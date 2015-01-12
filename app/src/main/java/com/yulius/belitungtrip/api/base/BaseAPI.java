@@ -15,7 +15,8 @@ public class BaseAPI {
 
     public String TAG = "BaseAPI";
 
-    protected static final String BASE_API_URL ="192.168.2.51";
+//    protected static final String BASE_API_URL ="192.168.2.51";
+    protected static final String BASE_API_URL = "stephen1706.host56.com";
 
     protected static final String BASE_API_HTTP_URL = "http://" + BASE_API_URL;
 
@@ -29,7 +30,7 @@ public class BaseAPI {
      * Hotel Search
      */
     protected static final String API_HOTEL_LIST_ROUTES = "/yulius/HotelList.php";
-    protected static final String API_HOTEL_DETAIL_ROUTES = "/yulius/HoteLDetail.php";
+    protected static final String API_HOTEL_DETAIL_ROUTES = "/yulius/HotelDetail.php";
 
     protected static final String API_HOTEL_LIST_URL = BASE_API_HTTP_URL + API_HOTEL_LIST_ROUTES;
     protected static final String API_HOTEL_DETAIL_URL = BASE_API_HTTP_URL + API_HOTEL_DETAIL_ROUTES;

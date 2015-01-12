@@ -38,7 +38,10 @@ public class HotelListAPI extends BaseAPI {
 
                 try {
                     hotelListResponseData = gson.fromJson(response, HotelListResponseData.class);
-                } catch (Exception e){}
+                } catch (Exception e){
+                    Log.e(TAG, "error parsing json in hotel list, " + e.getMessage());
+                }
+
                 if(mOnResponseListener!=null){
                     mOnResponseListener.onRequestSuccess(hotelListResponseData);
                 }

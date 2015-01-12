@@ -2,7 +2,6 @@ package com.yulius.belitungtrip.response;
 
 public class HotelDetailResponseData {
     public String hotelName;
-    public String hotelLocation;
     public String hotelStars;
     public String hotelWebsite;
     public String hotelLatitude;

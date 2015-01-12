@@ -26,7 +26,9 @@ public class HotelDetailAPI extends BaseAPI {
     }
     public void requestHotelDetail(final String hotelId){
         String url = API_HOTEL_DETAIL_URL;
-        StringRequest sr = new StringRequest(Request.Method.POST,API_HOTEL_DETAIL_URL, new Response.Listener<String>() {
+        Log.v("TEST Request (HotelDetailAPI)", "request hotel detail with id : " + hotelId);
+
+        StringRequest sr = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 if(BuildConfig.DEBUG) {
@@ -38,7 +40,9 @@ public class HotelDetailAPI extends BaseAPI {
 
                 try {
                     hotelDetailResponseData = gson.fromJson(response, HotelDetailResponseData.class);
-                } catch (Exception e){}
+                } catch (Exception e){
+                    Log.e(TAG, "error parsing json in hotel detail, " + e.getMessage());
+                }
 
                 if(mOnResponseListener!=null){
                     mOnResponseListener.onRequestSuccess(hotelDetailResponseData);

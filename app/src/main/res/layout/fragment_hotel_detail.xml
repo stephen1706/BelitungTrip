@@ -78,20 +78,65 @@
                 android:layout_height="2px"
                 android:background="@color/gray_d4" />
         </TableLayout>
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TableRow>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="5dp"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Website Hotel"
+                        android:textSize="14dp"
+                        android:textColor="@color/gray_43"/>
+
+                </LinearLayout>
+
+
+            </TableRow>
+            <TextView
+                android:id="@+id/text_view_hotel_website"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14dp"
+                android:gravity="center"
+                android:paddingBottom="5dp"
+                android:textColor="@color/gray_43"/>
+
+            <View android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:background="@color/gray_d4" />
+        </TableLayout>
         <TextView
             android:id="@+id/text_view_photosphere"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Gambar 360 derajat"
-            android:visibility="gone"
             android:textSize="14dp"
+            android:layout_marginTop="5dp"
             android:gravity="center_horizontal"
             android:textColor="@color/gray_43"/>
-        <!--<com.android.volley.toolbox.NetworkImageView-->
+        <ProgressBar
+            style="?android:attr/progressBarStyleHorizontal"
+            android:id="@+id/progress_bar"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="5dp"
+            android:layout_alignParentBottom="true"
+            android:progressDrawable="@drawable/progress_bar"
+            android:progress="0"
+            android:max="100" />
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/image"/>
+            android:id="@+id/image_photosphere"/>
         <Button
             android:id="@+id/button_view_photosphere"
             android:layout_width="match_parent"
@@ -127,6 +172,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="14dp"
+                    android:gravity="center"
                     android:textColor="@color/gray_43"
                     android:text="Jalan pengeak no 5"/>
         </LinearLayout>

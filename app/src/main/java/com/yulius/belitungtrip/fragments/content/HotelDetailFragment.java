@@ -22,6 +22,7 @@ import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -74,6 +75,8 @@ public class HotelDetailFragment extends BaseFragment {
     private ImageView mImage;
     private TextView mTextViewPhotosphere;
     private TextView mTextViewAddress;
+    private TextView mTextViewWebsite;
+    private ProgressBar mProgressBar;
 
     private String mHotelId;
     private int mImagePosition;
@@ -157,9 +160,11 @@ public class HotelDetailFragment extends BaseFragment {
         mMapView = (MapView) mLayoutView.findViewById(R.id.mapid);
         mPhotoSphereButton = (Button) mLayoutView.findViewById(R.id.button_view_photosphere);
 //        mImage = (NetworkImageView) mLayoutView.findViewById(R.id.image);
-        mImage = (ImageView) mLayoutView.findViewById(R.id.image);
+        mImage = (ImageView) mLayoutView.findViewById(R.id.image_photosphere);
         mTextViewPhotosphere = (TextView) mLayoutView.findViewById(R.id.text_view_photosphere);
         mTextViewAddress = (TextView) mLayoutView.findViewById(R.id.text_view_hotel_address);
+        mTextViewWebsite = (TextView) mLayoutView.findViewById(R.id.text_view_hotel_website);
+        mProgressBar = (ProgressBar) mLayoutView.findViewById(R.id.progress_bar);
     }
 
     private void setUpViewState() {
@@ -264,6 +269,7 @@ public class HotelDetailFragment extends BaseFragment {
             @Override
             public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                 Log.d("Test","complete");
+                mProgressBar.setVisibility(View.GONE);
                 storeImage(loadedImage);
                 mImage.setImageBitmap(loadedImage);
                 mPhotoSphereButton.setVisibility(View.VISIBLE);
@@ -293,12 +299,14 @@ public class HotelDetailFragment extends BaseFragment {
         }, new ImageLoadingProgressListener() {
             @Override
             public void onProgressUpdate(String imageUri, View view, int current, int total) {
-
+                mProgressBar.setMax(total);
+                mProgressBar.setProgress(current);
                 Log.d("Test","progress:" +current+"/"+total);
             }
         });
 
         mTextViewAddress.setText(mHotelDetailResponseData.hotelAddress);
+        mTextViewWebsite.setText(mHotelDetailResponseData.hotelWebsite);
         double score = Double.parseDouble(mHotelDetailResponseData.hotelStars);
         mRatingLayout.removeAllViews();
         while (score >= 0.5) {
