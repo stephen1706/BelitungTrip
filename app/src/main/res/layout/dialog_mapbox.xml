@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/frame_barcode">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:background="@color/light_blue">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:textColor="#FFFFFF"
+            android:textSize="20dp"
+            android:text="Detail Lokasi"/>
+        <ImageView
+            android:id="@+id/image_view_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/icon_close"/>
+    </RelativeLayout>
+
+    <com.mapbox.mapboxsdk.views.MapView
+        android:id="@+id/mapid"
+        app:mapid="@string/mapbox_id"
+        android:layout_width="match_parent"
+        android:layout_height="400dp" >
+    </com.mapbox.mapboxsdk.views.MapView>
+</LinearLayout>

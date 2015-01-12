@@ -1,34 +1,56 @@
 package com.yulius.belitungtrip.fragments.content;
 
 import android.app.Activity;
+import android.content.ComponentName;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.AnimationDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.overlay.Icon;
 import com.mapbox.mapboxsdk.overlay.Marker;
 import com.mapbox.mapboxsdk.views.MapView;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-import com.yulius.belitungtrip.activities.MainActivity;
-import com.yulius.belitungtrip.listeners.OnMessageActionListener;
+import com.squareup.picasso.Target;
 import com.yulius.belitungtrip.R;
+import com.yulius.belitungtrip.activities.MainActivity;
 import com.yulius.belitungtrip.api.HotelDetailAPI;
 import com.yulius.belitungtrip.fragments.base.BaseFragment;
-import com.yulius.belitungtrip.request.HotelDetailRequestData;
+import com.yulius.belitungtrip.listeners.OnMessageActionListener;
 import com.yulius.belitungtrip.response.HotelDetailResponseData;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class HotelDetailFragment extends BaseFragment {
     private static final String PARAM_IMAGE_URL = "param_image_url";
@@ -46,7 +68,12 @@ public class HotelDetailFragment extends BaseFragment {
     private ViewPager mImageHeaderPager;
     private MapView mMapView;
     private Button mMapboxButton;
+    private Button mPhotoSphereButton;
 
+//    private NetworkImageView mImage;
+    private ImageView mImage;
+    private TextView mTextViewPhotosphere;
+    private TextView mTextViewAddress;
 
     private String mHotelId;
     private int mImagePosition;
@@ -62,6 +89,8 @@ public class HotelDetailFragment extends BaseFragment {
     //================================================================================
 
     private HotelDetailAPI mHotelDetailAPI;
+    private Target loadtarget;
+    private File mPhotosphereFile;
     //================================================================================
     // Constructor
     //================================================================================
@@ -126,6 +155,11 @@ public class HotelDetailFragment extends BaseFragment {
         mMapboxButton = (Button) mLayoutView.findViewById(R.id.button_mapview);
         mRatingLayout = (LinearLayout) mLayoutView.findViewById(R.id.rating_layout);
         mMapView = (MapView) mLayoutView.findViewById(R.id.mapid);
+        mPhotoSphereButton = (Button) mLayoutView.findViewById(R.id.button_view_photosphere);
+//        mImage = (NetworkImageView) mLayoutView.findViewById(R.id.image);
+        mImage = (ImageView) mLayoutView.findViewById(R.id.image);
+        mTextViewPhotosphere = (TextView) mLayoutView.findViewById(R.id.text_view_photosphere);
+        mTextViewAddress = (TextView) mLayoutView.findViewById(R.id.text_view_hotel_address);
     }
 
     private void setUpViewState() {
@@ -155,9 +189,6 @@ public class HotelDetailFragment extends BaseFragment {
 
     private void startHotelDetailRequest() {
         showLoadingMessage(TAG);
-        HotelDetailRequestData hotelDetailRequestData = new HotelDetailRequestData();
-        hotelDetailRequestData.id = mHotelId;
-//        mHotelDetailAPI.requestHotelDetail(hotelDetailRequestData);
         mHotelDetailAPI.requestHotelDetail(mHotelId);
     }
 
@@ -206,7 +237,70 @@ public class HotelDetailFragment extends BaseFragment {
 
         ((MainActivity) getActivity()).getSupportActionBar().setTitle(mHotelDetailResponseData.hotelName);
 
+        Log.d("test","url:" + mHotelDetailResponseData.photosphere);
+
+        DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
+        .cacheInMemory(true).cacheOnDisk(true)
+        .build();
+
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(mContext)
+        .defaultDisplayImageOptions(defaultOptions)
+        .build();
+
+        ImageLoader.getInstance().init(config);
+        ImageLoader imageLoader = ImageLoader.getInstance();
+        imageLoader.displayImage(mHotelDetailResponseData.photosphere, mImage, defaultOptions, new ImageLoadingListener() {
+            @Override
+            public void onLoadingStarted(String imageUri, View view) {
+                Log.d("Test","started");
+            }
+            @Override
+            public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+                Log.d("Test","fail");
+
+                mPhotoSphereButton.setVisibility(View.GONE);
+                mTextViewPhotosphere.setVisibility(View.GONE);
+            }
+            @Override
+            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                Log.d("Test","complete");
+                storeImage(loadedImage);
+                mImage.setImageBitmap(loadedImage);
+                mPhotoSphereButton.setVisibility(View.VISIBLE);
+                mTextViewPhotosphere.setVisibility(View.VISIBLE);
+
+                mPhotoSphereButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Uri uri =  Uri.fromFile(mPhotosphereFile);
+                        Intent intent = new Intent(android.content.Intent.ACTION_VIEW);
+                        String mime = "*/*";
+                        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+                        if (mimeTypeMap.hasExtension(
+                                mimeTypeMap.getFileExtensionFromUrl(uri.toString())))
+                            mime = mimeTypeMap.getMimeTypeFromExtension(
+                                    mimeTypeMap.getFileExtensionFromUrl(uri.toString()));
+                        intent.setComponent(new ComponentName("com.google.android.gms", "com.google.android.gms.panorama.PanoramaViewActivity"));
+                        intent.setDataAndType(uri,mime);
+                        startActivity(intent);
+                    }
+                });
+            }
+            @Override
+            public void onLoadingCancelled(String imageUri, View view) {
+                Log.d("Test","cancel");
+            }
+        }, new ImageLoadingProgressListener() {
+            @Override
+            public void onProgressUpdate(String imageUri, View view, int current, int total) {
+
+                Log.d("Test","progress:" +current+"/"+total);
+            }
+        });
+
+        mTextViewAddress.setText(mHotelDetailResponseData.hotelAddress);
         double score = Double.parseDouble(mHotelDetailResponseData.hotelStars);
+        mRatingLayout.removeAllViews();
         while (score >= 0.5) {
             ImageView iv = new ImageView(getActivity());
             if (score >= 1) {
@@ -228,14 +322,101 @@ public class HotelDetailFragment extends BaseFragment {
         mMapView.addMarker(hotelMarker);
 
         mMapView.setZoom(DEFAULT_ZOOM_LEVEL);
-//                mMapboxButton.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        MapboxDialogFragment mapboxDialogFragment = MapboxDialogFragment.newInstance(hotelLocation, null, null);
-//                        mapboxDialogFragment.show(((ActionBarActivity) mContext).getSupportFragmentManager(), null);
-//                    }
-//                });
+        mMapboxButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MapboxDialogFragment mapboxDialogFragment = MapboxDialogFragment.newInstance(hotelLocation);
+                mapboxDialogFragment.show(((ActionBarActivity) mContext).getSupportFragmentManager(), null);
+            }
+        });
     }
+    private void storeImage(Bitmap image) {
+        File pictureFile = getOutputMediaFile();
+        if (pictureFile == null) {
+            Log.d(TAG, "Error creating media file, check storage permissions: ");
+            return;
+        }
+        try {
+            FileOutputStream fos = new FileOutputStream(pictureFile);
+            image.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            fos.close();
+            mPhotosphereFile = pictureFile;
+        } catch (FileNotFoundException e) {
+            Log.d(TAG, "File not found: " + e.getMessage());
+        } catch (IOException e) {
+            Log.d(TAG, "Error accessing file: " + e.getMessage());
+        }
+    }
+    private  File getOutputMediaFile(){
+        File mediaStorageDir = new File(Environment.getExternalStorageDirectory()
+                + "/Android/data/"
+                + mContext.getPackageName()
+                + "/Files");
+
+        if (! mediaStorageDir.exists()){
+            if (! mediaStorageDir.mkdirs()){
+                return null;
+            }
+        }
+        String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmm").format(new Date());
+        File mediaFile;
+        String mImageName="MI_"+ timeStamp +".png";
+        mediaFile = new File(mediaStorageDir.getPath() + File.separator + mImageName);
+        Log.d("test","written to : " + mediaStorageDir.getPath() + File.separator + mImageName);
+
+        return mediaFile;
+    }
+//    private void writeBitmapToMemory(Bitmap bitmap) {
+//        Log.d("Test", "size rowbyte*height: " + (bitmap.getRowBytes() * bitmap.getHeight()));
+//        Log.d("Test", "size allocation: " + bitmap.getAllocationByteCount());
+//        Log.d("Test", "size byte count: " + bitmap.getByteCount());
+//
+//
+////        ContentValues values = new ContentValues();
+////        values.put(MediaStore.Images.Media.TITLE, "test.jpg");
+////        values.put(MediaStore.Images.Media.DESCRIPTION, "deskripsi");
+////        values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
+////        values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+////        values.put(MediaStore.MediaColumns.DATA, Environment.getExternalStorageDirectory() + File.separator + "test.jpg");
+////
+////        mContext.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+//
+//        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+//        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+//        File f = new File(Environment.getExternalStorageDirectory().getPath() + File.separator + "test.jpg");
+//        try {
+//            f.createNewFile();
+//            FileOutputStream fo = new FileOutputStream(f);
+//            Log.d("Test", "size byte after write: " + bytes.size());
+//            fo.write(bytes.toByteArray());
+//
+//            fo.close();
+//            Log.d("test","written to : " + Environment.getExternalStorageDirectory().getPath() + File.separator + "test.jpg");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            Log.d("test","error : " + e.getMessage());
+//        }
+//
+//
+////        FileOutputStream out = null;
+////        try {
+////            out = new FileOutputStream(Environment.getExternalStorageDirectory() + File.separator + "test.png");
+////            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+////            FileInputStream fileInputStream = new FileInputStream(new File(Environment.getExternalStorageDirectory() + "/test.png"));
+////            FileOutputStream fileOutputStream = mContext.openFileOutput(Environment.getExternalStorageDirectory() + "/test.png", Activity.MODE_WORLD_READABLE);
+////            ByteStreams.copy(fileInputStream, fileOutputStream);
+////        } catch (Exception e) {
+////            e.printStackTrace();
+////        } finally {
+////            try {
+////                if (out != null) {
+////                    out.close();
+////                }
+////            } catch (IOException e) {
+////                e.printStackTrace();
+////            }
+////        }
+//    }
 
     private void setUpRequestAPI() {
         mHotelDetailAPI = new HotelDetailAPI(mContext);

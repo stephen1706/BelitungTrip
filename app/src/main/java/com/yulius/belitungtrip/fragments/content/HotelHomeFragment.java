@@ -94,7 +94,9 @@ public class HotelHomeFragment extends BaseFragment {
             @Override
             public void onRequestSuccess(HotelListResponseData hotelListResponseData) {
                 mHotelListResponseData = hotelListResponseData;
-                refreshFragment();
+                if(mHotelListResponseData != null) {
+                    refreshFragment();
+                }
             }
 
             @Override
@@ -111,8 +113,12 @@ public class HotelHomeFragment extends BaseFragment {
     }
 
     private void startRequestHotelList() {
-        showLoadingMessage(TAG);
-        mHotelListAPI.requestHotelList();
+        if(mHotelListResponseData == null) {//biar wkt back ga usah request ulang
+            showLoadingMessage(TAG);
+            mHotelListAPI.requestHotelList();
+        } else {
+            refreshFragment();
+        }
     }
 
     @Override

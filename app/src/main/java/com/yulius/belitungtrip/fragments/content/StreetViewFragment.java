@@ -1,6 +1,9 @@
 package com.yulius.belitungtrip.fragments.content;
 
+import android.content.ComponentName;
+import android.content.Intent;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,5 +68,13 @@ public class StreetViewFragment extends SupportStreetViewPanoramaFragment implem
         endLocation.setLongitude(endLng);
 
         return startLocation.bearingTo(endLocation);
+    }
+
+    private void startPanorama() {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        intent.setComponent(new ComponentName("com.google.android.gms", "com.google.android.gms.panorama.PanoramaViewActivity"));
+        intent.setDataAndType(Uri.parse("file://" + "/sdcard/DCIM/Camera/20140829_131503.jpg"), "image/*");
+        startActivity(intent);
     }
 }

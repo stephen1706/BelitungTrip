@@ -158,5 +158,16 @@ public class MainActivity extends BaseActivity implements NavigationDrawerFragme
     public void setDrawerIndicatorEnabled(boolean enabled){
         mNavigationDrawerFragment.setDrawerIndicatorEnabled(enabled);
     }
+    @Override
+    public void onBackPressed() {
+        Fragment currentContainerFragment = getSupportFragmentManager().findFragmentByTag(this.mFragmentTabHost.getCurrentTabTag());//ambil container yg skrg
+        if(currentContainerFragment.getChildFragmentManager().getBackStackEntryCount() > 0){//klo ada fragment seblmny yg disimpen di stack
+            if(currentContainerFragment.getChildFragmentManager().getBackStackEntryCount() == 1){
+                setDrawerIndicatorEnabled(true);
+            }
+            Fragment currentFragment = currentContainerFragment.getChildFragmentManager().findFragmentById(R.id.container);
+            currentContainerFragment.getChildFragmentManager().popBackStack();
+        }
 
+    }
 }
