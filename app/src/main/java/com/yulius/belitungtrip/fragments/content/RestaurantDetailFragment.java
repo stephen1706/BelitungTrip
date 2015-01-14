@@ -39,13 +39,12 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 import com.yulius.belitungtrip.R;
 import com.yulius.belitungtrip.activities.MainActivity;
-import com.yulius.belitungtrip.api.HotelDetailAPI;
+import com.yulius.belitungtrip.api.RestaurantDetailAPI;
 import com.yulius.belitungtrip.fragments.base.BaseFragment;
 import com.yulius.belitungtrip.listeners.OnMessageActionListener;
-import com.yulius.belitungtrip.response.HotelDetailResponseData;
+import com.yulius.belitungtrip.response.RestaurantDetailResponseData;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -54,10 +53,9 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class HotelDetailFragment extends BaseFragment {
+public class RestaurantDetailFragment extends BaseFragment {
     private static final String PARAM_IMAGE_URL = "param_image_url";
-    private static final String PARAM_IMAGE_POSITION = "param_image_position";
-    private static final String PARAM_HOTEL_ID = "param_hotel_id";
+    private static final String PARAM_RESTAURANT_ID = "param_hotel_id";
     private static final int DEFAULT_ZOOM_LEVEL = 14;
 
     //================================================================================
@@ -72,58 +70,54 @@ public class HotelDetailFragment extends BaseFragment {
     private Button mMapboxButton;
     private Button mPhotoSphereButton;
 
-//    private NetworkImageView mPhotosphereImageView;
     private ImageView mPhotosphereImageView;
     private TextView mTextViewPhotosphere;
     private TextView mTextViewAddress;
     private TextView mTextViewWebsite;
     private TextView mTextViewTelephone;
     private ProgressBar mProgressBar;
-
-    private String mHotelId;
-    private int mImagePosition;
     private ImageLoader mImageLoader;
+    private String mRestaurantId;
 
     //================================================================================
     // Current Fragment Variable
     //================================================================================
 
-    private HotelDetailResponseData mHotelDetailResponseData;
+    private RestaurantDetailResponseData mRestaurantDetailResponseData;
 
     //================================================================================
     // API
     //================================================================================
 
-    private HotelDetailAPI mHotelDetailAPI;
-    private Target loadtarget;
+    private RestaurantDetailAPI mRestaurantDetailAPI;
     private File mPhotosphereFile;
     //================================================================================
     // Constructor
     //================================================================================
 
-    public static HotelDetailFragment newInstance(String hotelId) {
-        HotelDetailFragment fragment = new HotelDetailFragment();
+    public static RestaurantDetailFragment newInstance(String restaurantId) {
+        RestaurantDetailFragment fragment = new RestaurantDetailFragment();
         Bundle args = new Bundle();
-        args.putString(PARAM_HOTEL_ID, hotelId);
+        args.putString(PARAM_RESTAURANT_ID, restaurantId);
         fragment.setArguments(args);
         return fragment;
     }
 
-    public HotelDetailFragment() {
+    public RestaurantDetailFragment() {
         super();
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        TAG = getResources().getString(R.string.hotel_detail_fragment_tag);
+        TAG = getResources().getString(R.string.restaurant_detail_fragment_tag);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null){
-            mHotelId = getArguments().getString(PARAM_HOTEL_ID);
+            mRestaurantId = getArguments().getString(PARAM_RESTAURANT_ID);
         }
     }
 
@@ -132,7 +126,7 @@ public class HotelDetailFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        mLayoutView = inflater.inflate(R.layout.fragment_hotel_detail, container, false);
+        mLayoutView = inflater.inflate(R.layout.fragment_restaurant_detail, container, false);
 
         setUpAttribute();
         setUpView();
@@ -147,7 +141,7 @@ public class HotelDetailFragment extends BaseFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if(mHotelDetailResponseData != null){
+        if(mRestaurantDetailResponseData != null){
             setUpImageGallery();
         }
     }
@@ -165,22 +159,21 @@ public class HotelDetailFragment extends BaseFragment {
 
     private void setUpView(){
         mNoPhotoFrame  = (LinearLayout) mLayoutView.findViewById(R.id.frame_no_photo_available);
-        mImageHeaderPager = (ViewPager) mLayoutView.findViewById(R.id.pager_hotel_image_header);
+        mImageHeaderPager = (ViewPager) mLayoutView.findViewById(R.id.pager_restaurant_image_header);
         mMapboxButton = (Button) mLayoutView.findViewById(R.id.button_mapview);
         mRatingLayout = (LinearLayout) mLayoutView.findViewById(R.id.rating_layout);
         mMapView = (MapView) mLayoutView.findViewById(R.id.mapid);
         mPhotoSphereButton = (Button) mLayoutView.findViewById(R.id.button_view_photosphere);
-//        mPhotosphereImageView = (NetworkImageView) mLayoutView.findViewById(R.id.image);
         mPhotosphereImageView = (ImageView) mLayoutView.findViewById(R.id.image_photosphere);
         mTextViewPhotosphere = (TextView) mLayoutView.findViewById(R.id.text_view_photosphere);
-        mTextViewAddress = (TextView) mLayoutView.findViewById(R.id.text_view_hotel_address);
-        mTextViewWebsite = (TextView) mLayoutView.findViewById(R.id.text_view_hotel_website);
-        mTextViewTelephone = (TextView) mLayoutView.findViewById(R.id.text_view_hotel_telephone);
+        mTextViewAddress = (TextView) mLayoutView.findViewById(R.id.text_view_restaurant_address);
+        mTextViewWebsite = (TextView) mLayoutView.findViewById(R.id.text_view_restaurant_website);
+        mTextViewTelephone = (TextView) mLayoutView.findViewById(R.id.text_view_restaurant_telephone);
         mProgressBar = (ProgressBar) mLayoutView.findViewById(R.id.progress_bar);
     }
 
     private void setUpViewState() {
-        if(mHotelDetailResponseData != null) {
+        if(mRestaurantDetailResponseData != null) {
             refreshFragment();
         }
     }
@@ -196,32 +189,31 @@ public class HotelDetailFragment extends BaseFragment {
                 super.onMessageActionTryAgain();
 
                 hideMessageScreen();
-                if (mHotelDetailResponseData == null) {
-                    startHotelDetailRequest();
+                if (mRestaurantDetailResponseData == null) {
+                    startRestaurantDetailRequest();
 
                 }
             }
         });
     }
 
-    private void startHotelDetailRequest() {
+    private void startRestaurantDetailRequest() {
         showLoadingMessage(TAG);
-        mHotelDetailAPI.requestHotelDetail(mHotelId);
+        mRestaurantDetailAPI.requestRestaurantDetail(mRestaurantId);
     }
 
     private void setUpImageGallery() {
-        if(mHotelDetailResponseData.assets != null && mHotelDetailResponseData.assets.length > 0){
+        if(mRestaurantDetailResponseData.assets != null && mRestaurantDetailResponseData.assets.length > 0){
             mNoPhotoFrame.setVisibility(View.GONE);
             mImageHeaderPager.setVisibility(View.VISIBLE);
 
-            String[] mImageUrl = new String [mHotelDetailResponseData.assets.length];
-            for(int i = 0 ;i<mHotelDetailResponseData.assets.length;i++){
-                mImageUrl[i] = mHotelDetailResponseData.assets[i].url;
+            String[] mImageUrl = new String [mRestaurantDetailResponseData.assets.length];
+            for(int i = 0 ;i < mRestaurantDetailResponseData.assets.length;i++){
+                mImageUrl[i] = mRestaurantDetailResponseData.assets[i].url;
             }
 
             mImageHeaderPager.setAdapter(new ImageHeaderAdapter(getChildFragmentManager(), mImageUrl));
             mImageHeaderPager.setCurrentItem(0);
-            mImagePosition = 0;
             mImageHeaderPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 public void onPageScrollStateChanged(int state) {
                 }
@@ -230,7 +222,7 @@ public class HotelDetailFragment extends BaseFragment {
                 }
 
                 public void onPageSelected(int position) {
-                    mImagePosition = position;
+
                 }
             });
 
@@ -252,37 +244,45 @@ public class HotelDetailFragment extends BaseFragment {
     protected void refreshFragment() {
         super.refreshFragment();
 
-        ((MainActivity) getActivity()).getSupportActionBar().setTitle(mHotelDetailResponseData.hotelName);
+        ((MainActivity) getActivity()).getSupportActionBar().setTitle(mRestaurantDetailResponseData.restaurantName);
 
-        Log.d("test","url:" + mHotelDetailResponseData.photosphere);
+        Log.d("test", "url:" + mRestaurantDetailResponseData.photosphere);
 
-        DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
-        .cacheInMemory(true).cacheOnDisk(true)
-        .build();
+        final ImageLoadingProgressListener imageLoadingProgressListener = new ImageLoadingProgressListener() {
+            @Override
+            public void onProgressUpdate(String imageUri, View view, int current, int total) {
+                mProgressBar.setMax(total);
+                mProgressBar.setProgress(current);
+                Log.d("Test","progress:" +current+"/"+total);
+            }
+        };
+
+        final DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
+                .cacheInMemory(true).cacheOnDisk(true)
+                .build();
 
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(mContext)
-        .defaultDisplayImageOptions(defaultOptions)
-        .build();
+                .defaultDisplayImageOptions(defaultOptions)
+                .build();
 
         ImageLoader.getInstance().init(config);
         mImageLoader = ImageLoader.getInstance();
-        mImageLoader.displayImage(mHotelDetailResponseData.photosphere, mPhotosphereImageView, defaultOptions, new ImageLoadingListener() {
+        mImageLoader.displayImage(mRestaurantDetailResponseData.photosphere, mPhotosphereImageView, defaultOptions, new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String imageUri, View view) {
-                Log.d("Test", "started");
+
             }
 
             @Override
             public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
                 Log.d("Test", "fail");
-
+                mImageLoader.displayImage(mRestaurantDetailResponseData.photosphere, mPhotosphereImageView, defaultOptions, this, imageLoadingProgressListener);
                 mPhotoSphereButton.setVisibility(View.GONE);
                 mTextViewPhotosphere.setVisibility(View.GONE);
             }
 
             @Override
             public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                Log.d("Test", "complete");
                 mProgressBar.setVisibility(View.GONE);
                 storeImage(loadedImage);
                 mPhotosphereImageView.setImageBitmap(loadedImage);
@@ -311,49 +311,28 @@ public class HotelDetailFragment extends BaseFragment {
             public void onLoadingCancelled(String imageUri, View view) {
                 Log.d("Test", "cancel");
             }
-        }, new ImageLoadingProgressListener() {
-            @Override
-            public void onProgressUpdate(String imageUri, View view, int current, int total) {
-                mProgressBar.setMax(total);
-                mProgressBar.setProgress(current);
-                Log.d("Test", "progress:" + current + "/" + total);
-            }
-        });
+        }, imageLoadingProgressListener);
 
-        mTextViewTelephone.setText(mHotelDetailResponseData.hotelTelephone);
+        mTextViewTelephone.setText(mRestaurantDetailResponseData.restaurantTelephone);
         mTextViewTelephone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mHotelDetailResponseData.hotelTelephone != null) {
+                if(mRestaurantDetailResponseData.restaurantTelephone != null) {
                     Intent callIntent = new Intent(Intent.ACTION_CALL);
-                    callIntent.setData(Uri.parse("tel:" + mHotelDetailResponseData.hotelTelephone));
+                    callIntent.setData(Uri.parse("tel:" + mRestaurantDetailResponseData.restaurantTelephone));
                     startActivity(callIntent);
                 }
             }
         });
-        mTextViewAddress.setText(mHotelDetailResponseData.hotelAddress);
-        mTextViewWebsite.setText(mHotelDetailResponseData.hotelWebsite);
+
+        mTextViewAddress.setText(mRestaurantDetailResponseData.restaurantAddress);
+        mTextViewWebsite.setText(mRestaurantDetailResponseData.restaurantWebsite);
         mTextViewWebsite.setMovementMethod(LinkMovementMethod.getInstance());
 
-        double score = Double.parseDouble(mHotelDetailResponseData.hotelStars);
-        mRatingLayout.removeAllViews();
-        while (score >= 0.5) {
-            ImageView iv = new ImageView(getActivity());
-            if (score >= 1) {
-                iv.setImageDrawable(getResources().getDrawable(R.drawable.icon_star));
-                mRatingLayout.addView(iv);
-                score--;
-            } else {
-                iv.setImageDrawable(getResources().getDrawable(R.drawable.icon_star_half));
-                mRatingLayout.addView(iv);
-                score -= 0.5;
-            }
-        }
+        final LatLng restaurantLocation = new LatLng(Double.parseDouble(mRestaurantDetailResponseData.restaurantLatitude), Double.parseDouble(mRestaurantDetailResponseData.restaurantLongitude));
+        mMapView.setCenter(restaurantLocation);
 
-        final LatLng hotelLocation = new LatLng(Double.parseDouble(mHotelDetailResponseData.hotelLatitude), Double.parseDouble(mHotelDetailResponseData.hotelLongitude));
-        mMapView.setCenter(hotelLocation);
-
-        Marker hotelMarker = new Marker(mMapView, "", "", hotelLocation);
+        Marker hotelMarker = new Marker(mMapView, "", "", restaurantLocation);
         hotelMarker.setIcon(new Icon(getResources().getDrawable(R.drawable.green_pin)));
         mMapView.addMarker(hotelMarker);
 
@@ -361,7 +340,7 @@ public class HotelDetailFragment extends BaseFragment {
         mMapboxButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MapboxDialogFragment mapboxDialogFragment = MapboxDialogFragment.newInstance(hotelLocation);
+                MapboxDialogFragment mapboxDialogFragment = MapboxDialogFragment.newInstance(restaurantLocation);
                 mapboxDialogFragment.show(((ActionBarActivity) mContext).getSupportFragmentManager(), null);
             }
         });
@@ -387,7 +366,7 @@ public class HotelDetailFragment extends BaseFragment {
         File mediaStorageDir = new File(Environment.getExternalStorageDirectory()
                 + "/Android/data/"
                 + mContext.getPackageName()
-                + "/Files/Hotel");
+                + "/Files/Restaurant");
 
         if (! mediaStorageDir.exists()){
             if (! mediaStorageDir.mkdirs()){
@@ -402,65 +381,14 @@ public class HotelDetailFragment extends BaseFragment {
 
         return mediaFile;
     }
-//    private void writeBitmapToMemory(Bitmap bitmap) {
-//        Log.d("Test", "size rowbyte*height: " + (bitmap.getRowBytes() * bitmap.getHeight()));
-//        Log.d("Test", "size allocation: " + bitmap.getAllocationByteCount());
-//        Log.d("Test", "size byte count: " + bitmap.getByteCount());
-//
-//
-////        ContentValues values = new ContentValues();
-////        values.put(MediaStore.Images.Media.TITLE, "test.jpg");
-////        values.put(MediaStore.Images.Media.DESCRIPTION, "deskripsi");
-////        values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
-////        values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
-////        values.put(MediaStore.MediaColumns.DATA, Environment.getExternalStorageDirectory() + File.separator + "test.jpg");
-////
-////        mContext.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-//
-//        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-//        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-//        File f = new File(Environment.getExternalStorageDirectory().getPath() + File.separator + "test.jpg");
-//        try {
-//            f.createNewFile();
-//            FileOutputStream fo = new FileOutputStream(f);
-//            Log.d("Test", "size byte after write: " + bytes.size());
-//            fo.write(bytes.toByteArray());
-//
-//            fo.close();
-//            Log.d("test","written to : " + Environment.getExternalStorageDirectory().getPath() + File.separator + "test.jpg");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            Log.d("test","error : " + e.getMessage());
-//        }
-//
-//
-////        FileOutputStream out = null;
-////        try {
-////            out = new FileOutputStream(Environment.getExternalStorageDirectory() + File.separator + "test.png");
-////            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
-////            FileInputStream fileInputStream = new FileInputStream(new File(Environment.getExternalStorageDirectory() + "/test.png"));
-////            FileOutputStream fileOutputStream = mContext.openFileOutput(Environment.getExternalStorageDirectory() + "/test.png", Activity.MODE_WORLD_READABLE);
-////            ByteStreams.copy(fileInputStream, fileOutputStream);
-////        } catch (Exception e) {
-////            e.printStackTrace();
-////        } finally {
-////            try {
-////                if (out != null) {
-////                    out.close();
-////                }
-////            } catch (IOException e) {
-////                e.printStackTrace();
-////            }
-////        }
-//    }
 
     private void setUpRequestAPI() {
-        mHotelDetailAPI = new HotelDetailAPI(mContext);
+        mRestaurantDetailAPI = new RestaurantDetailAPI(mContext);
 
-        mHotelDetailAPI.setOnResponseListener(new HotelDetailAPI.OnResponseListener() {
+        mRestaurantDetailAPI.setOnResponseListener(new RestaurantDetailAPI.OnResponseListener() {
             @Override
-            public void onRequestSuccess(HotelDetailResponseData hotelDetailResponseData) {
-                mHotelDetailResponseData = hotelDetailResponseData;
+            public void onRequestSuccess(RestaurantDetailResponseData restaurantDetailResponseData) {
+                mRestaurantDetailResponseData = restaurantDetailResponseData;
 
                 refreshFragment();
                 setUpImageGallery();
@@ -468,7 +396,7 @@ public class HotelDetailFragment extends BaseFragment {
 
             @Override
             public void onRequestError(VolleyError volleyError) {
-                showConnectionProblemErrorMessage(volleyError, getResources().getString(R.string.hotel_detail_fragment_tag));
+                showConnectionProblemErrorMessage(volleyError, getResources().getString(R.string.restaurant_detail_fragment_tag));
             }
 
             @Override
@@ -477,30 +405,19 @@ public class HotelDetailFragment extends BaseFragment {
             }
         });
 
-        startHotelDetailRequest();
+        startRestaurantDetailRequest();
     }
 
     @Override
     protected void restoreCustomActionBar(ActionBar actionBar) {
         super.restoreCustomActionBar(actionBar);
-        if(mHotelDetailResponseData != null){
-            actionBar.setTitle(mHotelDetailResponseData.hotelName);
+        if(mRestaurantDetailResponseData != null){
+            actionBar.setTitle(mRestaurantDetailResponseData.restaurantName);
         }
 
         actionBar.setDisplayHomeAsUpEnabled(true);
         getParentActivity().setDrawerIndicatorEnabled(false);
     }
-
-//    class TapGestureListener extends GestureDetector.SimpleOnGestureListener{//onclick listener for image pager
-//        @Override
-//        public boolean onSingleTapConfirmed(MotionEvent e) {
-//            Intent i = new Intent(getParentActivity(), GalleryImageHotelActivity.class);
-//            i.putExtra(PARAM_IMAGE_URL, mHotelDetailResponseData.assets);
-//            i.putExtra(PARAM_IMAGE_POSITION, mImagePosition);
-//            startActivity(i);
-//            return false;
-//        }
-//    }
 
     class ImageHeaderAdapter extends FragmentPagerAdapter {
         private static final String PARAM_IMAGE_URL = "param_image_url";
@@ -513,13 +430,13 @@ public class HotelDetailFragment extends BaseFragment {
 
         @Override
         public Fragment getItem(int i) {
-            Fragment hotelImageFragment = new HotelImageHeaderFragment();
+            Fragment imageFragment = new ImageHeaderFragment();
 
             Bundle b = new Bundle();
             b.putString(PARAM_IMAGE_URL, mImageList[i]);
-            hotelImageFragment.setArguments(b);
+            imageFragment.setArguments(b);
 
-            return hotelImageFragment;
+            return imageFragment;
         }
 
         @Override
@@ -532,7 +449,7 @@ public class HotelDetailFragment extends BaseFragment {
         }
 
     }
-    public static class HotelImageHeaderFragment extends Fragment {
+    public static class ImageHeaderFragment extends Fragment {
         private String mUrl;
         protected View mLayoutView;
         private ImageView mLoadingImageView;
@@ -556,7 +473,7 @@ public class HotelDetailFragment extends BaseFragment {
                 loadImage();
             } else{
                 ImageView loadingImageView = (ImageView) mLayoutView.findViewById(R.id.image_view_loading_animation);
-                loadingImageView.setVisibility(View.INVISIBLE);//harus di findVieById lagi ga tau knp bru bisa di buat invisible
+                loadingImageView.setVisibility(View.INVISIBLE);
             }
         }
 

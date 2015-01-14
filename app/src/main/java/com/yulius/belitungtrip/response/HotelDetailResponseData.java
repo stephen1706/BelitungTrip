@@ -8,6 +8,7 @@ public class HotelDetailResponseData {
     public String hotelLongitude;
     public String hotelAddress;
     public String photosphere;
+    public String hotelTelephone;
     public Asset[] assets;
 
     public static class Asset {

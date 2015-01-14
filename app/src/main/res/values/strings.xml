@@ -15,5 +15,7 @@
     <!-- Map Box -->
     <string name="mapbox_id">aalbert.i83flo4j</string>
     <string name="hotel_detail_fragment_tag">HotelDetailFragment</string>
+    <string name="restaurant_detail_fragment_tag">RestaurantDetailFragment</string>
+    <string name="poi_detail_fragment_tag">PoiDetailFragment</string>
 
 </resources>

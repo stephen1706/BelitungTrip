@@ -94,10 +94,12 @@
 
     <!-- Flight Payment - Method Layout -->
     <color name="method_title_gray">#444444</color>
-    <color name="traveloka_link_blue">#0D7FCC</color>
+    <color name="link_blue">#0D7FCC</color>
 
     <!-- Help FAQ Layout -->
     <color name="help_faq_title_background">#F0F0F0</color>
     <color name="gray_ed">#EDEDED</color>
 
+    <color name="pink">#e91e63</color>
+    <color name="pink_pressed">#ec407a</color>
 </resources>

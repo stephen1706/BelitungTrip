@@ -5,11 +5,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import com.yulius.belitungtrip.R;
 import com.yulius.belitungtrip.fragments.base.BaseFragment;
 
 public class TripPlannerHomeFragment extends BaseFragment {
+    private ImageButton mAddButton;
+
     public static TripPlannerHomeFragment newInstance() {
         TripPlannerHomeFragment fragment = new TripPlannerHomeFragment();
         Bundle args = new Bundle();
@@ -45,12 +48,15 @@ public class TripPlannerHomeFragment extends BaseFragment {
 
         mLayoutView = inflater.inflate(R.layout.fragment_trip_planner_home, container, false);
 
-//        setUpView();
+        setUpView();
 //        setUpViewState();
 //        setUpListener();
 //        setUpRequestAPI();
 //        setUpMessageListener();
 
         return mLayoutView;
+    }
+
+    private void setUpView() {
     }
 }

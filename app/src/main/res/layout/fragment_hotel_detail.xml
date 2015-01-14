@@ -96,10 +96,7 @@
                         android:text="Website Hotel"
                         android:textSize="14dp"
                         android:textColor="@color/gray_43"/>
-
                 </LinearLayout>
-
-
             </TableRow>
             <TextView
                 android:id="@+id/text_view_hotel_website"
@@ -107,9 +104,31 @@
                 android:layout_height="wrap_content"
                 android:textSize="14dp"
                 android:gravity="center"
+                android:autoLink="web"
                 android:paddingBottom="5dp"
+                android:textColor="@color/link_blue"/>
+            <View android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:background="@color/gray_d4" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Telepon Restaurant"
+                android:layout_marginTop="5dp"
+                android:textSize="14dp"
+                android:gravity="center"
                 android:textColor="@color/gray_43"/>
 
+            <TextView
+                android:id="@+id/text_view_hotel_telephone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14dp"
+                android:autoLink="web"
+                android:gravity="center"
+                android:paddingBottom="5dp"
+                android:textColor="@color/link_blue"/>
             <View android:layout_width="match_parent"
                 android:layout_height="2px"
                 android:background="@color/gray_d4" />
