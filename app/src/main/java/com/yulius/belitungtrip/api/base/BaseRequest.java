@@ -38,7 +38,7 @@ public class BaseRequest extends StringRequest{
     @Override
     public Map<String, String> getHeaders() throws AuthFailureError {
         HashMap<String, String> params = new HashMap<String, String>();
-        params.put("Origin", "m.traveloka.com");
+        params.put("Origin", "yulius.comuv.com");
         //TODO: REMOVE AFTER SERVER FIXED
         if(getMethod() == Method.GET){
             params.put("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
