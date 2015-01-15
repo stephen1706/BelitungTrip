@@ -33,8 +33,4 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
-    <!--<style name="Dialog.Traveloka" parent="@style/Theme.AppCompat.CompactMenu.Dialog">-->
-
-    <!--</style>-->
-
 </resources>

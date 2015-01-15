@@ -171,7 +171,6 @@ public class NavigationDrawerFragment extends Fragment {
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setTitle(R.string.app_name);
         actionBar.setSubtitle(null);
-       // actionBar.setIcon(R.drawable.icon_traveloka);
 
         mSectionAdapter.notifyDataSetChanged();
     }

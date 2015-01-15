@@ -126,7 +126,6 @@ public class BaseFragment extends Fragment {
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle(mTitle);
         actionBar.setSubtitle(null);
-//        actionBar.setIcon(R.drawable.icon_traveloka);
 
         restoreCustomActionBar(actionBar);
     }
