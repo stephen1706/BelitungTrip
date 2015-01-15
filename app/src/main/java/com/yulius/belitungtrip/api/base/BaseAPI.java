@@ -32,6 +32,7 @@ public class BaseAPI {
     protected static final String API_POI_LIST_ROUTES = "/yulius/PoiList.php";
     protected static final String API_POI_DETAIL_ROUTES = "/yulius/PoiDetail.php";
     protected static final String API_FLIGHT_ROUTES = "/yulius/FlightList.php";
+    protected static final String API_CAR_ROUTES = "/yulius/CarList.php";
 
     protected static final String API_HOTEL_LIST_URL = BASE_API_HTTP_URL + API_HOTEL_LIST_ROUTES;
     protected static final String API_HOTEL_DETAIL_URL = BASE_API_HTTP_URL + API_HOTEL_DETAIL_ROUTES;
@@ -40,6 +41,7 @@ public class BaseAPI {
     protected static final String API_POI_LIST_URL = BASE_API_HTTP_URL + API_POI_LIST_ROUTES;
     protected static final String API_POI_DETAIL_URL = BASE_API_HTTP_URL + API_POI_DETAIL_ROUTES;
     protected static final String API_FLIGHT_URL = BASE_API_HTTP_URL + API_FLIGHT_ROUTES;
+    protected static final String API_CAR_URL = BASE_API_HTTP_URL + API_CAR_ROUTES;
 
 
     //================================================================================

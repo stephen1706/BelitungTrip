@@ -14,36 +14,37 @@ import android.view.ViewGroup;
 
 import com.android.volley.VolleyError;
 import com.yulius.belitungtrip.R;
-import com.yulius.belitungtrip.adapters.FlightListAdapter;
-import com.yulius.belitungtrip.api.FlightAPI;
+import com.yulius.belitungtrip.adapters.CarListAdapter;
+import com.yulius.belitungtrip.api.CarAPI;
 import com.yulius.belitungtrip.fragments.base.BaseFragment;
 import com.yulius.belitungtrip.listeners.OnMessageActionListener;
 import com.yulius.belitungtrip.listeners.RecyclerItemClickListener;
-import com.yulius.belitungtrip.response.FlightResponseData;
+import com.yulius.belitungtrip.response.CarResponseData;
 
-public class FlightListFragment extends BaseFragment {
-    private RecyclerView mFlightList;
-    private FlightListAdapter mFlightListAdapter;
-    private FlightAPI mFlightAPI;
-    private FlightResponseData mFlightResponseData;
+public class CarListFragment extends BaseFragment{
 
-    public static FlightListFragment newInstance() {
-        FlightListFragment fragment = new FlightListFragment();
+    private RecyclerView mCarList;
+    private CarListAdapter mCarListAdapter;
+    private CarAPI mCarAPI;
+    private CarResponseData mCarResponseData;
+
+    public static CarListFragment newInstance() {
+        CarListFragment fragment = new CarListFragment();
         Bundle args = new Bundle();
 
         fragment.setArguments(args);
         return fragment;
     }
 
-    public FlightListFragment() {
+    public CarListFragment() {
         super();
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        TAG = getResources().getString(R.string.flight_list_fragment_tag);
-        mTitle = "Daftar Pesawat";
+        TAG = getResources().getString(R.string.car_list_fragment_tag);
+        mTitle = "Daftar Mobil";
     }
 
     @Override
@@ -60,7 +61,7 @@ public class FlightListFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        mLayoutView = inflater.inflate(R.layout.fragment_flight_list, container, false);
+        mLayoutView = inflater.inflate(R.layout.fragment_car_list, container, false);
 
         setUpView();
         setUpViewState();
@@ -72,21 +73,21 @@ public class FlightListFragment extends BaseFragment {
     }
 
     private void setUpView() {
-        mFlightList = (RecyclerView) mLayoutView.findViewById(R.id.list_flight);
+        mCarList = (RecyclerView) mLayoutView.findViewById(R.id.list_car);
     }
 
     private void setUpViewState() {
-        mFlightList.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mFlightList.setItemAnimator(new DefaultItemAnimator());
+        mCarList.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mCarList.setItemAnimator(new DefaultItemAnimator());
     }
 
     private void setUpListener() {
-        mFlightList.addOnItemTouchListener(
+        mCarList.addOnItemTouchListener(
                 new RecyclerItemClickListener(mContext, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
 
-                        String url = mFlightResponseData.entries[position].flightLink;
+                        String url = mCarResponseData.entries[position].carLink;
                         if (!url.startsWith("https://") && !url.startsWith("http://")) {//hrs mulai pk http
                             url = "http://" + url;
                         }
@@ -100,12 +101,12 @@ public class FlightListFragment extends BaseFragment {
     }
 
     private void setUpRequestAPI() {
-        mFlightAPI = new FlightAPI(mContext);
-        mFlightAPI.setOnResponseListener(new FlightAPI.OnResponseListener() {
+        mCarAPI = new CarAPI(mContext);
+        mCarAPI.setOnResponseListener(new CarAPI.OnResponseListener() {
             @Override
-            public void onRequestSuccess(FlightResponseData flightResponseData) {
-                mFlightResponseData = flightResponseData;
-                if (mFlightResponseData != null) {
+            public void onRequestSuccess(CarResponseData carResponseData) {
+                mCarResponseData = carResponseData;
+                if (mCarResponseData != null) {
                     refreshFragment();
                 }
             }
@@ -120,13 +121,13 @@ public class FlightListFragment extends BaseFragment {
                 showRequestFailedErrorMessage(message);
             }
         });
-        startRequestFlightList();
+        startRequestCarList();
     }
 
-    private void startRequestFlightList() {
-        if(mFlightResponseData == null) {//biar wkt back ga usah request ulang
+    private void startRequestCarList() {
+        if(mCarResponseData == null) {//biar wkt back ga usah request ulang
             showLoadingMessage(TAG);
-            mFlightAPI.requestFlightList();
+            mCarAPI.requestCarList();
         } else {
             refreshFragment();
         }
@@ -135,8 +136,8 @@ public class FlightListFragment extends BaseFragment {
     @Override
     protected void refreshFragment() {
         super.refreshFragment();
-        mFlightListAdapter = new FlightListAdapter(mFlightResponseData.entries, R.layout.row_flight_list, mContext);
-        mFlightList.setAdapter(mFlightListAdapter);
+        mCarListAdapter = new CarListAdapter(mCarResponseData.entries, R.layout.row_car_list, mContext);
+        mCarList.setAdapter(mCarListAdapter);
     }
 
     private void setUpMessageListener() {
@@ -144,11 +145,10 @@ public class FlightListFragment extends BaseFragment {
             @Override
             public void onMessageActionTryAgain() {
                 super.onMessageActionTryAgain();
-                startRequestFlightList();
+                startRequestCarList();
             }
         });
     }
-
     @Override
     protected void restoreCustomActionBar(ActionBar actionBar) {
         super.restoreCustomActionBar(actionBar);

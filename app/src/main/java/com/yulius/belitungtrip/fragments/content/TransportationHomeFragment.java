@@ -75,7 +75,9 @@ public class TransportationHomeFragment extends BaseFragment {
                 new RecyclerItemClickListener(mContext, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        if(position == 1){//flight
+                        if(position == 0){//car
+                            replaceContentFragment(CarListFragment.newInstance(), getResources().getString(R.string.car_list_fragment_tag));
+                        } else if(position == 1){//flight
                             replaceContentFragment(FlightListFragment.newInstance(), getResources().getString(R.string.flight_list_fragment_tag));
                         }
                     }
@@ -87,7 +89,7 @@ public class TransportationHomeFragment extends BaseFragment {
     @Override
     protected void refreshFragment() {
         super.refreshFragment();
-        mTransportationListAdapter = new TransportationListAdapter(new String[]{"Mobil","Pesawat","Kapal"}, R.layout.row_transportation_list, mContext);
+        mTransportationListAdapter = new TransportationListAdapter(new String[]{"Mobil","Pesawat"}, R.layout.row_transportation_list, mContext);
         mTransportationList.setAdapter(mTransportationListAdapter);
     }
 }
