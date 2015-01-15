@@ -16,7 +16,7 @@ public class BaseAPI {
     public String TAG = "BaseAPI";
 
 //    protected static final String BASE_API_URL ="192.168.2.51";
-    protected static final String BASE_API_URL = "stephen1706.host56.com";
+    protected static final String BASE_API_URL = "yulius.comuv.com";
 
     protected static final String BASE_API_HTTP_URL = "http://" + BASE_API_URL;
 

@@ -2,7 +2,6 @@ package com.yulius.belitungtrip.fragments.base;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -23,8 +22,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.yulius.belitungtrip.Constans;
-import com.yulius.belitungtrip.listeners.OnMessageActionListener;
 import com.yulius.belitungtrip.R;
+import com.yulius.belitungtrip.listeners.OnMessageActionListener;
 
 public abstract class BaseContainerFragment extends Fragment{
 
@@ -235,9 +234,9 @@ public abstract class BaseContainerFragment extends Fragment{
         switch (messageScreenType){
             case MESSAGE_SCREEN_LOADING:
                 messageScreenView = mLayoutInflater.inflate(R.layout.message_loading, mMessageScreenFrame, false);
-                ImageView loadingAnimationImageView = (ImageView)messageScreenView.findViewById(R.id.image_view_loading_animation);
-                AnimationDrawable loadingAnimation = (AnimationDrawable)loadingAnimationImageView.getBackground();
-                loadingAnimation.start();
+//                ImageView loadingAnimationImageView = (ImageView)messageScreenView.findViewById(R.id.image_view_loading_animation);
+//                AnimationDrawable loadingAnimation = (AnimationDrawable)loadingAnimationImageView.getBackground();
+//                loadingAnimation.start();
                 break;
             case MESSAGE_SCREEN_NO_INTERNET_CONNECTION:
                 messageScreenView = mLayoutInflater.inflate(R.layout.message_no_internet_connection, mMessageScreenFrame, false);
