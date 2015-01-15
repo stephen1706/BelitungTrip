@@ -7,12 +7,17 @@
     android:paddingRight="16dp"
     android:background="@color/white"
     android:gravity="center">
-
-    <ImageView
-        android:id="@+id/image_view_loading_animation"
-        android:layout_width="46dp"
-        android:layout_height="46dp"
-        android:background="@drawable/loading_animation_big"/>
+    <ProgressBar
+        android:id="@+id/progressBar1"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true" />
+    <!--<ImageView-->
+    <!--android:id="@+id/image_view_loading_animation"-->
+    <!--android:layout_width="46dp"-->
+    <!--android:layout_height="46dp"-->
+    <!--android:background="@drawable/loading_animation_big"/>-->
 
     <View
         android:layout_width="match_parent"
