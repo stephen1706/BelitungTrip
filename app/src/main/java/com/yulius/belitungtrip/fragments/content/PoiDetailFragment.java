@@ -275,9 +275,10 @@ public class PoiDetailFragment extends BaseFragment {
             @Override
             public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
                 Log.d("Test", "fail");
-                mImageLoader.displayImage(mPoiDetailResponseData.photosphere, mPhotosphereImageView, defaultOptions, this, imageLoadingProgressListener);
+//                mImageLoader.displayImage(mPoiDetailResponseData.photosphere, mPhotosphereImageView, defaultOptions, this, imageLoadingProgressListener);
                 mPhotoSphereButton.setVisibility(View.GONE);
                 mTextViewPhotosphere.setVisibility(View.GONE);
+                mProgressBar.setVisibility(View.GONE);
             }
 
             @Override

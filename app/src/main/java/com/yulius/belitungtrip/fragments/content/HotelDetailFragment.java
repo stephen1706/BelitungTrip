@@ -278,6 +278,7 @@ public class HotelDetailFragment extends BaseFragment {
 
                 mPhotoSphereButton.setVisibility(View.GONE);
                 mTextViewPhotosphere.setVisibility(View.GONE);
+                mProgressBar.setVisibility(View.GONE);
             }
 
             @Override
