@@ -27,7 +27,7 @@ import com.yulius.belitungtrip.fragments.containers.TripPlannerContainerFragment
 
 
 public class MainActivity extends BaseActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
-
+//
     private StreetViewPanorama svp;
 
     private static final LatLng SYDNEY = new LatLng(-33.87365, 151.20689);
@@ -96,8 +96,8 @@ public class MainActivity extends BaseActivity implements NavigationDrawerFragme
         mFragmentTabHost.addTab(mFragmentTabHost.newTabSpec(HOTEL_SECTION_TAG).setIndicator(HOTEL_SECTION_TAG), HotelContainerFragment.class, null);
         mFragmentTabHost.addTab(mFragmentTabHost.newTabSpec(RESTAURANT_SECTION_TAG).setIndicator(RESTAURANT_SECTION_TAG), RestaurantContainerFragment.class, null);
         mFragmentTabHost.addTab(mFragmentTabHost.newTabSpec(POI_SECTION_TAG).setIndicator(POI_SECTION_TAG), PoiContainerFragment.class, null);
-        mFragmentTabHost.addTab(mFragmentTabHost.newTabSpec(TRIP_PLANNER_SECTION_TAG).setIndicator(TRIP_PLANNER_SECTION_TAG), TripPlannerContainerFragment.class, null);
         mFragmentTabHost.addTab(mFragmentTabHost.newTabSpec(TRANSPORTATION_SECTION_TAG).setIndicator(TRANSPORTATION_SECTION_TAG), TransportationContainerFragment.class, null);
+        mFragmentTabHost.addTab(mFragmentTabHost.newTabSpec(TRIP_PLANNER_SECTION_TAG).setIndicator(TRIP_PLANNER_SECTION_TAG), TripPlannerContainerFragment.class, null);
 
         mFragmentTabHost.getTabWidget().setVisibility(View.GONE);
 
@@ -173,7 +173,7 @@ public class MainActivity extends BaseActivity implements NavigationDrawerFragme
             }
             Fragment currentFragment = currentContainerFragment.getChildFragmentManager().findFragmentById(R.id.container);
             currentContainerFragment.getChildFragmentManager().popBackStack();
-        } else{
+        } else {
             finish();
         }
     }

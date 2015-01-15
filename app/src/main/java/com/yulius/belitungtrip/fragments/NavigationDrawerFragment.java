@@ -271,11 +271,11 @@ public class NavigationDrawerFragment extends Fragment {
     private void setUpSectionAdapter(){
         ArrayList<SectionItem> sectionItems = new ArrayList<SectionItem>();
         sectionItems.add(new SectionItem(R.drawable.icon_home, "Home"));
-        sectionItems.add(new SectionItem(R.drawable.icon_hotel, "Hotel"));
-        sectionItems.add(new SectionItem(R.drawable.icon_restaurant, "Restaurant"));
+        sectionItems.add(new SectionItem(R.drawable.icon_hotel, "Penginapan"));
+        sectionItems.add(new SectionItem(R.drawable.icon_restaurant, "Kuliner"));
         sectionItems.add(new SectionItem(R.drawable.icon_poi, "Objek Wisata"));
-        sectionItems.add(new SectionItem(R.drawable.icon_trip_planner, "Trip Planner"));
         sectionItems.add(new SectionItem(R.drawable.icon_car, "Transportasi"));
+        sectionItems.add(new SectionItem(R.drawable.icon_trip_planner, "Trip Planner"));
 
         mSectionAdapter = new SectionAdapter(getActivity(), -1, sectionItems);
         mDrawerListView.setAdapter(mSectionAdapter);
