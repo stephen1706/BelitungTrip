@@ -173,7 +173,8 @@ public class MainActivity extends BaseActivity implements NavigationDrawerFragme
             }
             Fragment currentFragment = currentContainerFragment.getChildFragmentManager().findFragmentById(R.id.container);
             currentContainerFragment.getChildFragmentManager().popBackStack();
+        } else{
+            finish();
         }
-
     }
 }

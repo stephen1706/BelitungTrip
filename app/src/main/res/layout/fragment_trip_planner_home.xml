@@ -5,13 +5,13 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center">
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="this is trip planner page"/>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/list_trip"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
     <com.getbase.floatingactionbutton.FloatingActionButton
-        android:id="@+id/pink_icon"
+        android:id="@+id/button_add_trip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
@@ -19,6 +19,7 @@
         fab:fab_icon="@android:drawable/ic_input_add"
         fab:fab_colorNormal="@color/pink"
         fab:fab_colorPressed="@color/pink_pressed"
+        android:stateListAnimator="@anim/button_elevation"
         android:layout_marginBottom="16dp"
         android:layout_marginRight="16dp"/>
 </FrameLayout>
