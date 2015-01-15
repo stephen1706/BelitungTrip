@@ -36,8 +36,8 @@ public class NavigationDrawerFragment extends Fragment {
     public static final int HOTEL_SECTION = 1;
     public static final int RESTAURANT_SECTION = 2;
     public static final int POI_SECTION = 3;
-    public static final int TRIP_PLANNER_SECTION = 4;
-    public static final int TRANSPORTATION_SECTION = 5;
+    public static final int TRANSPORTATION_SECTION = 4;
+    public static final int TRIP_PLANNER_SECTION = 5;
 
     private static final String STATE_SELECTED_POSITION = "selected_navigation_drawer_position";
 
