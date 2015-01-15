@@ -27,7 +27,7 @@ public class RestaurantHomeFragment extends BaseFragment{
         super.onAttach(activity);
         TAG = getResources().getString(R.string.restaurant_home_fragment_tag);
 
-        mTitle = "Restaurant";
+        mTitle = "Daftar Kuliner";
     }
 
     @Override
