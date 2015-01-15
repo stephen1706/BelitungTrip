@@ -9,25 +9,24 @@ import android.view.ViewGroup;
 import com.yulius.belitungtrip.R;
 import com.yulius.belitungtrip.fragments.base.BaseFragment;
 
-public class RestaurantHomeFragment extends BaseFragment{
-    public static RestaurantHomeFragment newInstance() {
-        RestaurantHomeFragment fragment = new RestaurantHomeFragment();
+public class TransportationHomeFragment extends BaseFragment{
+    public static TransportationHomeFragment newInstance() {
+        TransportationHomeFragment fragment = new TransportationHomeFragment();
         Bundle args = new Bundle();
 
         fragment.setArguments(args);
         return fragment;
     }
 
-    public RestaurantHomeFragment() {
+    public TransportationHomeFragment() {
         super();
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        TAG = getResources().getString(R.string.restaurant_home_fragment_tag);
-
-        mTitle = "Daftar Kuliner";
+        TAG = getResources().getString(R.string.transportation_home_fragment_tag);
+        mTitle = "Daftar Transportasi";
     }
 
     @Override
@@ -44,7 +43,7 @@ public class RestaurantHomeFragment extends BaseFragment{
                              Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        mLayoutView = inflater.inflate(R.layout.fragment_restaurant_home, container, false);
+        mLayoutView = inflater.inflate(R.layout.fragment_transportation_home, container, false);
 
 //        setUpView();
 //        setUpViewState();

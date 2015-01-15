@@ -22,6 +22,7 @@ import com.yulius.belitungtrip.fragments.containers.HotelContainerFragment;
 import com.yulius.belitungtrip.fragments.containers.MainContainerFragment;
 import com.yulius.belitungtrip.fragments.containers.PoiContainerFragment;
 import com.yulius.belitungtrip.fragments.containers.RestaurantContainerFragment;
+import com.yulius.belitungtrip.fragments.containers.TransportationContainerFragment;
 import com.yulius.belitungtrip.fragments.containers.TripPlannerContainerFragment;
 
 
@@ -37,6 +38,7 @@ public class MainActivity extends BaseActivity implements NavigationDrawerFragme
     public static final String RESTAURANT_SECTION_TAG = "Restaurant";
     public static final String POI_SECTION_TAG = "Poi";
     public static final String TRIP_PLANNER_SECTION_TAG = "Trip Planner";
+    public static final String TRANSPORTATION_SECTION_TAG = "Transportation";
 
     //================================================================================
     // Current Activity Variable
@@ -95,6 +97,7 @@ public class MainActivity extends BaseActivity implements NavigationDrawerFragme
         mFragmentTabHost.addTab(mFragmentTabHost.newTabSpec(RESTAURANT_SECTION_TAG).setIndicator(RESTAURANT_SECTION_TAG), RestaurantContainerFragment.class, null);
         mFragmentTabHost.addTab(mFragmentTabHost.newTabSpec(POI_SECTION_TAG).setIndicator(POI_SECTION_TAG), PoiContainerFragment.class, null);
         mFragmentTabHost.addTab(mFragmentTabHost.newTabSpec(TRIP_PLANNER_SECTION_TAG).setIndicator(TRIP_PLANNER_SECTION_TAG), TripPlannerContainerFragment.class, null);
+        mFragmentTabHost.addTab(mFragmentTabHost.newTabSpec(TRANSPORTATION_SECTION_TAG).setIndicator(TRANSPORTATION_SECTION_TAG), TransportationContainerFragment.class, null);
 
         mFragmentTabHost.getTabWidget().setVisibility(View.GONE);
 
@@ -132,11 +135,11 @@ public class MainActivity extends BaseActivity implements NavigationDrawerFragme
                 mFragmentTabHost.setCurrentTabByTag(HOME_SECTION_TAG);
                 break;
             case NavigationDrawerFragment.HOTEL_SECTION:
-                mTitle = "Daftar Hotel";
+                mTitle = "Daftar Penginapan";
                 mFragmentTabHost.setCurrentTabByTag(HOTEL_SECTION_TAG);
                 break;
             case NavigationDrawerFragment.RESTAURANT_SECTION:
-                mTitle = "Daftar Restoran";
+                mTitle = "Daftar Kuliner";
                 mFragmentTabHost.setCurrentTabByTag(RESTAURANT_SECTION_TAG);
                 break;
             case NavigationDrawerFragment.POI_SECTION:
@@ -147,7 +150,10 @@ public class MainActivity extends BaseActivity implements NavigationDrawerFragme
                 mTitle = "Trip planner";
                 mFragmentTabHost.setCurrentTabByTag(TRIP_PLANNER_SECTION_TAG);
                 break;
-
+            case NavigationDrawerFragment.TRANSPORTATION_SECTION:
+                mTitle = "Daftar Transportasi";
+                mFragmentTabHost.setCurrentTabByTag(TRANSPORTATION_SECTION_TAG);
+                break;
         }
     }
 
@@ -158,5 +164,19 @@ public class MainActivity extends BaseActivity implements NavigationDrawerFragme
     public void setDrawerIndicatorEnabled(boolean enabled){
         mNavigationDrawerFragment.setDrawerIndicatorEnabled(enabled);
     }
+    @Override
+    public void onBackPressed() {
+        Fragment currentContainerFragment = getSupportFragmentManager().findFragmentByTag(this.mFragmentTabHost.getCurrentTabTag());//ambil container yg skrg
+        if(currentContainerFragment.getChildFragmentManager().getBackStackEntryCount() > 0){//klo ada fragment seblmny yg disimpen di stack
+            if(currentContainerFragment.getChildFragmentManager().getBackStackEntryCount() == 1){
+                setDrawerIndicatorEnabled(true);
+            }
+            Fragment currentFragment = currentContainerFragment.getChildFragmentManager().findFragmentById(R.id.container);
 
+             currentContainerFragment.getChildFragmentManager().popBackStack();
+        }
+        else {
+            finish();
+        }
+    }
 }
