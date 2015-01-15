@@ -22,6 +22,7 @@ import com.yulius.belitungtrip.fragments.containers.HotelContainerFragment;
 import com.yulius.belitungtrip.fragments.containers.MainContainerFragment;
 import com.yulius.belitungtrip.fragments.containers.PoiContainerFragment;
 import com.yulius.belitungtrip.fragments.containers.RestaurantContainerFragment;
+import com.yulius.belitungtrip.fragments.containers.TransportationContainerFragment;
 import com.yulius.belitungtrip.fragments.containers.TripPlannerContainerFragment;
 
 
@@ -37,6 +38,7 @@ public class MainActivity extends BaseActivity implements NavigationDrawerFragme
     public static final String RESTAURANT_SECTION_TAG = "Restaurant";
     public static final String POI_SECTION_TAG = "Poi";
     public static final String TRIP_PLANNER_SECTION_TAG = "Trip Planner";
+    public static final String TRANSPORTATION_SECTION_TAG = "Transportation";
 
     //================================================================================
     // Current Activity Variable
@@ -95,6 +97,7 @@ public class MainActivity extends BaseActivity implements NavigationDrawerFragme
         mFragmentTabHost.addTab(mFragmentTabHost.newTabSpec(RESTAURANT_SECTION_TAG).setIndicator(RESTAURANT_SECTION_TAG), RestaurantContainerFragment.class, null);
         mFragmentTabHost.addTab(mFragmentTabHost.newTabSpec(POI_SECTION_TAG).setIndicator(POI_SECTION_TAG), PoiContainerFragment.class, null);
         mFragmentTabHost.addTab(mFragmentTabHost.newTabSpec(TRIP_PLANNER_SECTION_TAG).setIndicator(TRIP_PLANNER_SECTION_TAG), TripPlannerContainerFragment.class, null);
+        mFragmentTabHost.addTab(mFragmentTabHost.newTabSpec(TRANSPORTATION_SECTION_TAG).setIndicator(TRANSPORTATION_SECTION_TAG), TransportationContainerFragment.class, null);
 
         mFragmentTabHost.getTabWidget().setVisibility(View.GONE);
 
@@ -147,7 +150,10 @@ public class MainActivity extends BaseActivity implements NavigationDrawerFragme
                 mTitle = "Trip planner";
                 mFragmentTabHost.setCurrentTabByTag(TRIP_PLANNER_SECTION_TAG);
                 break;
-
+            case NavigationDrawerFragment.TRANSPORTATION_SECTION:
+                mTitle = "Daftar Transportasi";
+                mFragmentTabHost.setCurrentTabByTag(TRANSPORTATION_SECTION_TAG);
+                break;
         }
     }
 

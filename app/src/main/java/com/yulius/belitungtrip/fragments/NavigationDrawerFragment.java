@@ -36,8 +36,8 @@ public class NavigationDrawerFragment extends Fragment {
     public static final int HOTEL_SECTION = 1;
     public static final int RESTAURANT_SECTION = 2;
     public static final int POI_SECTION = 3;
-    public static final int TRIP_PLANNER_SECTION = 4;
-    public static final int TRANSPORTATION_SECTION = 5;
+    public static final int TRANSPORTATION_SECTION = 4;
+    public static final int TRIP_PLANNER_SECTION = 5;
 
     private static final String STATE_SELECTED_POSITION = "selected_navigation_drawer_position";
 
@@ -272,11 +272,11 @@ public class NavigationDrawerFragment extends Fragment {
     private void setUpSectionAdapter(){
         ArrayList<SectionItem> sectionItems = new ArrayList<SectionItem>();
         sectionItems.add(new SectionItem(R.drawable.icon_home, "Home"));
-        sectionItems.add(new SectionItem(R.drawable.icon_hotel, "Hotel"));
-        sectionItems.add(new SectionItem(R.drawable.icon_restaurant, "Restaurant"));
+        sectionItems.add(new SectionItem(R.drawable.icon_hotel, "Penginapan"));
+        sectionItems.add(new SectionItem(R.drawable.icon_restaurant, "Kuliner"));
         sectionItems.add(new SectionItem(R.drawable.icon_poi, "Objek Wisata"));
-        sectionItems.add(new SectionItem(R.drawable.icon_trip_planner, "Trip Planner"));
         sectionItems.add(new SectionItem(R.drawable.icon_car, "Transportasi"));
+        sectionItems.add(new SectionItem(R.drawable.icon_trip_planner, "Trip Planner"));
 
         mSectionAdapter = new SectionAdapter(getActivity(), -1, sectionItems);
         mDrawerListView.setAdapter(mSectionAdapter);
