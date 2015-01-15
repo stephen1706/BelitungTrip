@@ -30,11 +30,6 @@ import com.yulius.belitungtrip.R;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Fragment used for managing interactions for and presentation of a navigation drawer.
- * See the <a href="https://developer.android.com/design/patterns/navigation-drawer.html#Interaction">
- * design guidelines</a> for a complete explanation of the behaviors implemented here.
- */
 public class NavigationDrawerFragment extends Fragment {
 
     public static final int HOME_SECTION = 0;
@@ -42,26 +37,14 @@ public class NavigationDrawerFragment extends Fragment {
     public static final int RESTAURANT_SECTION = 2;
     public static final int POI_SECTION = 3;
     public static final int TRIP_PLANNER_SECTION = 4;
+    public static final int TRANSPORTATION_SECTION = 5;
 
-    /**
-     * Remember the position of the selected item.
-     */
     private static final String STATE_SELECTED_POSITION = "selected_navigation_drawer_position";
 
-    /**
-     * Per the design guidelines, you should show the drawer on launch until the user manually
-     * expands it. This shared preference tracks this.
-     */
     private static final String PREF_USER_LEARNED_DRAWER = "navigation_drawer_learned";
 
-    /**
-     * A pointer to the current callbacks instance (the Activity).
-     */
     private NavigationDrawerCallbacks mCallbacks;
 
-    /**
-     * Helper component that ties the action bar to the navigation drawer.
-     */
     private ActionBarDrawerToggle mDrawerToggle;
 
     private DrawerLayout mDrawerLayout;
@@ -101,7 +84,6 @@ public class NavigationDrawerFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         // Indicate that this fragment would like to influence the set of actions in the action bar.
         setHasOptionsMenu(true);
-        // Select either the default item (0) or the last selected item.
         selectItem(mCurrentSelectedPosition);
     }
 
@@ -289,11 +271,12 @@ public class NavigationDrawerFragment extends Fragment {
 
     private void setUpSectionAdapter(){
         ArrayList<SectionItem> sectionItems = new ArrayList<SectionItem>();
-        sectionItems.add(new SectionItem(R.drawable.icon_sidebar_search_flight, "Home"));
-        sectionItems.add(new SectionItem(R.drawable.icon_sidebar_my_ticket, "Hotel"));
-        sectionItems.add(new SectionItem(R.drawable.icon_sidebar_my_booking, "Restaurant"));
-        sectionItems.add(new SectionItem(R.drawable.icon_sidebar_promo, "Objek Wisata"));
-        sectionItems.add(new SectionItem(R.drawable.icon_sidebar_user, "Trip Planner"));
+        sectionItems.add(new SectionItem(R.drawable.icon_home, "Home"));
+        sectionItems.add(new SectionItem(R.drawable.icon_hotel, "Hotel"));
+        sectionItems.add(new SectionItem(R.drawable.icon_restaurant, "Restaurant"));
+        sectionItems.add(new SectionItem(R.drawable.icon_poi, "Objek Wisata"));
+        sectionItems.add(new SectionItem(R.drawable.icon_trip_planner, "Trip Planner"));
+        sectionItems.add(new SectionItem(R.drawable.icon_car, "Transportasi"));
 
         mSectionAdapter = new SectionAdapter(getActivity(), -1, sectionItems);
         mDrawerListView.setAdapter(mSectionAdapter);
@@ -336,7 +319,6 @@ public class NavigationDrawerFragment extends Fragment {
                 mSectionViewHolder.sectionFrame = (LinearLayout)convertView.findViewById(R.id.section_frame);
                 mSectionViewHolder.sectionIconImageView = (ImageView)convertView.findViewById(R.id.section_icon_image_view);
                 mSectionViewHolder.sectionTitleTextView = (TextView)convertView.findViewById(R.id.section_title_text_view);
-                mSectionViewHolder.notificationIconTextView = (TextView) convertView.findViewById(R.id.notification_icon_text_view);
                 convertView.setTag(mSectionViewHolder);
             }
             else{

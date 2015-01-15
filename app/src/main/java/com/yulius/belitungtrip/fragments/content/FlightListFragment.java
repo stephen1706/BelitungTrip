@@ -1,6 +1,8 @@
 package com.yulius.belitungtrip.fragments.content;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,37 +12,37 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.android.volley.VolleyError;
-import com.yulius.belitungtrip.listeners.OnMessageActionListener;
 import com.yulius.belitungtrip.R;
-import com.yulius.belitungtrip.adapters.HotelListAdapter;
-import com.yulius.belitungtrip.api.HotelListAPI;
+import com.yulius.belitungtrip.adapters.FlightListAdapter;
+import com.yulius.belitungtrip.api.FlightAPI;
 import com.yulius.belitungtrip.fragments.base.BaseFragment;
+import com.yulius.belitungtrip.listeners.OnMessageActionListener;
 import com.yulius.belitungtrip.listeners.RecyclerItemClickListener;
-import com.yulius.belitungtrip.response.HotelListResponseData;
+import com.yulius.belitungtrip.response.FlightResponseData;
 
-public class HotelHomeFragment extends BaseFragment {
-    private RecyclerView mHotelList;
-    private HotelListAdapter mHotelListAdapter;
-    private HotelListAPI mHotelListAPI;
-    private HotelListResponseData mHotelListResponseData;
+public class FlightListFragment extends BaseFragment {
+    private RecyclerView mPoiList;
+    private FlightListAdapter mFlightListAdapter;
+    private FlightAPI mFlightAPI;
+    private FlightResponseData mFlightResponseData;
 
-    public static HotelHomeFragment newInstance() {
-        HotelHomeFragment fragment = new HotelHomeFragment();
+    public static FlightListFragment newInstance() {
+        FlightListFragment fragment = new FlightListFragment();
         Bundle args = new Bundle();
 
         fragment.setArguments(args);
         return fragment;
     }
 
-    public HotelHomeFragment() {
+    public FlightListFragment() {
         super();
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        TAG = getResources().getString(R.string.hotel_home_fragment_tag);
-        mTitle = "Daftar Hotel";
+        TAG = getResources().getString(R.string.flight_list_fragment_tag);
+        mTitle = "Daftar Pesawat";
     }
 
     @Override
@@ -57,7 +59,7 @@ public class HotelHomeFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        mLayoutView = inflater.inflate(R.layout.fragment_hotel_home, container, false);
+        mLayoutView = inflater.inflate(R.layout.fragment_flight_list, container, false);
 
         setUpView();
         setUpViewState();
@@ -69,32 +71,40 @@ public class HotelHomeFragment extends BaseFragment {
     }
 
     private void setUpView() {
-        mHotelList = (RecyclerView) mLayoutView.findViewById(R.id.list_hotel);
+        mPoiList = (RecyclerView) mLayoutView.findViewById(R.id.list_flight);
     }
 
     private void setUpViewState() {
-        mHotelList.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mHotelList.setItemAnimator(new DefaultItemAnimator());
+        mPoiList.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mPoiList.setItemAnimator(new DefaultItemAnimator());
     }
 
     private void setUpListener() {
-        mHotelList.addOnItemTouchListener(
+        mPoiList.addOnItemTouchListener(
                 new RecyclerItemClickListener(mContext, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        replaceContentFragment(HotelDetailFragment.newInstance(mHotelListResponseData.entries[position].hotelId), getResources().getString(R.string.hotel_detail_fragment_tag));
+
+                        String url = mFlightResponseData.entries[position].flightLink;
+                        if (!url.startsWith("https://") && !url.startsWith("http://")){//hrs mulai pk http
+                            url = "http://" + url;
+                        }
+
+                        Intent i = new Intent(Intent.ACTION_VIEW);
+                        i.setData(Uri.parse(url));
+                        startActivity(i);
                     }
                 })
         );
     }
 
     private void setUpRequestAPI() {
-        mHotelListAPI = new HotelListAPI(mContext);
-        mHotelListAPI.setOnResponseListener(new HotelListAPI.OnResponseListener() {
+        mFlightAPI = new FlightAPI(mContext);
+        mFlightAPI.setOnResponseListener(new FlightAPI.OnResponseListener() {
             @Override
-            public void onRequestSuccess(HotelListResponseData hotelListResponseData) {
-                mHotelListResponseData = hotelListResponseData;
-                if(mHotelListResponseData != null) {
+            public void onRequestSuccess(FlightResponseData flightResponseData) {
+                mFlightResponseData = flightResponseData;
+                if (mFlightResponseData != null) {
                     refreshFragment();
                 }
             }
@@ -109,13 +119,13 @@ public class HotelHomeFragment extends BaseFragment {
                 showRequestFailedErrorMessage(message);
             }
         });
-        startRequestHotelList();
+        startRequestFlightList();
     }
 
-    private void startRequestHotelList() {
-        if(mHotelListResponseData == null) {//biar wkt back ga usah request ulang
+    private void startRequestFlightList() {
+        if(mFlightResponseData == null) {//biar wkt back ga usah request ulang
             showLoadingMessage(TAG);
-            mHotelListAPI.requestHotelList();
+            mFlightAPI.requestFlightList();
         } else {
             refreshFragment();
         }
@@ -124,8 +134,8 @@ public class HotelHomeFragment extends BaseFragment {
     @Override
     protected void refreshFragment() {
         super.refreshFragment();
-        mHotelListAdapter = new HotelListAdapter(mHotelListResponseData.entries, R.layout.row_hotel_list, mContext);
-        mHotelList.setAdapter(mHotelListAdapter);
+        mFlightListAdapter = new FlightListAdapter(mFlightResponseData.entries, R.layout.row_flight_list, mContext);
+        mPoiList.setAdapter(mFlightListAdapter);
     }
 
     private void setUpMessageListener() {
@@ -133,9 +143,8 @@ public class HotelHomeFragment extends BaseFragment {
             @Override
             public void onMessageActionTryAgain() {
                 super.onMessageActionTryAgain();
-                startRequestHotelList();
+                startRequestFlightList();
             }
         });
     }
 }
-

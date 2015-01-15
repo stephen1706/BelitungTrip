@@ -5,8 +5,7 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="50dp"
-    android:gravity="center_vertical"
-    android:background="@color/caldroid_sky_blue">
+    android:gravity="center_vertical">
     <RelativeLayout
         android:layout_width="30dp"
         android:layout_height="30dp"
@@ -19,19 +18,7 @@
             android:layout_alignParentBottom="true"
             android:layout_width="24dp"
             android:layout_height="24dp"/>
-        <TextView
-            android:id="@+id/notification_icon_text_view"
-            android:layout_width="13dp"
-            android:layout_height="13dp"
-            android:textColor="@color/white"
-            android:visibility="invisible"
-            android:textStyle="bold"
-            android:layout_marginTop="3dp"
-            android:layout_marginRight="3dp"
-            android:textSize="10dp"
-            android:textAlignment="center"
-            android:gravity="center_vertical|center_horizontal"
-            android:layout_alignParentRight="true"/>
+
 
     </RelativeLayout>
     <TextView
@@ -41,7 +28,6 @@
         android:fontFamily="sans-serif-medium"
         android:gravity="center_vertical"
         android:textSize="15dp"
-        android:textColor="@color/white"
-        android:text="Cari Tiket Pesawat"/>
+        android:textColor="@color/gray_43"/>
 
 </LinearLayout>

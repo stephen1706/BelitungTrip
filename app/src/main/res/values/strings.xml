@@ -17,5 +17,7 @@
     <string name="hotel_detail_fragment_tag">HotelDetailFragment</string>
     <string name="restaurant_detail_fragment_tag">RestaurantDetailFragment</string>
     <string name="poi_detail_fragment_tag">PoiDetailFragment</string>
+    <string name="transportation_home_fragment_tag">TransportationHomeFragment</string>
+    <string name="flight_list_fragment_tag">FlightListFragment</string>
 
 </resources>

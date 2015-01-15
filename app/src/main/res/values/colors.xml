@@ -69,8 +69,8 @@
 
 
     <!-- Navigation Drawer Layout -->
-    <color name="active_section_background">#111111</color>
-    <color name="inactive_section_background">#06060A</color>
+    <color name="active_section_background">#42A5F5</color>
+    <color name="inactive_section_background">#BBDEFB</color>
 
     <!-- Flight Search Layout -->
 
@@ -102,4 +102,7 @@
 
     <color name="pink">#e91e63</color>
     <color name="pink_pressed">#ec407a</color>
+
+    <color name="primary">#0277BD</color>
+    <color name="primary_dark">#9FA8DA</color>
 </resources>
