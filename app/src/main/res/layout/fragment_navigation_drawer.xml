@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#06060A"
+    android:background="@color/inactive_section_background"
     android:orientation="vertical">
 
     <ListView
@@ -12,9 +12,6 @@
         android:layout_weight="1"
         android:choiceMode="singleChoice"
         android:divider="@android:color/transparent"
-        android:dividerHeight="1dp"
-        tools:context="com.traveloka.android.ui.fragment.drawer.FlightNavigationDrawerFragment" />
-
-
+        android:dividerHeight="1dp"/>
 
 </LinearLayout>
