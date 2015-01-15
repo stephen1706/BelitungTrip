@@ -15,9 +15,9 @@ public class BaseAPI {
 
     public String TAG = "BaseAPI";
 
-    public static final String BASE_MOBILE_URL = "192.168.1.249";
 
-    protected static final String BASE_API_URL ="192.168.1.41";
+//    protected static final String BASE_API_URL ="192.168.1.41";
+    protected static final String BASE_API_URL = "yulius.comuv.com";
 
     protected static final String BASE_API_HTTP_URL = "http://" + BASE_API_URL;
 
