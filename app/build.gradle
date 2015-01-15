@@ -31,6 +31,7 @@ dependencies {
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.3'
     compile 'com.squareup.picasso:picasso:2.1.1'
     compile 'com.getbase:floatingactionbutton:1.5.1'
+    compile 'com.github.flavienlaurent.datetimepicker:library:0.0.2'
     compile ('com.mapbox.mapboxsdk:mapbox-android-sdk:0.4.0@aar'){
         transitive=true
     }

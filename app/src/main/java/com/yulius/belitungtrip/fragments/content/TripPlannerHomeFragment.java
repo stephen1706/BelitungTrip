@@ -8,19 +8,30 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.fourmob.datetimepicker.date.DatePickerDialog;
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.sleepbot.datetimepicker.time.RadialPickerLayout;
+import com.sleepbot.datetimepicker.time.TimePickerDialog;
 import com.yulius.belitungtrip.R;
 import com.yulius.belitungtrip.adapters.TripListAdapter;
 import com.yulius.belitungtrip.fragments.base.BaseFragment;
 import com.yulius.belitungtrip.listeners.SwipeableRecyclerViewTouchListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
-public class TripPlannerHomeFragment extends BaseFragment {
+public class TripPlannerHomeFragment extends BaseFragment  implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener{
+    public static final String DATEPICKER_TAG = "datepicker";
+    public static final String TIMEPICKER_TAG = "timepicker";
+
     private FloatingActionButton mAddButton;
     private RecyclerView mTripList;
     private TripListAdapter mTripListAdapter;
+    private DatePickerDialog mDatePickerDialog;
+    private TimePickerDialog mTimePickerDialog;
+
     private ArrayList<String> mItems;
 
     public static TripPlannerHomeFragment newInstance() {
@@ -64,7 +75,16 @@ public class TripPlannerHomeFragment extends BaseFragment {
         setUpListener();
 //        setUpMessageListener();
 
+        setUpCalendar();
         return mLayoutView;
+    }
+
+    private void setUpCalendar() {
+        final Calendar calendar = Calendar.getInstance();
+
+        mDatePickerDialog = DatePickerDialog.newInstance(this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+        mTimePickerDialog = TimePickerDialog.newInstance(this, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false, false);
+
     }
 
     private void setUpAdapter() {
@@ -91,6 +111,17 @@ public class TripPlannerHomeFragment extends BaseFragment {
     }
 
     private void setUpListener() {
+
+        mAddButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDatePickerDialog.setVibrate(false);
+                mDatePickerDialog.setYearRange(1985, 2028);
+                mDatePickerDialog.setCloseOnSingleTapDay(true);
+                mDatePickerDialog.show(getFragmentManager(), DATEPICKER_TAG);
+            }
+        });
+
         SwipeableRecyclerViewTouchListener swipeTouchListener =
                 new SwipeableRecyclerViewTouchListener(mTripList,
                         new SwipeableRecyclerViewTouchListener.SwipeListener() {
@@ -103,6 +134,7 @@ public class TripPlannerHomeFragment extends BaseFragment {
                             public void onDismissedBySwipeLeft(RecyclerView recyclerView, int[] reverseSortedPositions) {
                                 for (int position : reverseSortedPositions) {
                                     mItems.remove(position);
+                                    //todo remove dr db
                                     mTripListAdapter.notifyItemRemoved(position);
                                 }
                                 mTripListAdapter.notifyDataSetChanged();
@@ -117,7 +149,19 @@ public class TripPlannerHomeFragment extends BaseFragment {
                                 mTripListAdapter.notifyDataSetChanged();
                             }
                         });
-
         mTripList.addOnItemTouchListener(swipeTouchListener);
+    }
+
+    @Override
+    public void onDateSet(DatePickerDialog datePickerDialog, int year, int month, int day) {
+        Toast.makeText(mContext, "new date:" + year + "-" + month + "-" + day, Toast.LENGTH_LONG).show();
+
+        mTimePickerDialog.setCloseOnSingleTapMinute(false);
+        mTimePickerDialog.show(getFragmentManager(), TIMEPICKER_TAG);
+    }
+
+    @Override
+    public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute) {
+        Toast.makeText(mContext, "new time:" + hourOfDay + "-" + minute, Toast.LENGTH_LONG).show();
     }
 }
