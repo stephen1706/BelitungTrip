@@ -10,17 +10,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.activeandroid.ActiveAndroid;
+import com.activeandroid.query.Select;
 import com.fourmob.datetimepicker.date.DatePickerDialog;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.sleepbot.datetimepicker.time.RadialPickerLayout;
 import com.sleepbot.datetimepicker.time.TimePickerDialog;
 import com.yulius.belitungtrip.R;
 import com.yulius.belitungtrip.adapters.TripListAdapter;
+import com.yulius.belitungtrip.database.Trip;
 import com.yulius.belitungtrip.fragments.base.BaseFragment;
 import com.yulius.belitungtrip.listeners.SwipeableRecyclerViewTouchListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class TripPlannerHomeFragment extends BaseFragment  implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener{
     public static final String DATEPICKER_TAG = "datepicker";
@@ -89,15 +93,32 @@ public class TripPlannerHomeFragment extends BaseFragment  implements DatePicker
 
     private void setUpAdapter() {
         mItems = new ArrayList<String>();
-        mItems.add("aa");
-        mItems.add("bb");
-        mItems.add("aa");
-        mItems.add("bb");
-        mItems.add("aa");
-        mItems.add("bb");
-        mItems.add("aa");
-        mItems.add("bb");
-        mTripListAdapter = new TripListAdapter(mItems, R.layout.row_trip_list, mContext);
+//        mItems.add("aa");
+//        mItems.add("bb");
+//        mItems.add("aa");
+//        mItems.add("bb");
+//        mItems.add("aa");
+//        mItems.add("bb");
+//        mItems.add("aa");
+//        mItems.add("bb");
+        ActiveAndroid.beginTransaction();
+        try {
+            for (int i = 0; i < 20; i++) {
+                Trip trip = new Trip();
+                trip.name = "Example " + i;
+                trip.time = System.currentTimeMillis();
+                trip.save();
+            }
+            ActiveAndroid.setTransactionSuccessful();
+        }
+        finally {
+            ActiveAndroid.endTransaction();
+        }
+        List<Trip> tripItems= new Select()
+                        .from(Trip.class)
+                        .orderBy("name ASC")
+                        .execute();
+        mTripListAdapter = new TripListAdapter(tripItems, R.layout.row_trip_list, mContext);
         mTripList.setAdapter(mTripListAdapter);
     }
 

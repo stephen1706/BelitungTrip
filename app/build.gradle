@@ -20,7 +20,6 @@ android {
 }
 
 dependencies {
-    compile 'com.google.guava:guava:18.0'
     compile 'com.google.android.gms:play-services:+'
     compile 'com.android.support:support-v4:21.0.+'
     compile 'com.android.support:appcompat-v7:21.0.+'
@@ -32,6 +31,7 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.1.1'
     compile 'com.getbase:floatingactionbutton:1.5.1'
     compile 'com.github.flavienlaurent.datetimepicker:library:0.0.2'
+    compile files('libs/ActiveAndroid-3.0.jar')
     compile ('com.mapbox.mapboxsdk:mapbox-android-sdk:0.4.0@aar'){
         transitive=true
     }

@@ -8,16 +8,17 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.yulius.belitungtrip.R;
+import com.yulius.belitungtrip.database.Trip;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class TripListAdapter extends RecyclerView.Adapter<TripListAdapter.ViewHolder>  {
 
-    private ArrayList<String> tripList;
+    private List<Trip>  tripList;
     private int rowLayout;
     private Context mContext;
 
-    public TripListAdapter(ArrayList<String> tripList, int rowLayout, Context context) {
+    public TripListAdapter(List<Trip> tripList, int rowLayout, Context context) {
         this.tripList = tripList;
         this.rowLayout = rowLayout;
         this.mContext = context;
@@ -31,7 +32,7 @@ public class TripListAdapter extends RecyclerView.Adapter<TripListAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
-        viewHolder.tripName.setText(tripList.get(i));
+        viewHolder.tripName.setText(tripList.get(i).name);
     }
 
     @Override

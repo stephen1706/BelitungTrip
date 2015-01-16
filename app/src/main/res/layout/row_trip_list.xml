@@ -35,8 +35,19 @@
                 android:fontFamily="sans-serif-regular"
                 android:textSize="17dp"
                 android:textColor="@color/gray_43"
-                android:text="Mobil" />
+                android:text="Trip" />
 
+            <TextView
+                android:id="@+id/text_view_trip_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:layout_below="@id/text_view_trip_name"
+                android:fontFamily="sans-serif-regular"
+                android:textSize="17dp"
+                android:textColor="@color/gray_43"
+                android:text="10.00" />
 
         </RelativeLayout>
 

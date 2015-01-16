@@ -26,6 +26,12 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+        <!--meta data for active android-->
+        <meta-data
+            android:name="AA_MODELS"
+            android:value="com.myapp.model.Item, com.myapp.model.Category" />
+        <meta-data android:name="AA_DB_NAME" android:value="yulius.db" />
+        <meta-data android:name="AA_DB_VERSION" android:value="1" />
 
         <activity
             android:name=".activities.MainActivity"
@@ -36,11 +42,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".activities.PhotosphereActivity"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.Belitung">
         </activity>
     </application>
 
