@@ -13,7 +13,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -153,10 +152,11 @@ public class HotelDetailFragment extends BaseFragment {
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onDestroy() {
+        super.onDestroy();
         if (mImageLoader != null) {
             mImageLoader.cancelDisplayTask(mPhotosphereImageView);//cancel load gambar wkt diback ato home button pressed
+            mImageLoader.destroy();
         }
     }
 
@@ -257,7 +257,7 @@ public class HotelDetailFragment extends BaseFragment {
         Log.d("test","url:" + mHotelDetailResponseData.photosphere);
 
         DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
-        .cacheInMemory(true).cacheOnDisk(true)
+        .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
         .build();
 
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(mContext)
@@ -293,7 +293,10 @@ public class HotelDetailFragment extends BaseFragment {
                 mPhotoSphereButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Uri uri = Uri.fromFile(mPhotosphereFile);
+                        File cachedFile = mImageLoader.getDiskCache().get(mHotelDetailResponseData.photosphere);//lgsg ambil file dari cache downloader biar ga kekompres dll
+//                        Uri uri = Uri.fromFile(mPhotosphereFile);
+                        Uri uri = Uri.fromFile(cachedFile);
+
                         Intent intent = new Intent(android.content.Intent.ACTION_VIEW);
                         String mime = "*/*";
                         MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
@@ -362,8 +365,11 @@ public class HotelDetailFragment extends BaseFragment {
         mMapboxButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MapboxDialogFragment mapboxDialogFragment = MapboxDialogFragment.newInstance(hotelLocation);
-                mapboxDialogFragment.show(((ActionBarActivity) mContext).getSupportFragmentManager(), null);
+                String url = "http://maps.google.com/maps?q=loc:" + mHotelDetailResponseData.hotelLatitude + "," + mHotelDetailResponseData.hotelLongitude + " (" + mHotelDetailResponseData.hotelName + ")";
+                Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(url));
+                startActivity(intent);
+//                MapboxDialogFragment mapboxDialogFragment = MapboxDialogFragment.newInstance(hotelLocation);
+//                mapboxDialogFragment.show(((ActionBarActivity) mContext).getSupportFragmentManager(), null);
             }
         });
     }
@@ -376,6 +382,7 @@ public class HotelDetailFragment extends BaseFragment {
         try {
             FileOutputStream fos = new FileOutputStream(pictureFile);
             image.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            fos.flush();
             fos.close();
             mPhotosphereFile = pictureFile;
         } catch (FileNotFoundException e) {

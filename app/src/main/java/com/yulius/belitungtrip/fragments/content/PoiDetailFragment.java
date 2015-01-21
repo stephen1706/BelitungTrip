@@ -13,7 +13,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -55,7 +54,7 @@ import java.util.Date;
 
 public class PoiDetailFragment extends BaseFragment {
     private static final String PARAM_IMAGE_URL = "param_image_url";
-    private static final String PARAM_POI_ID = "param_hotel_id";
+    private static final String PARAM_POI_ID = "param_poi_id";
     private static final int DEFAULT_ZOOM_LEVEL = 14;
 
     //================================================================================
@@ -137,8 +136,8 @@ public class PoiDetailFragment extends BaseFragment {
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onDestroy() {
+        super.onDestroy();
         if (mImageLoader != null) {
             mImageLoader.cancelDisplayTask(mPhotosphereImageView);//cancel load gambar wkt diback ato home button pressed
         }
@@ -292,7 +291,9 @@ public class PoiDetailFragment extends BaseFragment {
                 mPhotoSphereButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Uri uri = Uri.fromFile(mPhotosphereFile);
+                        File cachedFile = mImageLoader.getDiskCache().get(mPoiDetailResponseData.photosphere);//lgsg ambil file dari cache downloader biar ga kekompres dll
+//                        Uri uri = Uri.fromFile(mPhotosphereFile);
+                        Uri uri = Uri.fromFile(cachedFile);
                         Intent intent = new Intent(android.content.Intent.ACTION_VIEW);
                         String mime = "*/*";
                         MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
@@ -340,8 +341,11 @@ public class PoiDetailFragment extends BaseFragment {
         mMapboxButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MapboxDialogFragment mapboxDialogFragment = MapboxDialogFragment.newInstance(poiLocation);
-                mapboxDialogFragment.show(((ActionBarActivity) mContext).getSupportFragmentManager(), null);
+                String url = "http://maps.google.com/maps?q=loc:" + mPoiDetailResponseData.poiLatitude + "," + mPoiDetailResponseData.poiLongitude + " (" + mPoiDetailResponseData.poiName + ")";
+                Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(url));
+                startActivity(intent);
+//                MapboxDialogFragment mapboxDialogFragment = MapboxDialogFragment.newInstance(poiLocation);
+//                mapboxDialogFragment.show(((ActionBarActivity) mContext).getSupportFragmentManager(), null);
             }
         });
     }
@@ -353,7 +357,8 @@ public class PoiDetailFragment extends BaseFragment {
         }
         try {
             FileOutputStream fos = new FileOutputStream(pictureFile);
-            image.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            image.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            fos.flush();
             fos.close();
             mPhotosphereFile = pictureFile;
         } catch (FileNotFoundException e) {
@@ -375,7 +380,7 @@ public class PoiDetailFragment extends BaseFragment {
         }
         String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmm").format(new Date());
         File mediaFile;
-        String mImageName="MI_"+ timeStamp +".png";
+        String mImageName="MI_"+ timeStamp +".jpg";
         mediaFile = new File(mediaStorageDir.getPath() + File.separator + mImageName);
         Log.d("test","written to : " + mediaStorageDir.getPath() + File.separator + mImageName);
 

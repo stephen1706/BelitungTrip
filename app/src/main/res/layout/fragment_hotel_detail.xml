@@ -26,16 +26,11 @@
                 android:gravity="center"
                 android:visibility="gone"
                 android:background="@color/light_blue">
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/icon_menu_hotel"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingTop="10dp"
-                    android:text="Tidak ada foto"
+                    android:text="Foto tidak tersedia"
                     android:textColor="@color/white"/>
             </LinearLayout>
         </FrameLayout>
@@ -96,17 +91,18 @@
                         android:text="Website Hotel"
                         android:textSize="14dp"
                         android:textColor="@color/gray_43"/>
+                    <TextView
+                        android:id="@+id/text_view_hotel_website"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="14dp"
+                        android:layout_gravity="center"
+                        android:autoLink="web"
+                        android:paddingBottom="5dp"
+                        android:textColor="@color/link_blue"/>
                 </LinearLayout>
             </TableRow>
-            <TextView
-                android:id="@+id/text_view_hotel_website"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="14dp"
-                android:gravity="center"
-                android:autoLink="web"
-                android:paddingBottom="5dp"
-                android:textColor="@color/link_blue"/>
+
             <View android:layout_width="match_parent"
                 android:layout_height="2px"
                 android:background="@color/gray_d4" />

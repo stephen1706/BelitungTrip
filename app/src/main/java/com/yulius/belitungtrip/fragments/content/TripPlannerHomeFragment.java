@@ -154,7 +154,7 @@ public class TripPlannerHomeFragment extends BaseFragment  implements DatePicker
                             @Override
                             public void onDismissedBySwipeLeft(RecyclerView recyclerView, int[] reverseSortedPositions) {
                                 for (int position : reverseSortedPositions) {
-                                    mItems.remove(position);
+
                                     //todo remove dr db
                                     mTripListAdapter.notifyItemRemoved(position);
                                 }
@@ -164,7 +164,7 @@ public class TripPlannerHomeFragment extends BaseFragment  implements DatePicker
                             @Override
                             public void onDismissedBySwipeRight(RecyclerView recyclerView, int[] reverseSortedPositions) {
                                 for (int position : reverseSortedPositions) {
-                                    mItems.remove(position);
+
                                     mTripListAdapter.notifyItemRemoved(position);
                                 }
                                 mTripListAdapter.notifyDataSetChanged();

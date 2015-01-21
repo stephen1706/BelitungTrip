@@ -13,7 +13,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -147,8 +146,8 @@ public class RestaurantDetailFragment extends BaseFragment {
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onDestroy() {
+        super.onDestroy();
         if (mImageLoader != null) {
             mImageLoader.cancelDisplayTask(mPhotosphereImageView);//cancel load gambar wkt diback ato home button pressed
         }
@@ -258,7 +257,7 @@ public class RestaurantDetailFragment extends BaseFragment {
         };
 
         final DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
-                .cacheInMemory(true).cacheOnDisk(true)
+                .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .build();
 
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(mContext)
@@ -293,7 +292,8 @@ public class RestaurantDetailFragment extends BaseFragment {
                 mPhotoSphereButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Uri uri = Uri.fromFile(mPhotosphereFile);
+                        File cachedFile = mImageLoader.getDiskCache().get(mRestaurantDetailResponseData.photosphere);
+                        Uri uri = Uri.fromFile(cachedFile);
                         Intent intent = new Intent(android.content.Intent.ACTION_VIEW);
                         String mime = "*/*";
                         MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
@@ -341,8 +341,11 @@ public class RestaurantDetailFragment extends BaseFragment {
         mMapboxButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MapboxDialogFragment mapboxDialogFragment = MapboxDialogFragment.newInstance(restaurantLocation);
-                mapboxDialogFragment.show(((ActionBarActivity) mContext).getSupportFragmentManager(), null);
+                String url = "http://maps.google.com/maps?q=loc:" + mRestaurantDetailResponseData.restaurantLatitude + "," + mRestaurantDetailResponseData.restaurantLongitude + " (" + mRestaurantDetailResponseData.restaurantName + ")";
+                Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(url));
+                startActivity(intent);
+//                MapboxDialogFragment mapboxDialogFragment = MapboxDialogFragment.newInstance(restaurantLocation);
+//                mapboxDialogFragment.show(((ActionBarActivity) mContext).getSupportFragmentManager(), null);
             }
         });
     }
@@ -355,6 +358,7 @@ public class RestaurantDetailFragment extends BaseFragment {
         try {
             FileOutputStream fos = new FileOutputStream(pictureFile);
             image.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            fos.flush();
             fos.close();
             mPhotosphereFile = pictureFile;
         } catch (FileNotFoundException e) {
