@@ -31,6 +31,11 @@ public class TripListAdapter extends RecyclerView.Adapter<TripListAdapter.ViewHo
     }
 
     @Override
+    public long getItemId(int position) {
+        return tripList.get(position).getId();
+    }
+
+    @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
         viewHolder.tripName.setText(tripList.get(i).name);
     }
@@ -38,6 +43,10 @@ public class TripListAdapter extends RecyclerView.Adapter<TripListAdapter.ViewHo
     @Override
     public int getItemCount() {
         return tripList == null ? 0 : tripList.size();
+    }
+
+    public void removeItem(int position) {
+        tripList.remove(position);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

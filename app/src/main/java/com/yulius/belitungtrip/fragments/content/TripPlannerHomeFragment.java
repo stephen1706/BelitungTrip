@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.activeandroid.ActiveAndroid;
+import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
 import com.fourmob.datetimepicker.date.DatePickerDialog;
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -154,8 +155,9 @@ public class TripPlannerHomeFragment extends BaseFragment  implements DatePicker
                             @Override
                             public void onDismissedBySwipeLeft(RecyclerView recyclerView, int[] reverseSortedPositions) {
                                 for (int position : reverseSortedPositions) {
-
-                                    //todo remove dr db
+                                    Toast.makeText(mContext,"deleted id : " + mTripListAdapter.getItemId(position),Toast.LENGTH_SHORT).show();
+                                    new Delete().from(Trip.class).where("Id = ?", mTripListAdapter.getItemId(position)).execute();
+                                    mTripListAdapter.removeItem(position);
                                     mTripListAdapter.notifyItemRemoved(position);
                                 }
                                 mTripListAdapter.notifyDataSetChanged();
@@ -164,7 +166,10 @@ public class TripPlannerHomeFragment extends BaseFragment  implements DatePicker
                             @Override
                             public void onDismissedBySwipeRight(RecyclerView recyclerView, int[] reverseSortedPositions) {
                                 for (int position : reverseSortedPositions) {
+                                    Toast.makeText(mContext,"deleted id : " + mTripListAdapter.getItemId(position),Toast.LENGTH_SHORT).show();
 
+                                    new Delete().from(Trip.class).where("Id = ?", mTripListAdapter.getItemId(position)).execute();
+                                    mTripListAdapter.removeItem(position);
                                     mTripListAdapter.notifyItemRemoved(position);
                                 }
                                 mTripListAdapter.notifyDataSetChanged();
