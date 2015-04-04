@@ -248,9 +248,9 @@ public class PoiDetailFragment extends BaseFragment {
         final ImageLoadingProgressListener imageLoadingProgressListener = new ImageLoadingProgressListener() {
             @Override
             public void onProgressUpdate(String imageUri, View view, int current, int total) {
+                mProgressBar.setVisibility(View.VISIBLE);
                 mProgressBar.setMax(total);
                 mProgressBar.setProgress(current);
-                mProgressBar.setVisibility(View.VISIBLE);
                 Log.d("Test","progress:" +current+"/"+total);
             }
         };
@@ -260,11 +260,12 @@ public class PoiDetailFragment extends BaseFragment {
                 .build();
 
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(mContext)
-                .defaultDisplayImageOptions(defaultOptions)
+                .defaultDisplayImageOptions(defaultOptions).threadPriority(Thread.MAX_PRIORITY)
                 .build();
 
         ImageLoader.getInstance().init(config);
         mImageLoader = ImageLoader.getInstance();
+
         mImageLoader.displayImage(mPoiDetailResponseData.photosphere, mPhotosphereImageView, defaultOptions, new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String imageUri, View view) {
@@ -274,7 +275,7 @@ public class PoiDetailFragment extends BaseFragment {
             @Override
             public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
                 Log.d("Test", "fail");
-//                mImageLoader.displayImage(mPoiDetailResponseData.photosphere, mPhotosphereImageView, defaultOptions, this, imageLoadingProgressListener);
+                mImageLoader.displayImage(mPoiDetailResponseData.photosphere, mPhotosphereImageView, defaultOptions, this, imageLoadingProgressListener);
                 mPhotoSphereButton.setVisibility(View.GONE);
                 mTextViewPhotosphere.setVisibility(View.GONE);
                 mProgressBar.setVisibility(View.GONE);
@@ -283,7 +284,7 @@ public class PoiDetailFragment extends BaseFragment {
             @Override
             public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                 mProgressBar.setVisibility(View.GONE);
-                storeImage(loadedImage);
+//                storeImage(loadedImage);
                 mPhotosphereImageView.setImageBitmap(loadedImage);
                 mPhotoSphereButton.setVisibility(View.VISIBLE);
                 mTextViewPhotosphere.setVisibility(View.VISIBLE);

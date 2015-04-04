@@ -256,12 +256,22 @@ public class HotelDetailFragment extends BaseFragment {
 
         Log.d("test","url:" + mHotelDetailResponseData.photosphere);
 
-        DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
+        final ImageLoadingProgressListener imageLoadingListener = new ImageLoadingProgressListener() {
+            @Override
+            public void onProgressUpdate(String imageUri, View view, int current, int total) {
+                mProgressBar.setVisibility(View.VISIBLE);
+                mProgressBar.setMax(total);
+                mProgressBar.setProgress(current);
+                Log.d("Test", "progress:" + current + "/" + total);
+            }
+        };
+
+        final DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
         .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
         .build();
 
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(mContext)
-        .defaultDisplayImageOptions(defaultOptions)
+        .defaultDisplayImageOptions(defaultOptions).threadPriority(Thread.MAX_PRIORITY)
         .build();
 
         ImageLoader.getInstance().init(config);
@@ -275,6 +285,7 @@ public class HotelDetailFragment extends BaseFragment {
             @Override
             public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
                 Log.d("Test", "fail");
+                mImageLoader.displayImage(mHotelDetailResponseData.photosphere, mPhotosphereImageView, defaultOptions, this, imageLoadingListener);
 
                 mPhotoSphereButton.setVisibility(View.GONE);
                 mTextViewPhotosphere.setVisibility(View.GONE);
@@ -285,7 +296,7 @@ public class HotelDetailFragment extends BaseFragment {
             public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                 Log.d("Test", "complete");
                 mProgressBar.setVisibility(View.GONE);
-                storeImage(loadedImage);
+//                storeImage(loadedImage);
                 mPhotosphereImageView.setImageBitmap(loadedImage);
                 mPhotoSphereButton.setVisibility(View.VISIBLE);
                 mTextViewPhotosphere.setVisibility(View.VISIBLE);
@@ -315,14 +326,7 @@ public class HotelDetailFragment extends BaseFragment {
             public void onLoadingCancelled(String imageUri, View view) {
                 Log.d("Test", "cancel");
             }
-        }, new ImageLoadingProgressListener() {
-            @Override
-            public void onProgressUpdate(String imageUri, View view, int current, int total) {
-                mProgressBar.setMax(total);
-                mProgressBar.setProgress(current);
-                Log.d("Test", "progress:" + current + "/" + total);
-            }
-        });
+        }, imageLoadingListener);
 
         mTextViewTelephone.setText(mHotelDetailResponseData.hotelTelephone);
         mTextViewTelephone.setOnClickListener(new View.OnClickListener() {

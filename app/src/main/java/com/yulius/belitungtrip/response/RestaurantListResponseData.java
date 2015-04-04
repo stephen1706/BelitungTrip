@@ -7,5 +7,8 @@ public class RestaurantListResponseData {
         public String restaurantId;
         public String restaurantName;
         public String restaurantAddress;
+        public String restaurantPrice;
+        public String restaurantRating;
+        public String restaurantType;
     }
 }

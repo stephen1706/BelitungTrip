@@ -7,6 +7,9 @@ public class RestaurantDetailResponseData {
     public String restaurantLongitude;
     public String restaurantAddress;
     public String restaurantTelephone;
+    public String restaurantPrice;
+    public String restaurantRating;
+    public String restaurantType;
     public String photosphere;
     public Asset[] assets;
 

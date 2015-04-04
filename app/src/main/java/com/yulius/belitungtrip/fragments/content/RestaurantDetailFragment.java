@@ -250,6 +250,7 @@ public class RestaurantDetailFragment extends BaseFragment {
         final ImageLoadingProgressListener imageLoadingProgressListener = new ImageLoadingProgressListener() {
             @Override
             public void onProgressUpdate(String imageUri, View view, int current, int total) {
+                mProgressBar.setVisibility(View.VISIBLE);
                 mProgressBar.setMax(total);
                 mProgressBar.setProgress(current);
                 Log.d("Test","progress:" +current+"/"+total);
@@ -261,7 +262,7 @@ public class RestaurantDetailFragment extends BaseFragment {
                 .build();
 
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(mContext)
-                .defaultDisplayImageOptions(defaultOptions)
+                .defaultDisplayImageOptions(defaultOptions).threadPriority(Thread.MAX_PRIORITY)
                 .build();
 
         ImageLoader.getInstance().init(config);
@@ -275,7 +276,8 @@ public class RestaurantDetailFragment extends BaseFragment {
             @Override
             public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
                 Log.d("Test", "fail");
-//                mImageLoader.displayImage(mRestaurantDetailResponseData.photosphere, mPhotosphereImageView, defaultOptions, this, imageLoadingProgressListener);
+
+                mImageLoader.displayImage(mRestaurantDetailResponseData.photosphere, mPhotosphereImageView, defaultOptions, this, imageLoadingProgressListener);
                 mPhotoSphereButton.setVisibility(View.GONE);
                 mTextViewPhotosphere.setVisibility(View.GONE);
                 mProgressBar.setVisibility(View.GONE);
@@ -284,7 +286,7 @@ public class RestaurantDetailFragment extends BaseFragment {
             @Override
             public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                 mProgressBar.setVisibility(View.GONE);
-                storeImage(loadedImage);
+//                storeImage(loadedImage);
                 mPhotosphereImageView.setImageBitmap(loadedImage);
                 mPhotoSphereButton.setVisibility(View.VISIBLE);
                 mTextViewPhotosphere.setVisibility(View.VISIBLE);

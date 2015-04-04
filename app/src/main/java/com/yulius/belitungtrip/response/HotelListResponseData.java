@@ -7,5 +7,7 @@ public class HotelListResponseData {
         public String hotelId;
         public String hotelName;
         public String hotelLocation;
+        public String hotelRating;
+        public String hotelPrice;
     }
 }

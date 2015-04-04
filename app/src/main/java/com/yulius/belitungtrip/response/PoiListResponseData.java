@@ -7,5 +7,7 @@ public class PoiListResponseData {
         public String poiId;
         public String poiName;
         public String poiAddress;
+        public String poiPrice;
+        public String poiRating;
     }
 }

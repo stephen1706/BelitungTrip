@@ -20,6 +20,7 @@ android {
 }
 
 dependencies {
+    compile 'io.realm:realm-android:0.79.1'
     compile 'com.google.android.gms:play-services:+'
     compile 'com.android.support:support-v4:21.0.+'
     compile 'com.android.support:appcompat-v7:21.0.+'

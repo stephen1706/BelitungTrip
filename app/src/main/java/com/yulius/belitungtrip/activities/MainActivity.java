@@ -16,6 +16,9 @@ import com.google.android.gms.maps.SupportStreetViewPanoramaFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.StreetViewPanoramaLocation;
 import com.yulius.belitungtrip.R;
+import com.yulius.belitungtrip.alogirthm.Algorithm;
+import com.yulius.belitungtrip.alogirthm.FitnessCalculation;
+import com.yulius.belitungtrip.alogirthm.Population;
 import com.yulius.belitungtrip.fragments.NavigationDrawerFragment;
 import com.yulius.belitungtrip.fragments.base.BaseContainerFragment;
 import com.yulius.belitungtrip.fragments.containers.HotelContainerFragment;
@@ -56,7 +59,28 @@ public class MainActivity extends BaseActivity implements NavigationDrawerFragme
         setUpTabHost();
         setUpNavigationDrawer();
 
-        //setUpStreetViewPanoramaIfNeeded(savedInstanceState);
+//        startGeneticAlgorithm();
+//        setUpStreetViewPanoramaIfNeeded(savedInstanceState);
+    }
+
+    private void startGeneticAlgorithm() {
+
+        FitnessCalculation.setSolution("1111111000000000000000000000000000000000000000000000000000001111");
+
+        // Create an initial population
+        Population myPop = new Population(50, true);
+
+        // Evolve our population until we reach an optimum solution
+        int generationCount = 0;
+        while (myPop.getFittest().getFitness() < FitnessCalculation.getMaxFitness()) {
+            generationCount++;
+            System.out.println("Generation: " + generationCount + " Fittest: " + myPop.getFittest().getFitness());
+            myPop = Algorithm.evolvePopulation(myPop);
+        }
+        Log.d("test algo", "Solution found!");
+        Log.d("test algo", "Generation: " + generationCount);
+        Log.d("test algo", "Genes:");
+        Log.d("test algo",  "pemenang : " + myPop.getFittest());
     }
 
     private void startPanorama() {
