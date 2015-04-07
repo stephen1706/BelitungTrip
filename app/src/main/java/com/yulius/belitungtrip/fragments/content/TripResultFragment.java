@@ -2,37 +2,46 @@ package com.yulius.belitungtrip.fragments.content;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.yulius.belitungtrip.R;
-import com.yulius.belitungtrip.adapters.TripResultAdapter;
 import com.yulius.belitungtrip.alogirthm.PoiAlgorithm;
+import com.yulius.belitungtrip.alogirthm.PoiIndividual;
 import com.yulius.belitungtrip.alogirthm.PoiPopulation;
 import com.yulius.belitungtrip.alogirthm.RestaurantAlgorithm;
+import com.yulius.belitungtrip.alogirthm.RestaurantIndividual;
 import com.yulius.belitungtrip.alogirthm.RestaurantPopulation;
 import com.yulius.belitungtrip.api.PoiListAPI;
 import com.yulius.belitungtrip.api.RestaurantListAPI;
+import com.yulius.belitungtrip.entity.Poi;
+import com.yulius.belitungtrip.entity.Restaurant;
 import com.yulius.belitungtrip.fragments.base.BaseFragment;
+import com.yulius.belitungtrip.listeners.OnMessageActionListener;
 import com.yulius.belitungtrip.response.PoiListResponseData;
 import com.yulius.belitungtrip.response.RestaurantListResponseData;
+
+import java.util.ArrayList;
 
 public class TripResultFragment extends BaseFragment {
     private static final String PARAM_TOTAL_NIGHT = "param_total_night";
     private static final String PARAM_MAX_BUDGET = "param_max_budget";
     private static final int POPULATION_SIZE = 10;
-    private RecyclerView mTripList;
-    private TripResultAdapter mTripResultAdapter;
     private RestaurantListAPI mRestaurantListAPI;
     private PoiListAPI mPoiListAPI;
     private RestaurantListResponseData mRestaurantListResponseData;
     private PoiListResponseData mPoiListResponseData;
     private int mMaxBudget;
     private int mTotalNight;
+    private ArrayList<Restaurant> mRestaurantResultList;
+    private ArrayList<Poi> mPoiResultList;
+    private LinearLayout mRestaurantListFrame;
+    private LinearLayout mPoiListFrame;
 
     public static TripResultFragment newInstance(int maxBudget, int totalNight) {
         TripResultFragment fragment = new TripResultFragment();
@@ -74,14 +83,14 @@ public class TripResultFragment extends BaseFragment {
         setUpView();
         setUpViewState();
         setUpRequestAPI();
-//        setUpListener();
-//        setUpMessageListener();
+        setUpMessageListener();
 
         return mLayoutView;
     }
 
-
     private void setUpView() {
+        mPoiListFrame = (LinearLayout) mLayoutView.findViewById(R.id.frame_poi_list);
+        mRestaurantListFrame = (LinearLayout) mLayoutView.findViewById(R.id.frame_restaurant_list);
     }
 
     private void setUpViewState() {
@@ -130,12 +139,77 @@ public class TripResultFragment extends BaseFragment {
             }
         });
 
-        mPoiListAPI.requestPoiList();
+        if(mPoiListResponseData == null || mRestaurantListResponseData == null) {
+            mPoiListAPI.requestPoiList();
+            showLoadingMessage(TAG);
+        } else {
+            refreshFragment();
+        }
+    }
+
+    private void setUpMessageListener() {
+        setOnMessageActionListener(new OnMessageActionListener() {
+            @Override
+            public void onMessageActionTryAgain() {
+                super.onMessageActionTryAgain();
+
+                hideMessageScreen();
+                if(mPoiListResponseData == null || mRestaurantListResponseData == null) {
+                    mPoiListAPI.requestPoiList();
+                    showLoadingMessage(TAG);
+                }
+            }
+        });
     }
 
     @Override
     public void refreshFragment(){
         super.refreshFragment();
+        mRestaurantListFrame.removeAllViews();
+        mPoiListFrame.removeAllViews();
+
+        for(int i = 0 ;i < mRestaurantResultList.size();i++){
+            final Restaurant restaurant = mRestaurantResultList.get(i);
+
+            View restaurantRow = mLayoutInflater.inflate(R.layout.row_restaurant_list, mRestaurantListFrame, false);
+            ((TextView) restaurantRow.findViewById(R.id.text_view_restaurant_name)).setText(restaurant.name);
+            if(i%3 == 0){
+                ((TextView) restaurantRow.findViewById(R.id.text_view_region)).setText("Hari ke-" + ((i/3)+1) + ", makan pagi");
+            } else if(i%3 == 1){
+                ((TextView) restaurantRow.findViewById(R.id.text_view_region)).setText("Hari ke-" + ((i/3)+1) + ", makan siang");
+            } else {
+                ((TextView) restaurantRow.findViewById(R.id.text_view_region)).setText("Hari ke-" + ((i/3)+1) + ", makan malam");
+            }
+
+            restaurantRow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    replaceContentFragment(RestaurantDetailFragment.newInstance(Integer.toString(restaurant.id)), getResources().getString(R.string.restaurant_detail_fragment_tag));
+                }
+            });
+            mRestaurantListFrame.addView(restaurantRow);
+        }
+
+        for(int i = 0 ;i < mPoiResultList.size();i++){
+            final Poi poi = mPoiResultList.get(i);
+
+            View poiRow = mLayoutInflater.inflate(R.layout.row_poi_list, mPoiListFrame, false);
+            ((TextView) poiRow.findViewById(R.id.text_view_poi_name)).setText(poi.name);
+            if(i%3 == 0){
+                ((TextView) poiRow.findViewById(R.id.text_view_region)).setText("Hari ke-" + ((i/3)+1));
+            } else if(i%3 == 1){
+                ((TextView) poiRow.findViewById(R.id.text_view_region)).setText("Hari ke-" + ((i/3)+1));
+            } else {
+                ((TextView) poiRow.findViewById(R.id.text_view_region)).setText("Hari ke-" + ((i/3)+1));
+            }
+            poiRow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    replaceContentFragment(PoiDetailFragment.newInstance(Integer.toString(poi.id)), getResources().getString(R.string.restaurant_detail_fragment_tag));
+                }
+            });
+            mPoiListFrame.addView(poiRow);
+        }
     }
 
     private void findBestPoi() {
@@ -165,6 +239,13 @@ public class TripResultFragment extends BaseFragment {
         Log.d("test algo", "Generation: " + generationCount);
         Log.d("test algo", "Genes:");
         Log.d("test algo", "pemenang poi: " + poiPopulation.getFittest());
+        Log.d("test algo", "total price poi: " + poiPopulation.getFittest().getTotalPrice());
+
+        PoiIndividual bestPoiIndividual = poiPopulation.getFittest();
+        mPoiResultList = new ArrayList<>();
+        for(int i=0;i<bestPoiIndividual.size();i++){
+            mPoiResultList.add(bestPoiIndividual.getGene(i));
+        }
 
         mRestaurantListAPI.requestRestaurantList();
     }
@@ -197,10 +278,14 @@ public class TripResultFragment extends BaseFragment {
         Log.d("test algo", "Generation: " + generationCount);
         Log.d("test algo", "Genes:");
         Log.d("test algo", "pemenang restaurant: " + restaurantPopulation.getFittest());
+        Log.d("test algo", "total price poi: " + restaurantPopulation.getFittest().getTotalPrice());
         //show hasilnya
-//        RestaurantIndividual bestRestaurantIndividual = restaurantPopulation.getFittest();
-//        for(int i=0;i<bestRestaurantIndividual.size();i++){
-//            bestRestaurantIndividual.getGene(i).name
-//        }
+        RestaurantIndividual bestRestaurantIndividual = restaurantPopulation.getFittest();
+        mRestaurantResultList = new ArrayList<>();
+
+        for(int i=0;i<bestRestaurantIndividual.size();i++){
+            mRestaurantResultList.add(bestRestaurantIndividual.getGene(i));
+        }
+        refreshFragment();
     }
 }

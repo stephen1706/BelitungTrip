@@ -53,14 +53,15 @@ public class RestaurantAlgorithm {
         RestaurantObjectTransfer rot = RestaurantObjectTransfer.getInstance();
         RestaurantIndividual newSol = new RestaurantIndividual(rot.maxBudget, rot.totalNight, rot.mRestaurantListResponseData);
         // Loop through genes
-        for (int i = 0; i < indiv1.size(); i++) {
-            // Crossover
-            if (Math.random() <= uniformRate) {
-                newSol.setGene(i, indiv1.getGene(i));
-            } else {
-                newSol.setGene(i, indiv2.getGene(i));
+        do {
+            for (int i = 0; i < indiv1.size(); i++) {
+                if (Math.random() <= uniformRate) {
+                    newSol.setGene(i, indiv1.getGene(i));
+                } else {
+                    newSol.setGene(i, indiv2.getGene(i));
+                }
             }
-        }
+        } while (newSol.anyRedundant());
         return newSol;
     }
 
@@ -73,7 +74,8 @@ public class RestaurantAlgorithm {
             if (Math.random() <= mutationRate) {
                 // Create random gene
                 Log.d("test algo","mutate restaurant");
-                indiv.mutate();
+                indiv.mutate();//todo
+
 //                int index = new Random().nextInt(rot.mRestaurantListResponseData.entries.length);//ambil lg dr response data
 //
 //                Restaurant restaurant = new Restaurant();

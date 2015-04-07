@@ -50,11 +50,7 @@ public class RestaurantIndividual {
                     }
                 } while (true);
             }
-        } while (priceHigherThanBudget());
-    }
-
-    public static void setDefaultGeneLength(int length) {
-        defaultGeneLength = length;
+        } while (priceHigherThanBudget() || anyRedundant());
     }
 
     public Restaurant getGene(int index) {
@@ -84,7 +80,15 @@ public class RestaurantIndividual {
         do {
             int newRestaurantIndex = new Random().nextInt(restaurantList.size());
             genes[changeIndex] = restaurantList.get(newRestaurantIndex);
-        } while (priceHigherThanBudget());
+        } while (priceHigherThanBudget() || anyRedundant());
+    }
+
+    public int getTotalPrice() {
+        int totalPrice = 0;
+        for (int i = 0; i < size(); i++) {
+            totalPrice += genes[i].price;
+        }
+        return (totalPrice);
     }
 
     private boolean priceHigherThanBudget() {
@@ -95,6 +99,17 @@ public class RestaurantIndividual {
         return (totalPrice > maxBudget);
     }
 
+    public boolean anyRedundant(){
+        for (int i = 0; i < size(); i++) {
+            for(int j=i+1;j<size();j++) {
+                if(genes[i].id == genes[j].id){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     @Override
     public String toString() {
         String geneString = "";
@@ -102,7 +117,7 @@ public class RestaurantIndividual {
             if(i%3 == 0){
                 geneString += "\n";
             }
-            geneString += " " + getGene(i).rating + "-" + getGene(i).type;
+            geneString += " " + getGene(i).id + "-" + getGene(i).type;
         }
         return geneString;
     }

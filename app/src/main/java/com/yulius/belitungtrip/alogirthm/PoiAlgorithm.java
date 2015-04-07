@@ -42,13 +42,15 @@ public class PoiAlgorithm {
     private static PoiIndividual crossover(PoiIndividual indiv1, PoiIndividual indiv2) {
         PoiObjectTransfer rot = PoiObjectTransfer.getInstance();
         PoiIndividual newSol = new PoiIndividual(rot.maxBudget, rot.totalNight, rot.mPoiListResponseData);
-        for (int i = 0; i < indiv1.size(); i++) {
-            if (Math.random() <= uniformRate) {
-                newSol.setGene(i, indiv1.getGene(i));
-            } else {
-                newSol.setGene(i, indiv2.getGene(i));
+        do {
+            for (int i = 0; i < indiv1.size(); i++) {
+                if (Math.random() <= uniformRate) {
+                    newSol.setGene(i, indiv1.getGene(i));
+                } else {
+                    newSol.setGene(i, indiv2.getGene(i));
+                }
             }
-        }
+        } while (newSol.anyRedundant());
         return newSol;
     }
 
@@ -56,7 +58,7 @@ public class PoiAlgorithm {
         for (int i = 0; i < indiv.size(); i++) {
             if (Math.random() <= mutationRate) {
                 Log.d("test algo", "mutate poi");
-                indiv.mutate();
+                indiv.mutate();//todo
             }
         }
     }

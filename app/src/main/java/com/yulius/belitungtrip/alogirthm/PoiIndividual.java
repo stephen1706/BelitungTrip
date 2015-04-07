@@ -33,18 +33,13 @@ public class PoiIndividual {
     }
 
     public void generateIndividual() {
-        int totalPrice = 0;
         do {
             for (int i = 0; i < size(); i++) {
                 int poiIndex = new Random().nextInt(poiList.size());
-                genes[i] = poiList.get(poiIndex);
-                totalPrice += genes[i].price;
-            }
-        } while (priceHigherThanBudget());
-    }
 
-    public static void setDefaultGeneLength(int length) {
-        defaultGeneLength = length;
+                genes[i] = poiList.get(poiIndex);
+            }
+        } while (priceHigherThanBudget() || anyRedundant());
     }
 
     public Poi getGene(int index) {
@@ -74,7 +69,7 @@ public class PoiIndividual {
         do {
             int newPoiIndex = new Random().nextInt(poiList.size());
             genes[changeIndex] = poiList.get(newPoiIndex);
-        } while (priceHigherThanBudget());
+        } while (priceHigherThanBudget() || anyRedundant());
     }
 
     private boolean priceHigherThanBudget() {
@@ -85,6 +80,25 @@ public class PoiIndividual {
         return (totalPrice > maxBudget);
     }
 
+    public int getTotalPrice() {
+        int totalPrice = 0;
+        for (int i = 0; i < size(); i++) {
+            totalPrice += genes[i].price;
+        }
+        return (totalPrice);
+    }
+
+    public boolean anyRedundant(){
+        for (int i = 0; i < size(); i++) {
+            for(int j=i+1;j<size();j++) {
+                if(genes[i].id == genes[j].id){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     @Override
     public String toString() {
         String geneString = "";
@@ -92,7 +106,7 @@ public class PoiIndividual {
             if(i%3 == 0){
                 geneString += "\n";
             }
-            geneString += " " + getGene(i).rating;
+            geneString += " " + getGene(i).id;
         }
         return geneString;
     }
