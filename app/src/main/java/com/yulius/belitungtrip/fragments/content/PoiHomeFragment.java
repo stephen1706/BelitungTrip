@@ -82,7 +82,7 @@ public class PoiHomeFragment extends BaseFragment {
                 new RecyclerItemClickListener(mContext, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        replaceContentFragment(PoiDetailFragment.newInstance(mPoiListResponseData.entries[position].poiId), getResources().getString(R.string.poi_detail_fragment_tag));
+                        replaceContentFragment(PoiDetailFragment.newInstance(Integer.toString(mPoiListResponseData.entries[position].poiId)), getResources().getString(R.string.poi_detail_fragment_tag));
                     }
                 })
         );

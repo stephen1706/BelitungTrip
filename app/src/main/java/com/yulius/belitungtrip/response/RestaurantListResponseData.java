@@ -4,11 +4,11 @@ public class RestaurantListResponseData {
     public Entry[] entries;
 
     public static class Entry {
-        public String restaurantId;
+        public int restaurantId;
         public String restaurantName;
         public String restaurantAddress;
-        public String restaurantPrice;
-        public String restaurantRating;
-        public String restaurantType;
+        public int restaurantPrice;
+        public int restaurantRating;
+        public int restaurantType;
     }
 }

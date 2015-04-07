@@ -1,41 +1,54 @@
 package com.yulius.belitungtrip.alogirthm;
 
-import android.content.Context;
+import com.yulius.belitungtrip.entity.Restaurant;
+import com.yulius.belitungtrip.response.RestaurantListResponseData;
 
-import com.yulius.belitungtrip.realm.Restaurant;
-
+import java.util.ArrayList;
 import java.util.Random;
 
-import io.realm.Realm;
-import io.realm.RealmResults;
-
 public class RestaurantIndividual {
-
     static int defaultGeneLength = 9;
-    private Restaurant[] genes = new Restaurant[defaultGeneLength];
-    private Realm realm;
-    private RealmResults<Restaurant> restaurantList;
+    private Restaurant[] genes;
+    private ArrayList<Restaurant> restaurantList;
     private int maxBudget;
     private int totalNight;
-    // Cache
     private int fitness = 0;
 
-    public RestaurantIndividual(Context context, int maxBudget, int totalNight) {
-        realm = Realm.getInstance(context);
-        restaurantList = realm.where(Restaurant.class).findAll();
+    public RestaurantIndividual(int maxBudget, int totalNight, RestaurantListResponseData restaurantListResponseData) {
+        restaurantList = new ArrayList<>();
+        for(int i=0 ; i < restaurantListResponseData.entries.length;i++){
+            Restaurant restaurant = new Restaurant();
+            restaurant.id = restaurantListResponseData.entries[i].restaurantId;
+            restaurant.name = restaurantListResponseData.entries[i].restaurantName;
+            restaurant.rating = restaurantListResponseData.entries[i].restaurantRating;
+            restaurant.price = restaurantListResponseData.entries[i].restaurantPrice;
+            restaurant.type = restaurantListResponseData.entries[i].restaurantType;
+
+            restaurantList.add(restaurant);
+        }
         this.maxBudget = maxBudget;
         this.totalNight = totalNight;
         defaultGeneLength = totalNight * 3;
+        genes = new Restaurant[defaultGeneLength];
         generateIndividual();
     }
 
     public void generateIndividual() {
-        int totalPrice = 0;
         do {
             for (int i = 0; i < size(); i++) {
-                int restaurantIndex = new Random().nextInt(restaurantList.size());
-                genes[i] = restaurantList.get(restaurantIndex);
-                totalPrice += genes[i].getRestaurantPrice();
+                do {
+                    int restaurantIndex = new Random().nextInt(restaurantList.size());
+                    genes[i] = restaurantList.get(restaurantIndex);
+                    if (i % 3 == 2) {//khusus yg mlm hrs type no 2
+                        if (genes[i].type == 2) {
+                            break;
+                        }
+                    } else {
+                        if (genes[i].type == 1) {
+                            break;
+                        }
+                    }
+                } while (true);
             }
         } while (priceHigherThanBudget());
     }
@@ -60,7 +73,7 @@ public class RestaurantIndividual {
     public int getFitness() {
         fitness = 0;
         for(int i=0;i<defaultGeneLength;i++){
-            fitness += genes[i].getRestaurantRating();
+            fitness += genes[i].rating;
         }
         return fitness;
     }
@@ -77,7 +90,7 @@ public class RestaurantIndividual {
     private boolean priceHigherThanBudget() {
         int totalPrice = 0;
         for (int i = 0; i < size(); i++) {
-            totalPrice += genes[i].getRestaurantPrice();
+            totalPrice += genes[i].price;
         }
         return (totalPrice > maxBudget);
     }
@@ -86,10 +99,10 @@ public class RestaurantIndividual {
     public String toString() {
         String geneString = "";
         for (int i = 0; i < size(); i++) {
-            if(i%totalNight == 0){
+            if(i%3 == 0){
                 geneString += "\n";
             }
-            geneString += getGene(i).getRestaurantRating();
+            geneString += " " + getGene(i).rating + "-" + getGene(i).type;
         }
         return geneString;
     }

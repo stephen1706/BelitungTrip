@@ -20,5 +20,6 @@
     <string name="transportation_home_fragment_tag">TransportationHomeFragment</string>
     <string name="flight_list_fragment_tag">FlightListFragment</string>
     <string name="car_list_fragment_tag">CarListFragment</string>
+    <string name="trip_result_fragment_tag">TripResultFragment</string>
 
 </resources>

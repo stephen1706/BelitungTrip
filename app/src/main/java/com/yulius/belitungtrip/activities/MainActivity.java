@@ -65,7 +65,7 @@ public class MainActivity extends BaseActivity implements NavigationDrawerFragme
 
     private void startGeneticAlgorithm() {
 
-        FitnessCalculation.setSolution("1111111000000000000000000000000000000000000000000000000000001111");
+//        FitnessCalculation.setSolution("1111111000000000000000000000000000000000000000000000000000001111");
 
         // Create an initial population
         Population myPop = new Population(50, true);

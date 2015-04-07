@@ -82,7 +82,7 @@ public class RestaurantHomeFragment extends BaseFragment{
                 new RecyclerItemClickListener(mContext, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        replaceContentFragment(RestaurantDetailFragment.newInstance(mRestaurantListResponseData.entries[position].restaurantId), getResources().getString(R.string.restaurant_detail_fragment_tag));
+                        replaceContentFragment(RestaurantDetailFragment.newInstance(Integer.toString(mRestaurantListResponseData.entries[position].restaurantId)), getResources().getString(R.string.restaurant_detail_fragment_tag));
                     }
                 })
         );
