@@ -18,14 +18,18 @@ import com.yulius.belitungtrip.R;
 
 public class NewTripDialogFragment extends DialogFragment {
     private static final String PARAM_TOTAL_NIGHT = "param_total_night";
-    private static final String PARAM_TOTAL_BUDGET = "param_total_budget";
+    private static final String PARAM_POI_BUDGET = "param_poi_budget";
+    private static final String PARAM_RESTAURANT_BUDGET = "param_restaurant_budget";
+    private static final String PARAM_HOTEL_BUDGET = "param_hotel_budget";
     private ImageView mCloseImageView;
     private View mLayoutView;
     private Dialog mDialog;
     private Button mContinueButton;
     private Context mContext;
     private EditText mTotalNightEditText;
-    private EditText mMaxBudgetEditText;
+    private EditText mHotelBudgetEditText;
+    private EditText mRestaurantBudgetEditText;
+    private EditText mPoiBudgetEditText;
 
     public static NewTripDialogFragment newInstance(){
         NewTripDialogFragment fragment = new NewTripDialogFragment();
@@ -88,7 +92,9 @@ public class NewTripDialogFragment extends DialogFragment {
     private void setUpView() {
         mCloseImageView = (ImageView) mLayoutView.findViewById(R.id.image_view_close);
         mContinueButton = (Button) mLayoutView.findViewById(R.id.button_continue);
-        mMaxBudgetEditText = (EditText) mLayoutView.findViewById(R.id.edit_text_max_budget);
+        mRestaurantBudgetEditText = (EditText) mLayoutView.findViewById(R.id.edit_text_restaurant_budget);
+        mPoiBudgetEditText = (EditText) mLayoutView.findViewById(R.id.edit_text_poi_budget);
+        mHotelBudgetEditText = (EditText) mLayoutView.findViewById(R.id.edit_text_hotel_budget);
         mTotalNightEditText = (EditText) mLayoutView.findViewById(R.id.edit_text_total_night);
 
     }
@@ -109,14 +115,28 @@ public class NewTripDialogFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent();
-                Integer maxBudget = Integer.parseInt(mMaxBudgetEditText.getText().toString());
-                Integer totalNight = Integer.parseInt(mTotalNightEditText.getText().toString());
-                if(totalNight == null || maxBudget == null || totalNight <= 0 || maxBudget <= 0){
+                int poiBudget;
+                int restaurantBudget;
+                int hotelBudget;
+                int totalNight;
+                try {
+                    poiBudget = Integer.parseInt(mPoiBudgetEditText.getText().toString());
+                    restaurantBudget = Integer.parseInt(mRestaurantBudgetEditText.getText().toString());
+                    hotelBudget = Integer.parseInt(mHotelBudgetEditText.getText().toString());
+                    totalNight = Integer.parseInt(mTotalNightEditText.getText().toString());
+                } catch (Exception e){
+                    Toast.makeText(mContext, "Harap lengkapi field dengan benar", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                if(totalNight <= 0 || poiBudget <= 0 || hotelBudget <= 0 || restaurantBudget <= 0){
                     Toast.makeText(mContext, "Harap lengkapi field dengan benar", Toast.LENGTH_LONG).show();
                     return;
                 }
                 i.putExtra(PARAM_TOTAL_NIGHT, totalNight);
-                i.putExtra(PARAM_TOTAL_BUDGET, maxBudget);
+                i.putExtra(PARAM_RESTAURANT_BUDGET, restaurantBudget);
+                i.putExtra(PARAM_HOTEL_BUDGET, hotelBudget);
+                i.putExtra(PARAM_POI_BUDGET, poiBudget);
                 NewTripDialogFragment.this.dismiss();
 
                 if(getTargetFragment() != null) {

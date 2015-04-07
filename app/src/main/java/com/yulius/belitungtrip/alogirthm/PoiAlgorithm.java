@@ -6,7 +6,7 @@ import com.yulius.belitungtrip.objectTransfer.PoiObjectTransfer;
 
 public class PoiAlgorithm {
     private static final double uniformRate = 0.5;
-    private static final double mutationRate = 0.015;
+    private static final double mutationRate = 0.01;
     private static final int tournamentSize = 5;
     private static final boolean elitism = true;
 
@@ -50,7 +50,7 @@ public class PoiAlgorithm {
                     newSol.setGene(i, indiv2.getGene(i));
                 }
             }
-        } while (newSol.anyRedundant());
+        } while (newSol.anyRedundant() || newSol.priceHigherThanBudget());
         return newSol;
     }
 
@@ -58,7 +58,7 @@ public class PoiAlgorithm {
         for (int i = 0; i < indiv.size(); i++) {
             if (Math.random() <= mutationRate) {
                 Log.d("test algo", "mutate poi");
-                indiv.mutate();//todo
+                indiv.mutate();
             }
         }
     }

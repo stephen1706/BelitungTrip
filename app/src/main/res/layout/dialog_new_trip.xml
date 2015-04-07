@@ -1,90 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical" android:layout_width="match_parent"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="12dp"
-        android:background="@color/light_blue">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"
-            android:textColor="#FFFFFF"
-            android:textSize="15dp"
-            android:textStyle="bold"
-            android:text="Trip baru"/>
-        <ImageView
-            android:id="@+id/image_view_close"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:src="@drawable/icon_close"/>
-    </RelativeLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="15dp"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/text_view_message_subtitle"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text="Silahkan masukkan lama perjalanan dan jumlah budget"/>
+            android:layout_height="44dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="12dp"
+            android:background="@color/light_blue">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:textColor="#FFFFFF"
+                android:textSize="15dp"
+                android:textStyle="bold"
+                android:text="Trip baru"/>
+            <ImageView
+                android:id="@+id/image_view_close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/icon_close"/>
+        </RelativeLayout>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="Lama Perjalanan"/>
-
-        <EditText
-            android:id="@+id/edit_text_total_night"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:hint="Lama Perjalanan"
-            android:inputType="number" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Jumlah Budget" />
-
-        <EditText
-            android:id="@+id/edit_text_max_budget"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:hint="Jumlah Budget"
-            android:inputType="number" />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:padding="15dp"
+            android:orientation="vertical">
 
-            <Button
-                android:id="@+id/button_continue"
+            <TextView
+                android:id="@+id/text_view_message_subtitle"
                 android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:layout_weight="1"
-                android:fontFamily="sans-serif"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:text="Lanjut"
-                android:textColor="@color/white"
-                android:background="@color/button_orange"/>
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Silahkan masukkan lama perjalanan dan jumlah budget"/>
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Lama Perjalanan"/>
+
+            <EditText
+                android:id="@+id/edit_text_total_night"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:hint="Lama Perjalanan"
+                android:inputType="number" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Budget Wisata" />
+
+            <EditText
+                android:id="@+id/edit_text_poi_budget"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:hint="Budget Wisata"
+                android:inputType="number" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Budget Kuliner" />
+
+            <EditText
+                android:id="@+id/edit_text_restaurant_budget"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:hint="Budget Kuliner"
+                android:inputType="number" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Budget Hotel" />
+
+            <EditText
+                android:id="@+id/edit_text_hotel_budget"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:hint="Budget Hotel"
+                android:inputType="number" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/button_continue"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_weight="1"
+                    android:fontFamily="sans-serif"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:text="Lanjut"
+                    android:textColor="@color/white"
+                    android:background="@color/button_orange"/>
+
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</ScrollView>

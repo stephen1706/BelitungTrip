@@ -61,20 +61,20 @@ public class RestaurantAlgorithm {
                     newSol.setGene(i, indiv2.getGene(i));
                 }
             }
-        } while (newSol.anyRedundant());
+        } while (newSol.anyRedundant() || newSol.priceHigherThanBudget());
         return newSol;
     }
 
     // Mutate an individual
     private static void mutate(RestaurantIndividual indiv) {
         // Loop through genes
-        RestaurantObjectTransfer rot = RestaurantObjectTransfer.getInstance();
+//        RestaurantObjectTransfer rot = RestaurantObjectTransfer.getInstance();
 
         for (int i = 0; i < indiv.size(); i++) {
             if (Math.random() <= mutationRate) {
                 // Create random gene
                 Log.d("test algo","mutate restaurant");
-                indiv.mutate();//todo
+                indiv.mutate();
 
 //                int index = new Random().nextInt(rot.mRestaurantListResponseData.entries.length);//ambil lg dr response data
 //

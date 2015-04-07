@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -35,7 +36,9 @@ public class TripPlannerHomeFragment extends BaseFragment  implements DatePicker
     public static final String DATEPICKER_TAG = "datepicker";
     public static final String TIMEPICKER_TAG = "timepicker";
     private static final String PARAM_TOTAL_NIGHT = "param_total_night";
-    private static final String PARAM_TOTAL_BUDGET = "param_total_budget";
+    private static final String PARAM_POI_BUDGET = "param_poi_budget";
+    private static final String PARAM_RESTAURANT_BUDGET = "param_restaurant_budget";
+    private static final String PARAM_HOTEL_BUDGET = "param_hotel_budget";
     private static final int ROOM_INFO_REQUEST_CODE = 0;
 
     private FloatingActionButton mAddButton;
@@ -210,14 +213,23 @@ public class TripPlannerHomeFragment extends BaseFragment  implements DatePicker
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == Activity.RESULT_OK && requestCode == ROOM_INFO_REQUEST_CODE){
             if(data != null) {
-                int maxBudget = data.getIntExtra(PARAM_TOTAL_BUDGET, 0);
+                int hotelBudget = data.getIntExtra(PARAM_HOTEL_BUDGET, 0);
+                int poiBudget = data.getIntExtra(PARAM_POI_BUDGET, 0);
+                int restaurantBudget = data.getIntExtra(PARAM_RESTAURANT_BUDGET, 0);
                 int totalNight = data.getIntExtra(PARAM_TOTAL_NIGHT, 0);
-                if (maxBudget != 0 && totalNight != 0) {
-                    replaceContentFragment(TripResultFragment.newInstance(maxBudget, totalNight), getResources().getString(R.string.trip_result_fragment_tag));
+                if (restaurantBudget != 0 && totalNight != 0 && hotelBudget != 0 && poiBudget != 0) {
+                    replaceContentFragment(TripResultFragment.newInstance(poiBudget, restaurantBudget, hotelBudget, totalNight), getResources().getString(R.string.trip_result_fragment_tag));
                 } else {
                     Toast.makeText(mContext, "Harap ulangi", Toast.LENGTH_LONG).show();
                 }
             }
         }
+    }
+    @Override
+    protected void restoreCustomActionBar(ActionBar actionBar) {
+        super.restoreCustomActionBar(actionBar);
+
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        getParentActivity().setDrawerIndicatorEnabled(false);
     }
 }

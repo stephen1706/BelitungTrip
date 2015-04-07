@@ -91,7 +91,7 @@ public class RestaurantIndividual {
         return (totalPrice);
     }
 
-    private boolean priceHigherThanBudget() {
+    public boolean priceHigherThanBudget() {
         int totalPrice = 0;
         for (int i = 0; i < size(); i++) {
             totalPrice += genes[i].price;
@@ -117,7 +117,7 @@ public class RestaurantIndividual {
             if(i%3 == 0){
                 geneString += "\n";
             }
-            geneString += " " + getGene(i).id + "-" + getGene(i).type;
+            geneString += " " + getGene(i).price + "-" + getGene(i).type;
         }
         return geneString;
     }

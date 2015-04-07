@@ -72,7 +72,7 @@ public class PoiIndividual {
         } while (priceHigherThanBudget() || anyRedundant());
     }
 
-    private boolean priceHigherThanBudget() {
+    public boolean priceHigherThanBudget() {
         int totalPrice = 0;
         for (int i = 0; i < size(); i++) {
             totalPrice += genes[i].price;
@@ -106,7 +106,7 @@ public class PoiIndividual {
             if(i%3 == 0){
                 geneString += "\n";
             }
-            geneString += " " + getGene(i).id;
+            geneString += " " + getGene(i).price;
         }
         return geneString;
     }

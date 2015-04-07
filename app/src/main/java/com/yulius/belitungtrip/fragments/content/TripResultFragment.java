@@ -30,23 +30,30 @@ import java.util.ArrayList;
 
 public class TripResultFragment extends BaseFragment {
     private static final String PARAM_TOTAL_NIGHT = "param_total_night";
-    private static final String PARAM_MAX_BUDGET = "param_max_budget";
+    private static final String PARAM_POI_BUDGET = "param_poi_budget";
+    private static final String PARAM_RESTAURANT_BUDGET = "param_restaurant_budget";
+    private static final String PARAM_HOTEL_BUDGET = "param_hotel_budget";
     private static final int POPULATION_SIZE = 10;
     private RestaurantListAPI mRestaurantListAPI;
     private PoiListAPI mPoiListAPI;
     private RestaurantListResponseData mRestaurantListResponseData;
     private PoiListResponseData mPoiListResponseData;
-    private int mMaxBudget;
+    private int mPoiBudget;
+    private int mRestaurantBudget;
+    private int mHotelBudget;
     private int mTotalNight;
     private ArrayList<Restaurant> mRestaurantResultList;
     private ArrayList<Poi> mPoiResultList;
     private LinearLayout mRestaurantListFrame;
     private LinearLayout mPoiListFrame;
 
-    public static TripResultFragment newInstance(int maxBudget, int totalNight) {
+    public static TripResultFragment newInstance(int poiBudget, int restaurantBudget, int hotelBudget, int totalNight) {
         TripResultFragment fragment = new TripResultFragment();
         Bundle args = new Bundle();
-        args.putInt(PARAM_MAX_BUDGET, maxBudget);
+
+        args.putInt(PARAM_POI_BUDGET, poiBudget);
+        args.putInt(PARAM_RESTAURANT_BUDGET, restaurantBudget);
+        args.putInt(PARAM_HOTEL_BUDGET, hotelBudget);
         args.putInt(PARAM_TOTAL_NIGHT, totalNight);
         fragment.setArguments(args);
         return fragment;
@@ -68,7 +75,9 @@ public class TripResultFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         if(getArguments() != null){
             mTotalNight = getArguments().getInt(PARAM_TOTAL_NIGHT);
-            mMaxBudget = getArguments().getInt(PARAM_MAX_BUDGET);
+            mPoiBudget = getArguments().getInt(PARAM_POI_BUDGET);
+            mRestaurantBudget = getArguments().getInt(PARAM_RESTAURANT_BUDGET);
+            mHotelBudget = getArguments().getInt(PARAM_HOTEL_BUDGET);
         }
 
     }
@@ -213,7 +222,7 @@ public class TripResultFragment extends BaseFragment {
     }
 
     private void findBestPoi() {
-        PoiPopulation poiPopulation = new PoiPopulation(POPULATION_SIZE, true, mMaxBudget, mTotalNight, mPoiListResponseData);
+        PoiPopulation poiPopulation = new PoiPopulation(POPULATION_SIZE, true, mPoiBudget, mTotalNight, mPoiListResponseData);
 
         int generationCount = 0;
         int numberSameResult = 0;
@@ -251,7 +260,7 @@ public class TripResultFragment extends BaseFragment {
     }
 
     private void findBestRestaurant() {
-        RestaurantPopulation restaurantPopulation = new RestaurantPopulation(POPULATION_SIZE, true, mMaxBudget, mTotalNight, mRestaurantListResponseData);
+        RestaurantPopulation restaurantPopulation = new RestaurantPopulation(POPULATION_SIZE, true, mRestaurantBudget, mTotalNight, mRestaurantListResponseData);
 
         int generationCount = 0;
         int numberSameResult = 0;
@@ -278,7 +287,7 @@ public class TripResultFragment extends BaseFragment {
         Log.d("test algo", "Generation: " + generationCount);
         Log.d("test algo", "Genes:");
         Log.d("test algo", "pemenang restaurant: " + restaurantPopulation.getFittest());
-        Log.d("test algo", "total price poi: " + restaurantPopulation.getFittest().getTotalPrice());
+        Log.d("test algo", "total price restaurant: " + restaurantPopulation.getFittest().getTotalPrice());
         //show hasilnya
         RestaurantIndividual bestRestaurantIndividual = restaurantPopulation.getFittest();
         mRestaurantResultList = new ArrayList<>();
