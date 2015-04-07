@@ -79,7 +79,14 @@ public class RestaurantIndividual {
 
         do {
             int newRestaurantIndex = new Random().nextInt(restaurantList.size());
-            genes[changeIndex] = restaurantList.get(newRestaurantIndex);
+
+            if(changeIndex % 3 == 2 && restaurantList.get(newRestaurantIndex).type == 2){
+            //biar grupin ga brantakan di mutasi, klo crossover ga bkl brantakan krn ambil gen dr urutan yg sama selalu
+                genes[changeIndex] = restaurantList.get(newRestaurantIndex);
+            } else if (changeIndex % 3 != 2 && restaurantList.get(newRestaurantIndex).type == 1){
+                genes[changeIndex] = restaurantList.get(newRestaurantIndex);
+            }
+
         } while (priceHigherThanBudget() || anyRedundant());
     }
 

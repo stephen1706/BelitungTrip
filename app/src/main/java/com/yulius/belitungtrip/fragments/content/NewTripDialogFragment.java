@@ -128,11 +128,17 @@ public class NewTripDialogFragment extends DialogFragment {
                     Toast.makeText(mContext, "Harap lengkapi field dengan benar", Toast.LENGTH_LONG).show();
                     return;
                 }
-
-                if(totalNight <= 0 || poiBudget <= 0 || hotelBudget <= 0 || restaurantBudget <= 0){
-                    Toast.makeText(mContext, "Harap lengkapi field dengan benar", Toast.LENGTH_LONG).show();
+                if(totalNight <= 1) {
+                    Toast.makeText(mContext, "Minimal trip adalah 2 hari", Toast.LENGTH_LONG).show();
                     return;
                 }
+
+                int minBudget = (totalNight-1)*500000/3;
+                if(poiBudget < minBudget || hotelBudget < minBudget || restaurantBudget < minBudget){
+                    Toast.makeText(mContext, "Minimal budget tiap bagian adalah Rp " + minBudget, Toast.LENGTH_LONG).show();
+                    return;
+                }
+
                 i.putExtra(PARAM_TOTAL_NIGHT, totalNight);
                 i.putExtra(PARAM_RESTAURANT_BUDGET, restaurantBudget);
                 i.putExtra(PARAM_HOTEL_BUDGET, hotelBudget);
