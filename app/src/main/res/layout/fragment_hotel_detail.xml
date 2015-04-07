@@ -98,6 +98,8 @@
                         android:textSize="14dp"
                         android:layout_gravity="center"
                         android:autoLink="web"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
                         android:paddingBottom="5dp"
                         android:textColor="@color/link_blue"/>
                 </LinearLayout>

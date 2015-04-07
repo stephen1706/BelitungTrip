@@ -276,58 +276,60 @@ public class HotelDetailFragment extends BaseFragment {
 
         ImageLoader.getInstance().init(config);
         mImageLoader = ImageLoader.getInstance();
-        mImageLoader.displayImage(mHotelDetailResponseData.photosphere, mPhotosphereImageView, defaultOptions, new ImageLoadingListener() {
-            @Override
-            public void onLoadingStarted(String imageUri, View view) {
-                Log.d("Test", "started");
-            }
 
-            @Override
-            public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-                Log.d("Test", "fail");
-                mImageLoader.displayImage(mHotelDetailResponseData.photosphere, mPhotosphereImageView, defaultOptions, this, imageLoadingListener);
+        if(!mHotelDetailResponseData.photosphere.equals("http://yulius.webatu.com/yulius/")) {
+            mImageLoader.displayImage(mHotelDetailResponseData.photosphere, mPhotosphereImageView, defaultOptions, new ImageLoadingListener() {
+                @Override
+                public void onLoadingStarted(String imageUri, View view) {
+                    Log.d("Test", "started");
+                }
 
-                mPhotoSphereButton.setVisibility(View.GONE);
-                mTextViewPhotosphere.setVisibility(View.GONE);
-                mProgressBar.setVisibility(View.GONE);
-            }
+                @Override
+                public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+                    Log.d("Test", "fail");
+                    mImageLoader.displayImage(mHotelDetailResponseData.photosphere, mPhotosphereImageView, defaultOptions, this, imageLoadingListener);
 
-            @Override
-            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                Log.d("Test", "complete");
-                mProgressBar.setVisibility(View.GONE);
+                    mPhotoSphereButton.setVisibility(View.GONE);
+                    mTextViewPhotosphere.setVisibility(View.GONE);
+                    mProgressBar.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                    Log.d("Test", "complete");
+                    mProgressBar.setVisibility(View.GONE);
 //                storeImage(loadedImage);
-                mPhotosphereImageView.setImageBitmap(loadedImage);
-                mPhotoSphereButton.setVisibility(View.VISIBLE);
-                mTextViewPhotosphere.setVisibility(View.VISIBLE);
+                    mPhotosphereImageView.setImageBitmap(loadedImage);
+                    mPhotoSphereButton.setVisibility(View.VISIBLE);
+                    mTextViewPhotosphere.setVisibility(View.VISIBLE);
 
-                mPhotoSphereButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        File cachedFile = mImageLoader.getDiskCache().get(mHotelDetailResponseData.photosphere);//lgsg ambil file dari cache downloader biar ga kekompres dll
+                    mPhotoSphereButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            File cachedFile = mImageLoader.getDiskCache().get(mHotelDetailResponseData.photosphere);//lgsg ambil file dari cache downloader biar ga kekompres dll
 //                        Uri uri = Uri.fromFile(mPhotosphereFile);
-                        Uri uri = Uri.fromFile(cachedFile);
+                            Uri uri = Uri.fromFile(cachedFile);
 
-                        Intent intent = new Intent(android.content.Intent.ACTION_VIEW);
-                        String mime = "*/*";
-                        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
-                        if (mimeTypeMap.hasExtension(
-                                mimeTypeMap.getFileExtensionFromUrl(uri.toString())))
-                            mime = mimeTypeMap.getMimeTypeFromExtension(
-                                    mimeTypeMap.getFileExtensionFromUrl(uri.toString()));
-                        intent.setComponent(new ComponentName("com.google.android.gms", "com.google.android.gms.panorama.PanoramaViewActivity"));
-                        intent.setDataAndType(uri, mime);
-                        startActivity(intent);
-                    }
-                });
-            }
+                            Intent intent = new Intent(android.content.Intent.ACTION_VIEW);
+                            String mime = "*/*";
+                            MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+                            if (mimeTypeMap.hasExtension(
+                                    mimeTypeMap.getFileExtensionFromUrl(uri.toString())))
+                                mime = mimeTypeMap.getMimeTypeFromExtension(
+                                        mimeTypeMap.getFileExtensionFromUrl(uri.toString()));
+                            intent.setComponent(new ComponentName("com.google.android.gms", "com.google.android.gms.panorama.PanoramaViewActivity"));
+                            intent.setDataAndType(uri, mime);
+                            startActivity(intent);
+                        }
+                    });
+                }
 
-            @Override
-            public void onLoadingCancelled(String imageUri, View view) {
-                Log.d("Test", "cancel");
-            }
-        }, imageLoadingListener);
-
+                @Override
+                public void onLoadingCancelled(String imageUri, View view) {
+                    Log.d("Test", "cancel");
+                }
+            }, imageLoadingListener);
+        }
         mTextViewTelephone.setText(mHotelDetailResponseData.hotelTelephone);
         mTextViewTelephone.setOnClickListener(new View.OnClickListener() {
             @Override
