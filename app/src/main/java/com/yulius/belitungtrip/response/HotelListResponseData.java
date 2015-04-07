@@ -4,10 +4,10 @@ public class HotelListResponseData {
     public Entry[] entries;
 
     public static class Entry {
-        public String hotelId;
+        public int hotelId;
         public String hotelName;
         public String hotelLocation;
-        public String hotelRating;
-        public String hotelPrice;
+        public int hotelRating;
+        public int hotelPrice;
     }
 }

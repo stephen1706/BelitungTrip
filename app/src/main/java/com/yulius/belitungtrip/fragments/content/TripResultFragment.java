@@ -17,12 +17,15 @@ import com.yulius.belitungtrip.alogirthm.PoiPopulation;
 import com.yulius.belitungtrip.alogirthm.RestaurantAlgorithm;
 import com.yulius.belitungtrip.alogirthm.RestaurantIndividual;
 import com.yulius.belitungtrip.alogirthm.RestaurantPopulation;
+import com.yulius.belitungtrip.api.HotelListAPI;
 import com.yulius.belitungtrip.api.PoiListAPI;
 import com.yulius.belitungtrip.api.RestaurantListAPI;
+import com.yulius.belitungtrip.entity.Hotel;
 import com.yulius.belitungtrip.entity.Poi;
 import com.yulius.belitungtrip.entity.Restaurant;
 import com.yulius.belitungtrip.fragments.base.BaseFragment;
 import com.yulius.belitungtrip.listeners.OnMessageActionListener;
+import com.yulius.belitungtrip.response.HotelListResponseData;
 import com.yulius.belitungtrip.response.PoiListResponseData;
 import com.yulius.belitungtrip.response.RestaurantListResponseData;
 
@@ -36,7 +39,9 @@ public class TripResultFragment extends BaseFragment {
     private static final int POPULATION_SIZE = 10;
     private RestaurantListAPI mRestaurantListAPI;
     private PoiListAPI mPoiListAPI;
+    private HotelListAPI mHotelListAPI;
     private RestaurantListResponseData mRestaurantListResponseData;
+    private HotelListResponseData mHotelListResponseData;
     private PoiListResponseData mPoiListResponseData;
     private int mPoiBudget;
     private int mRestaurantBudget;
@@ -44,8 +49,10 @@ public class TripResultFragment extends BaseFragment {
     private int mTotalNight;
     private ArrayList<Restaurant> mRestaurantResultList;
     private ArrayList<Poi> mPoiResultList;
+    private Hotel mSelectedHotel;
     private LinearLayout mRestaurantListFrame;
     private LinearLayout mPoiListFrame;
+    private LinearLayout mHotelListFrame;
 
     public static TripResultFragment newInstance(int poiBudget, int restaurantBudget, int hotelBudget, int totalNight) {
         TripResultFragment fragment = new TripResultFragment();
@@ -100,6 +107,7 @@ public class TripResultFragment extends BaseFragment {
     private void setUpView() {
         mPoiListFrame = (LinearLayout) mLayoutView.findViewById(R.id.frame_poi_list);
         mRestaurantListFrame = (LinearLayout) mLayoutView.findViewById(R.id.frame_restaurant_list);
+        mHotelListFrame = (LinearLayout) mLayoutView.findViewById(R.id.frame_hotel_list);
     }
 
     private void setUpViewState() {
@@ -148,6 +156,28 @@ public class TripResultFragment extends BaseFragment {
             }
         });
 
+        mHotelListAPI = new HotelListAPI(mContext);
+        mHotelListAPI.setOnResponseListener(new HotelListAPI.OnResponseListener() {
+            @Override
+            public void onRequestSuccess(HotelListResponseData hotelListResponseData) {
+                mHotelListResponseData = hotelListResponseData;
+                if(hotelListResponseData != null) {
+                    findBestHotel();
+                }
+            }
+
+            @Override
+            public void onRequestError(VolleyError volleyError) {
+                showConnectionProblemErrorMessage(volleyError, TAG);
+            }
+
+            @Override
+            public void onRequestFailed(String message) {
+                showRequestFailedErrorMessage(message);
+            }
+        });
+
+
         if(mPoiListResponseData == null || mRestaurantListResponseData == null) {
             mPoiListAPI.requestPoiList();
             showLoadingMessage(TAG);
@@ -155,6 +185,7 @@ public class TripResultFragment extends BaseFragment {
             refreshFragment();
         }
     }
+
 
     private void setUpMessageListener() {
         setOnMessageActionListener(new OnMessageActionListener() {
@@ -176,6 +207,7 @@ public class TripResultFragment extends BaseFragment {
         super.refreshFragment();
         mRestaurantListFrame.removeAllViews();
         mPoiListFrame.removeAllViews();
+        mHotelListFrame.removeAllViews();
 
         for(int i = 0 ;i < mRestaurantResultList.size();i++){
             final Restaurant restaurant = mRestaurantResultList.get(i);
@@ -219,6 +251,11 @@ public class TripResultFragment extends BaseFragment {
             });
             mPoiListFrame.addView(poiRow);
         }
+
+        View hotelRow = mLayoutInflater.inflate(R.layout.row_hotel_list, mPoiListFrame, false);
+        ((TextView) hotelRow.findViewById(R.id.text_view_hotel_name)).setText(mSelectedHotel.name);
+        ((TextView) hotelRow.findViewById(R.id.text_view_region)).setText("Total biaya : " + mSelectedHotel.price);
+        mHotelListFrame.addView(hotelRow);
     }
 
     private void findBestPoi() {
@@ -295,6 +332,23 @@ public class TripResultFragment extends BaseFragment {
         for(int i=0;i<bestRestaurantIndividual.size();i++){
             mRestaurantResultList.add(bestRestaurantIndividual.getGene(i));
         }
+
+        mHotelListAPI.requestHotelList();
+    }
+
+    private void findBestHotel() {
+        for(int i=0;i<mHotelListResponseData.entries.length;i++){
+            if(mHotelListResponseData.entries[i].hotelPrice * (mTotalNight-1) <= mHotelBudget){
+                Hotel hotel = new Hotel();
+                hotel.id = mHotelListResponseData.entries[i].hotelId;
+                hotel.name = mHotelListResponseData.entries[i].hotelName;
+                hotel.price = mHotelListResponseData.entries[i].hotelPrice;
+                hotel.rating = mHotelListResponseData.entries[i].hotelRating;
+                mSelectedHotel = hotel;
+                break;
+            }
+        }
+
         refreshFragment();
     }
 }

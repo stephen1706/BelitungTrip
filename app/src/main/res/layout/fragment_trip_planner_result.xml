@@ -28,6 +28,18 @@
             android:id="@+id/frame_restaurant_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Hotel"
+            android:textSize="18dp"/>
+        <LinearLayout
+            android:id="@+id/frame_hotel_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"/>
     </LinearLayout>
 </ScrollView>

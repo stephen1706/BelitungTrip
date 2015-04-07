@@ -82,7 +82,7 @@ public class HotelHomeFragment extends BaseFragment {
                 new RecyclerItemClickListener(mContext, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        replaceContentFragment(HotelDetailFragment.newInstance(mHotelListResponseData.entries[position].hotelId), getResources().getString(R.string.hotel_detail_fragment_tag));
+                        replaceContentFragment(HotelDetailFragment.newInstance(Integer.toString(mHotelListResponseData.entries[position].hotelId)), getResources().getString(R.string.hotel_detail_fragment_tag));
                     }
                 })
         );
