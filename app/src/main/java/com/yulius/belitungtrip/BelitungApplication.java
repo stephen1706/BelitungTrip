@@ -2,7 +2,6 @@ package com.yulius.belitungtrip;
 
 import android.app.Application;
 
-import com.activeandroid.ActiveAndroid;
 import com.yulius.belitungtrip.api.RequestManager;
 
 public class BelitungApplication extends Application {
@@ -11,6 +10,5 @@ public class BelitungApplication extends Application {
         super.onCreate();
 
         RequestManager.init(this);
-        ActiveAndroid.initialize(this);
     }
 }

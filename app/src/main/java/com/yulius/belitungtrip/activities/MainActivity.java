@@ -25,6 +25,7 @@ import com.yulius.belitungtrip.fragments.containers.HotelContainerFragment;
 import com.yulius.belitungtrip.fragments.containers.MainContainerFragment;
 import com.yulius.belitungtrip.fragments.containers.PoiContainerFragment;
 import com.yulius.belitungtrip.fragments.containers.RestaurantContainerFragment;
+import com.yulius.belitungtrip.fragments.containers.SouvenirContainerFragment;
 import com.yulius.belitungtrip.fragments.containers.TransportationContainerFragment;
 import com.yulius.belitungtrip.fragments.containers.TripPlannerContainerFragment;
 
@@ -40,6 +41,7 @@ public class MainActivity extends BaseActivity implements NavigationDrawerFragme
     public static final String HOTEL_SECTION_TAG = "Hotel";
     public static final String RESTAURANT_SECTION_TAG = "Restaurant";
     public static final String POI_SECTION_TAG = "Poi";
+    public static final String SOUVENIR_SECTION_TAG = "Souvenir";
     public static final String TRIP_PLANNER_SECTION_TAG = "Trip Planner";
     public static final String TRANSPORTATION_SECTION_TAG = "Transportation";
 
@@ -120,6 +122,7 @@ public class MainActivity extends BaseActivity implements NavigationDrawerFragme
         mFragmentTabHost.addTab(mFragmentTabHost.newTabSpec(HOTEL_SECTION_TAG).setIndicator(HOTEL_SECTION_TAG), HotelContainerFragment.class, null);
         mFragmentTabHost.addTab(mFragmentTabHost.newTabSpec(RESTAURANT_SECTION_TAG).setIndicator(RESTAURANT_SECTION_TAG), RestaurantContainerFragment.class, null);
         mFragmentTabHost.addTab(mFragmentTabHost.newTabSpec(POI_SECTION_TAG).setIndicator(POI_SECTION_TAG), PoiContainerFragment.class, null);
+        mFragmentTabHost.addTab(mFragmentTabHost.newTabSpec(SOUVENIR_SECTION_TAG).setIndicator(SOUVENIR_SECTION_TAG), SouvenirContainerFragment.class, null);
         mFragmentTabHost.addTab(mFragmentTabHost.newTabSpec(TRANSPORTATION_SECTION_TAG).setIndicator(TRANSPORTATION_SECTION_TAG), TransportationContainerFragment.class, null);
         mFragmentTabHost.addTab(mFragmentTabHost.newTabSpec(TRIP_PLANNER_SECTION_TAG).setIndicator(TRIP_PLANNER_SECTION_TAG), TripPlannerContainerFragment.class, null);
 
@@ -169,6 +172,10 @@ public class MainActivity extends BaseActivity implements NavigationDrawerFragme
             case NavigationDrawerFragment.POI_SECTION:
                 mTitle = "Dafter Objek Wisata";
                 mFragmentTabHost.setCurrentTabByTag(POI_SECTION_TAG);
+                break;
+            case NavigationDrawerFragment.SOUVENIR_SECTION:
+                mTitle = "Dafter Toko Souvenir";
+                mFragmentTabHost.setCurrentTabByTag(SOUVENIR_SECTION_TAG);
                 break;
             case NavigationDrawerFragment.TRIP_PLANNER_SECTION:
                 mTitle = "Trip planner";

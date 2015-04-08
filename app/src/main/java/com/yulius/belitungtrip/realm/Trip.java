@@ -13,6 +13,7 @@ public class Trip extends RealmObject {
     private RealmList<Restaurant> restaurants;
     private RealmList<Poi> pois;
     private Hotel hotel;
+    private Souvenir souvenir;
 
     public String getTripName() {
         return tripName;
@@ -60,6 +61,14 @@ public class Trip extends RealmObject {
 
     public void setTotalNight(int totalNight) {
         this.totalNight = totalNight;
+    }
+
+    public Souvenir getSouvenir() {
+        return souvenir;
+    }
+
+    public void setSouvenir(Souvenir souvenir) {
+        this.souvenir = souvenir;
     }
 
 }

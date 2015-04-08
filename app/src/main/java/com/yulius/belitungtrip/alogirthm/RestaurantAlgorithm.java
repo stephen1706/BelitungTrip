@@ -81,7 +81,7 @@ public class RestaurantAlgorithm {
 //                Restaurant restaurant = new Restaurant();
 //                restaurant.id = rot.mRestaurantListResponseData.entries[index].restaurantId;
 //                restaurant.rating = rot.mRestaurantListResponseData.entries[index].restaurantRating;
-//                restaurant.name = rot.mRestaurantListResponseData.entries[index].restaurantName;
+//                restaurant.name = rot.mRestaurantListResponseData.entries[index].souvenirName;
 //                restaurant.type = rot.mRestaurantListResponseData.entries[index].restaurantType;
 //                restaurant.price = rot.mRestaurantListResponseData.entries[index].restaurantPrice;
 //                indiv.setGene(i, restaurant);

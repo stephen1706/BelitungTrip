@@ -22,5 +22,7 @@
     <string name="car_list_fragment_tag">CarListFragment</string>
     <string name="trip_result_fragment_tag">TripResultFragment</string>
     <string name="trip_detail_fragment_tag">TripDetailFragment</string>
+    <string name="souvenir_home_fragment_tag">SouvenirHomeFragment</string>
+    <string name="souvenir_detail_fragment_tag">SouvenirDetailFragment</string>
 
 </resources>

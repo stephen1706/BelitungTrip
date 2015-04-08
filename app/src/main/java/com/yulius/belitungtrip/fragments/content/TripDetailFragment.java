@@ -14,6 +14,7 @@ import com.yulius.belitungtrip.R;
 import com.yulius.belitungtrip.entity.Hotel;
 import com.yulius.belitungtrip.entity.Poi;
 import com.yulius.belitungtrip.entity.Restaurant;
+import com.yulius.belitungtrip.entity.Souvenir;
 import com.yulius.belitungtrip.fragments.base.BaseFragment;
 import com.yulius.belitungtrip.realm.Trip;
 
@@ -28,9 +29,11 @@ public class TripDetailFragment extends BaseFragment {
     private ArrayList<Restaurant> mRestaurantResultList;
     private ArrayList<Poi> mPoiResultList;
     private Hotel mSelectedHotel;
+    private Souvenir mSelectedSouvenir;
     private LinearLayout mRestaurantListFrame;
     private LinearLayout mPoiListFrame;
     private LinearLayout mHotelListFrame;
+    private LinearLayout mSouvenirListFrame;
     private Button mSaveTripButton;
     private String mTripName;
 
@@ -84,6 +87,7 @@ public class TripDetailFragment extends BaseFragment {
         mPoiListFrame = (LinearLayout) mLayoutView.findViewById(R.id.frame_poi_list);
         mRestaurantListFrame = (LinearLayout) mLayoutView.findViewById(R.id.frame_restaurant_list);
         mHotelListFrame = (LinearLayout) mLayoutView.findViewById(R.id.frame_hotel_list);
+        mSouvenirListFrame = (LinearLayout) mLayoutView.findViewById(R.id.frame_souvenir_list);
         mSaveTripButton = (Button) mLayoutView.findViewById(R.id.button_save_trip);
     }
 
@@ -103,6 +107,9 @@ public class TripDetailFragment extends BaseFragment {
 
         RealmList<com.yulius.belitungtrip.realm.Restaurant> restaurants = tripResult.first().getRestaurants();
         convertRestaurantRealmToEntity(restaurants);
+
+        com.yulius.belitungtrip.realm.Souvenir souvenir = tripResult.first().getSouvenir();
+        convertSouvenirRealmToEntity(souvenir);
 
         refreshFragment();
     }
@@ -167,6 +174,17 @@ public class TripDetailFragment extends BaseFragment {
             }
         });
         mHotelListFrame.addView(hotelRow);
+
+        View souvenirRow = mLayoutInflater.inflate(R.layout.row_souvenir_list, mSouvenirListFrame, false);
+        ((TextView) souvenirRow.findViewById(R.id.text_view_souvenir_name)).setText(mSelectedSouvenir.name);
+        ((TextView) souvenirRow.findViewById(R.id.text_view_region)).setText("Estimasi biaya : " + mSelectedSouvenir.price);
+        souvenirRow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                replaceContentFragment(SouvenirDetailFragment.newInstance(Integer.toString(mSelectedSouvenir.id)), getResources().getString(R.string.souvenir_detail_fragment_tag));
+            }
+        });
+        mSouvenirListFrame.addView(souvenirRow);
     }
 
     @Override
@@ -191,6 +209,7 @@ public class TripDetailFragment extends BaseFragment {
         }
     }
 
+
     private void convertPoiRealmToEntity(RealmList<com.yulius.belitungtrip.realm.Poi> pois) {
         mPoiResultList = new ArrayList<>();
         for(com.yulius.belitungtrip.realm.Poi currentPoi : pois){
@@ -210,4 +229,13 @@ public class TripDetailFragment extends BaseFragment {
         mSelectedHotel.price = hotel.getHotelPrice();
         mSelectedHotel.rating = hotel.getHotelRating();
     }
+
+    private void convertSouvenirRealmToEntity(com.yulius.belitungtrip.realm.Souvenir souvenir) {
+        mSelectedSouvenir = new Souvenir();
+        mSelectedSouvenir.id = souvenir.getSouvenirId();
+        mSelectedSouvenir.name = souvenir.getSouvenirName();
+        mSelectedSouvenir.price = souvenir.getSouvenirPrice();
+        mSelectedSouvenir.rating = souvenir.getSouvenirRating();
+    }
+
 }

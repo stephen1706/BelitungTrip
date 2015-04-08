@@ -23,17 +23,21 @@ import com.yulius.belitungtrip.alogirthm.RestaurantPopulation;
 import com.yulius.belitungtrip.api.HotelListAPI;
 import com.yulius.belitungtrip.api.PoiListAPI;
 import com.yulius.belitungtrip.api.RestaurantListAPI;
+import com.yulius.belitungtrip.api.SouvenirListAPI;
 import com.yulius.belitungtrip.entity.Hotel;
 import com.yulius.belitungtrip.entity.Poi;
 import com.yulius.belitungtrip.entity.Restaurant;
+import com.yulius.belitungtrip.entity.Souvenir;
 import com.yulius.belitungtrip.fragments.base.BaseFragment;
 import com.yulius.belitungtrip.listeners.OnMessageActionListener;
 import com.yulius.belitungtrip.realm.Trip;
 import com.yulius.belitungtrip.response.HotelListResponseData;
 import com.yulius.belitungtrip.response.PoiListResponseData;
 import com.yulius.belitungtrip.response.RestaurantListResponseData;
+import com.yulius.belitungtrip.response.SouvenirListResponseData;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import io.realm.Realm;
 import io.realm.RealmList;
@@ -48,9 +52,11 @@ public class TripResultFragment extends BaseFragment {
     private RestaurantListAPI mRestaurantListAPI;
     private PoiListAPI mPoiListAPI;
     private HotelListAPI mHotelListAPI;
+    private SouvenirListAPI mSouvenirListAPI;
     private RestaurantListResponseData mRestaurantListResponseData;
     private HotelListResponseData mHotelListResponseData;
     private PoiListResponseData mPoiListResponseData;
+    private SouvenirListResponseData mSouvenirListResponseData;
     private int mPoiBudget;
     private int mRestaurantBudget;
     private int mHotelBudget;
@@ -58,9 +64,12 @@ public class TripResultFragment extends BaseFragment {
     private ArrayList<Restaurant> mRestaurantResultList;
     private ArrayList<Poi> mPoiResultList;
     private Hotel mSelectedHotel;
+    private Souvenir mSelectedSouvenir;
+    private ArrayList<Integer> mSouvenirLotteryList;
     private LinearLayout mRestaurantListFrame;
     private LinearLayout mPoiListFrame;
     private LinearLayout mHotelListFrame;
+    private LinearLayout mSouvenirListFrame;
     private Button mSaveTripButton;
 
     public static TripResultFragment newInstance(int poiBudget, int restaurantBudget, int hotelBudget, int totalNight) {
@@ -118,6 +127,7 @@ public class TripResultFragment extends BaseFragment {
         mPoiListFrame = (LinearLayout) mLayoutView.findViewById(R.id.frame_poi_list);
         mRestaurantListFrame = (LinearLayout) mLayoutView.findViewById(R.id.frame_restaurant_list);
         mHotelListFrame = (LinearLayout) mLayoutView.findViewById(R.id.frame_hotel_list);
+        mSouvenirListFrame = (LinearLayout) mLayoutView.findViewById(R.id.frame_souvenir_list);
         mSaveTripButton = (Button) mLayoutView.findViewById(R.id.button_save_trip);
     }
 
@@ -142,6 +152,13 @@ public class TripResultFragment extends BaseFragment {
                     hotel.setHotelPrice(mSelectedHotel.price);
                     hotel.setHotelRating(mSelectedHotel.rating);
                     trip.setHotel(hotel);
+
+                    com.yulius.belitungtrip.realm.Souvenir souvenir = realm.createObject(com.yulius.belitungtrip.realm.Souvenir.class);
+                    souvenir.setSouvenirId(mSelectedSouvenir.id);
+                    souvenir.setSouvenirName(mSelectedSouvenir.name);
+                    souvenir.setSouvenirPrice(mSelectedSouvenir.price);
+                    souvenir.setSouvenirRating(mSelectedSouvenir.rating);
+                    trip.setSouvenir(souvenir);
 
                     RealmList<com.yulius.belitungtrip.realm.Restaurant> restaurants = new RealmList<>();
                     for (Restaurant currentRestaurant : mRestaurantResultList) {
@@ -239,6 +256,26 @@ public class TripResultFragment extends BaseFragment {
             }
         });
 
+        mSouvenirListAPI = new SouvenirListAPI(mContext);
+        mSouvenirListAPI.setOnResponseListener(new SouvenirListAPI.OnResponseListener() {
+            @Override
+            public void onRequestSuccess(SouvenirListResponseData souvenirListResponseData) {
+                mSouvenirListResponseData = souvenirListResponseData;
+                if (souvenirListResponseData != null) {
+                    findBestSouvenir();
+                }
+            }
+
+            @Override
+            public void onRequestError(VolleyError volleyError) {
+                showConnectionProblemErrorMessage(volleyError, TAG);
+            }
+
+            @Override
+            public void onRequestFailed(String message) {
+                showRequestFailedErrorMessage(message);
+            }
+        });
 
         if(mPoiListResponseData == null || mRestaurantListResponseData == null) {
             mPoiListAPI.requestPoiList();
@@ -247,7 +284,6 @@ public class TripResultFragment extends BaseFragment {
             refreshFragment();
         }
     }
-
 
     private void setUpMessageListener() {
         setOnMessageActionListener(new OnMessageActionListener() {
@@ -270,6 +306,7 @@ public class TripResultFragment extends BaseFragment {
         mRestaurantListFrame.removeAllViews();
         mPoiListFrame.removeAllViews();
         mHotelListFrame.removeAllViews();
+        mSouvenirListFrame.removeAllViews();
 
         for(int i = 0 ;i < mRestaurantResultList.size();i++){
             final Restaurant restaurant = mRestaurantResultList.get(i);
@@ -308,22 +345,33 @@ public class TripResultFragment extends BaseFragment {
             poiRow.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    replaceContentFragment(PoiDetailFragment.newInstance(Integer.toString(poi.id)), getResources().getString(R.string.restaurant_detail_fragment_tag));
+                    replaceContentFragment(PoiDetailFragment.newInstance(Integer.toString(poi.id)), getResources().getString(R.string.poi_detail_fragment_tag));
                 }
             });
             mPoiListFrame.addView(poiRow);
         }
 
-        View hotelRow = mLayoutInflater.inflate(R.layout.row_hotel_list, mPoiListFrame, false);
+        View hotelRow = mLayoutInflater.inflate(R.layout.row_hotel_list, mHotelListFrame, false);
         ((TextView) hotelRow.findViewById(R.id.text_view_hotel_name)).setText(mSelectedHotel.name);
         ((TextView) hotelRow.findViewById(R.id.text_view_region)).setText("Total biaya : " + mSelectedHotel.price);
         hotelRow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                replaceContentFragment(HotelDetailFragment.newInstance(Integer.toString(mSelectedHotel.id)), getResources().getString(R.string.restaurant_detail_fragment_tag));
+                replaceContentFragment(HotelDetailFragment.newInstance(Integer.toString(mSelectedHotel.id)), getResources().getString(R.string.hotel_detail_fragment_tag));
             }
         });
         mHotelListFrame.addView(hotelRow);
+
+        View souvenirRow = mLayoutInflater.inflate(R.layout.row_souvenir_list, mSouvenirListFrame, false);
+        ((TextView) souvenirRow.findViewById(R.id.text_view_souvenir_name)).setText(mSelectedSouvenir.name);
+        ((TextView) souvenirRow.findViewById(R.id.text_view_region)).setText("Estimasi biaya : " + mSelectedSouvenir.price);
+        souvenirRow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                replaceContentFragment(SouvenirDetailFragment.newInstance(Integer.toString(mSelectedSouvenir.id)), getResources().getString(R.string.souvenir_detail_fragment_tag));
+            }
+        });
+        mSouvenirListFrame.addView(souvenirRow);
     }
 
     private void findBestPoi() {
@@ -416,7 +464,28 @@ public class TripResultFragment extends BaseFragment {
                 break;
             }
         }
+        mSouvenirListAPI.requestSouvenirList();
+    }
 
+    private void findBestSouvenir() {
+        mSouvenirLotteryList = new ArrayList<Integer>();
+        for(int i=0;i<mSouvenirListResponseData.entries.length;i++){
+            for(int j=0;j<mSouvenirListResponseData.entries[i].souvenirRating;j++){
+                mSouvenirLotteryList.add(mSouvenirListResponseData.entries[i].souvenirId);
+            }
+        }
+        int selectedIndex = new Random().nextInt(mSouvenirLotteryList.size());
+        int selectedSouvenirId = mSouvenirLotteryList.get(selectedIndex);
+        for(int i=0;i<mSouvenirListResponseData.entries.length;i++){
+            if(mSouvenirListResponseData.entries[i].souvenirId == selectedSouvenirId){
+                mSelectedSouvenir = new Souvenir();
+                mSelectedSouvenir.id = mSouvenirListResponseData.entries[i].souvenirId;
+                mSelectedSouvenir.name = mSouvenirListResponseData.entries[i].souvenirName;
+                mSelectedSouvenir.price = mSouvenirListResponseData.entries[i].souvenirPrice;
+                mSelectedSouvenir.rating = mSouvenirListResponseData.entries[i].souvenirRating;
+                break;
+            }
+        }
         refreshFragment();
     }
 

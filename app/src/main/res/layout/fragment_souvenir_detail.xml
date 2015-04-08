@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/parent_layout"
+    android:background="@color/white">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="16dp"
+        android:id="@+id/layout">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="150dp" >
+            <android.support.v4.view.ViewPager
+                android:id="@+id/pager_souvenir_image_header"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+            <LinearLayout
+                android:id="@+id/frame_no_photo_available"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:visibility="gone"
+                android:background="@color/light_blue">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dp"
+                    android:text="Foto tidak tersedia"
+                    android:textColor="@color/white"/>
+            </LinearLayout>
+        </FrameLayout>
+        <View android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="@color/gray_d4" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Website Toko Souvenir"
+            android:layout_marginTop="5dp"
+            android:textSize="14dp"
+            android:layout_gravity="center"
+            android:textColor="@color/gray_43"/>
+
+        <TextView
+            android:id="@+id/text_view_souvenir_website"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:autoLink="web"
+            android:layout_gravity="center"
+            android:paddingBottom="5dp"
+            android:textColor="@color/link_blue"/>
+
+        <View android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="@color/gray_d4" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Telepon Toko Souvenir"
+            android:layout_marginTop="5dp"
+            android:textSize="14dp"
+            android:gravity="center"
+            android:textColor="@color/gray_43"/>
+
+        <TextView
+            android:id="@+id/text_view_souvenir_telephone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14dp"
+            android:autoLink="web"
+            android:gravity="center"
+            android:paddingBottom="5dp"
+            android:textColor="@color/link_blue"/>
+        <View android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="@color/gray_d4" />
+        <TextView
+            android:id="@+id/text_view_photosphere"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Gambar 360 derajat"
+            android:textSize="14dp"
+            android:layout_marginTop="5dp"
+            android:gravity="center_horizontal"
+            android:textColor="@color/gray_43"/>
+        <ProgressBar
+            style="?android:attr/progressBarStyleHorizontal"
+            android:id="@+id/progress_bar"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="5dp"
+            android:layout_alignParentBottom="true"
+            android:progressDrawable="@drawable/progress_bar"
+            android:progress="0"
+            android:max="100" />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/image_photosphere"/>
+        <Button
+            android:id="@+id/button_view_photosphere"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Lihat Photosphere Objek Wisata"
+            android:textSize="12dp"
+            android:visibility="gone"
+            android:layout_margin="5dp"
+            android:textColor="@color/white"
+            android:background="@color/wallet_holo_blue_light"/>
+
+        <View android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="@color/gray_d4" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:textSize="14dp"
+            android:text="Alamat Toko Souvenir"
+            android:gravity="center_horizontal"
+            android:textColor="@color/gray_43"/>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp"
+            android:gravity="top">
+            <TextView
+                android:id="@+id/text_view_souvenir_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14dp"
+                android:gravity="center"
+                android:textColor="@color/gray_43"/>
+        </LinearLayout>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:id="@+id/frame_mapbox"
+            android:focusableInTouchMode="false"
+            android:layout_gravity="bottom|right"
+            android:focusable="false">
+
+            <com.mapbox.mapboxsdk.views.MapView
+                android:id="@+id/mapid"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:paddingTop="10dp"
+                app:mapid="@string/mapbox_id"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+            </com.mapbox.mapboxsdk.views.MapView>
+            <Button
+                android:id="@+id/button_mapview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"/>
+        </FrameLayout>
+    </LinearLayout>
+</ScrollView>
