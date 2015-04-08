@@ -30,18 +30,58 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingTop="10dp"
-                    android:text="Foto tidak tersedia"
+                    android:text="Photo unavailable"
                     android:textColor="@color/white"/>
             </LinearLayout>
         </FrameLayout>
         <View android:layout_width="match_parent"
             android:layout_height="2px"
             android:background="@color/gray_d4" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:gravity="center_horizontal"
+                android:text="Rating"/>
+            <TextView
+                android:id="@+id/text_view_rating"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:gravity="center_horizontal"
+                android:text="70/100"/>
+            <View
+                android:layout_width="1px"
+                android:layout_height="match_parent"
+                android:background="@color/gray_d4"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:gravity="center_horizontal"
+                android:text="Price"/>
+            <TextView
+                android:id="@+id/text_view_price"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:gravity="center_horizontal"
+                android:text="Rp 0"/>
+        </LinearLayout>
 
+        <View android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="@color/gray_d4" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Website Restaurant"
+            android:text="Restaurant Website"
             android:layout_marginTop="5dp"
             android:textSize="14dp"
             android:layout_gravity="center"
@@ -66,7 +106,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Telepon Restaurant"
+            android:text="Restaurant Telephone"
             android:layout_marginTop="5dp"
             android:textSize="14dp"
             android:gravity="center"
@@ -84,49 +124,55 @@
         <View android:layout_width="match_parent"
             android:layout_height="2px"
             android:background="@color/gray_d4" />
-        <TextView
-            android:id="@+id/text_view_photosphere"
+        <LinearLayout
+            android:id="@+id/frame_photosphere"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Gambar 360 derajat"
-            android:textSize="14dp"
-            android:layout_marginTop="5dp"
-            android:gravity="center_horizontal"
-            android:textColor="@color/gray_43"/>
-        <ProgressBar
-            style="?android:attr/progressBarStyleHorizontal"
-            android:id="@+id/progress_bar"
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_marginTop="5dp"
-            android:layout_alignParentBottom="true"
-            android:progressDrawable="@drawable/progress_bar"
-            android:progress="0"
-            android:max="100" />
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/image_photosphere"/>
-        <Button
-            android:id="@+id/button_view_photosphere"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Lihat Photosphere Restaurant"
-            android:textSize="12dp"
-            android:visibility="gone"
-            android:layout_margin="5dp"
-            android:textColor="@color/white"
-            android:background="@color/wallet_holo_blue_light"/>
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/text_view_photosphere"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Photosphere"
+                android:textSize="14dp"
+                android:layout_marginTop="5dp"
+                android:gravity="center_horizontal"
+                android:textColor="@color/gray_43"/>
+            <ProgressBar
+                style="?android:attr/progressBarStyleHorizontal"
+                android:id="@+id/progress_bar"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="5dp"
+                android:layout_alignParentBottom="true"
+                android:progressDrawable="@drawable/progress_bar"
+                android:progress="0"
+                android:max="100" />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/image_photosphere"/>
+            <Button
+                android:id="@+id/button_view_photosphere"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Lihat Photosphere Hotel"
+                android:textSize="12dp"
+                android:visibility="gone"
+                android:layout_margin="5dp"
+                android:textColor="@color/white"
+                android:background="@color/wallet_holo_blue_light"/>
 
-        <View android:layout_width="match_parent"
-            android:layout_height="2px"
-            android:background="@color/gray_d4" />
+            <View android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:background="@color/gray_d4" />
+        </LinearLayout>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:textSize="14dp"
-            android:text="Alamat Restaurant"
+            android:text="Restaurant Address"
             android:gravity="center_horizontal"
             android:textColor="@color/gray_43"/>
         <LinearLayout

@@ -16,9 +16,6 @@ import com.google.android.gms.maps.SupportStreetViewPanoramaFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.StreetViewPanoramaLocation;
 import com.yulius.belitungtrip.R;
-import com.yulius.belitungtrip.alogirthm.Algorithm;
-import com.yulius.belitungtrip.alogirthm.FitnessCalculation;
-import com.yulius.belitungtrip.alogirthm.Population;
 import com.yulius.belitungtrip.fragments.NavigationDrawerFragment;
 import com.yulius.belitungtrip.fragments.base.BaseContainerFragment;
 import com.yulius.belitungtrip.fragments.containers.HotelContainerFragment;
@@ -65,25 +62,22 @@ public class MainActivity extends BaseActivity implements NavigationDrawerFragme
 //        setUpStreetViewPanoramaIfNeeded(savedInstanceState);
     }
 
-    private void startGeneticAlgorithm() {
-
-//        FitnessCalculation.setSolution("1111111000000000000000000000000000000000000000000000000000001111");
-
-        // Create an initial population
-        Population myPop = new Population(50, true);
-
-        // Evolve our population until we reach an optimum solution
-        int generationCount = 0;
-        while (myPop.getFittest().getFitness() < FitnessCalculation.getMaxFitness()) {
-            generationCount++;
-            System.out.println("Generation: " + generationCount + " Fittest: " + myPop.getFittest().getFitness());
-            myPop = Algorithm.evolvePopulation(myPop);
-        }
-        Log.d("test algo", "Solution found!");
-        Log.d("test algo", "Generation: " + generationCount);
-        Log.d("test algo", "Genes:");
-        Log.d("test algo",  "pemenang : " + myPop.getFittest());
-    }
+//    private void startGeneticAlgorithm() {
+//        // Create an initial population
+//        Population myPop = new Population(50, true);
+//
+//        // Evolve our population until we reach an optimum solution
+//        int generationCount = 0;
+//        while (myPop.getFittest().getFitness() < FitnessCalculation.getMaxFitness()) {
+//            generationCount++;
+//            System.out.println("Generation: " + generationCount + " Fittest: " + myPop.getFittest().getFitness());
+//            myPop = Algorithm.evolvePopulation(myPop);
+//        }
+//        Log.d("test algo", "Solution found!");
+//        Log.d("test algo", "Generation: " + generationCount);
+//        Log.d("test algo", "Genes:");
+//        Log.d("test algo",  "pemenang : " + myPop.getFittest());
+//    }
 
     private void startPanorama() {
         Intent intent = new Intent();
@@ -162,27 +156,27 @@ public class MainActivity extends BaseActivity implements NavigationDrawerFragme
                 mFragmentTabHost.setCurrentTabByTag(HOME_SECTION_TAG);
                 break;
             case NavigationDrawerFragment.HOTEL_SECTION:
-                mTitle = "Daftar Hotel";
+                mTitle = "Hotel List";
                 mFragmentTabHost.setCurrentTabByTag(HOTEL_SECTION_TAG);
                 break;
             case NavigationDrawerFragment.RESTAURANT_SECTION:
-                mTitle = "Daftar Restoran";
+                mTitle = "Restaurant List";
                 mFragmentTabHost.setCurrentTabByTag(RESTAURANT_SECTION_TAG);
                 break;
             case NavigationDrawerFragment.POI_SECTION:
-                mTitle = "Dafter Objek Wisata";
+                mTitle = "Point of Interest List";
                 mFragmentTabHost.setCurrentTabByTag(POI_SECTION_TAG);
                 break;
             case NavigationDrawerFragment.SOUVENIR_SECTION:
-                mTitle = "Dafter Toko Souvenir";
+                mTitle = "Souvenir Shop List";
                 mFragmentTabHost.setCurrentTabByTag(SOUVENIR_SECTION_TAG);
                 break;
             case NavigationDrawerFragment.TRIP_PLANNER_SECTION:
-                mTitle = "Trip planner";
+                mTitle = "Trip Planner";
                 mFragmentTabHost.setCurrentTabByTag(TRIP_PLANNER_SECTION_TAG);
                 break;
             case NavigationDrawerFragment.TRANSPORTATION_SECTION:
-                mTitle = "Daftar Transportasi";
+                mTitle = "Transportation List";
                 mFragmentTabHost.setCurrentTabByTag(TRANSPORTATION_SECTION_TAG);
                 break;
         }

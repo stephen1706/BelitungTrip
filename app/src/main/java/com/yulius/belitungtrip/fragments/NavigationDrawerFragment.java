@@ -189,8 +189,6 @@ public class NavigationDrawerFragment extends Fragment {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
 
-        // ActionBarDrawerToggle ties together the the proper interactions
-        // between the navigation drawer and the action bar app icon.
         mDrawerToggle = new ActionBarDrawerToggle(
                 getActivity(),                    /* host Activity */
                 mDrawerLayout,                    /* DrawerLayout object */
@@ -216,8 +214,6 @@ public class NavigationDrawerFragment extends Fragment {
                 }
 
                 if (!mUserLearnedDrawer) {
-                    // The user manually opened the drawer; store this flag to prevent auto-showing
-                    // the navigation drawer automatically in the future.
                     mUserLearnedDrawer = true;
 
                     SharedPreferences sp = PreferenceManager
@@ -229,8 +225,6 @@ public class NavigationDrawerFragment extends Fragment {
             }
         };
 
-        // If the user hasn't 'learned' about the drawer, open it to introduce them to the drawer,
-        // per the navigation drawer design guidelines.
         if (!mUserLearnedDrawer && !mFromSavedInstanceState) {
             mDrawerLayout.openDrawer(mFragmentContainerView);
         }
@@ -272,11 +266,11 @@ public class NavigationDrawerFragment extends Fragment {
     private void setUpSectionAdapter(){
         ArrayList<SectionItem> sectionItems = new ArrayList<SectionItem>();
         sectionItems.add(new SectionItem(R.drawable.icon_home, "Home"));
-        sectionItems.add(new SectionItem(R.drawable.icon_hotel, "Penginapan"));
-        sectionItems.add(new SectionItem(R.drawable.icon_restaurant, "Kuliner"));
-        sectionItems.add(new SectionItem(R.drawable.icon_poi, "Objek Wisata"));
-        sectionItems.add(new SectionItem(R.drawable.icon_poi, "Souvenir"));
-        sectionItems.add(new SectionItem(R.drawable.icon_car, "Transportasi"));
+        sectionItems.add(new SectionItem(R.drawable.icon_hotel, "Hotel"));
+        sectionItems.add(new SectionItem(R.drawable.icon_restaurant, "Culinary"));
+        sectionItems.add(new SectionItem(R.drawable.icon_poi, "Point of Interest"));
+        sectionItems.add(new SectionItem(R.drawable.icon_souvenir, "Souvenir Shop"));
+        sectionItems.add(new SectionItem(R.drawable.icon_car, "Transportation"));
         sectionItems.add(new SectionItem(R.drawable.icon_trip_planner, "Trip Planner"));
 
         mSectionAdapter = new SectionAdapter(getActivity(), -1, sectionItems);
@@ -299,7 +293,6 @@ public class NavigationDrawerFragment extends Fragment {
             super(context, layoutResourceId, sectionItems);
 
             mContext = context;
-//            mInflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             mInflater = LayoutInflater.from(context);
 
             mSectionItems = sectionItems;
@@ -377,13 +370,7 @@ public class NavigationDrawerFragment extends Fragment {
     // Interface Callback
     //================================================================================
 
-    /**
-     * Callbacks interface that all activities using this fragment must implement.
-     */
     public static interface NavigationDrawerCallbacks {
-        /**
-         * Called when an item in the navigation drawer is selected.
-         */
         void onNavigationDrawerItemSelected(int position);
     }
 

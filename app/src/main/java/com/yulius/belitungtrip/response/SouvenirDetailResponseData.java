@@ -10,7 +10,7 @@ public class SouvenirDetailResponseData {
     public String photosphere;
     public String souvenirTelephone;
     public String souvenirRating;
-    public String souvenirPrice;
+    public int souvenirPrice;
     public Asset[] assets;
 
     public static class Asset {

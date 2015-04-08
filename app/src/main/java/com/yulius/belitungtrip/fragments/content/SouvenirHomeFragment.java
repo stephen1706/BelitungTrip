@@ -40,7 +40,7 @@ public class SouvenirHomeFragment extends BaseFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         TAG = getResources().getString(R.string.souvenir_home_fragment_tag);
-        mTitle = "Daftar Toko Souvenir";
+        mTitle = "Souvenir Shop List";
     }
 
     @Override

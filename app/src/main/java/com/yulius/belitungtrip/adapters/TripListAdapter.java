@@ -7,13 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.yulius.belitungtrip.FormattingUtil;
 import com.yulius.belitungtrip.R;
 import com.yulius.belitungtrip.realm.Trip;
 
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.util.List;
-import java.util.Locale;
 
 public class TripListAdapter extends RecyclerView.Adapter<TripListAdapter.ViewHolder>  {
     private List<Trip>  tripList;
@@ -35,9 +33,9 @@ public class TripListAdapter extends RecyclerView.Adapter<TripListAdapter.ViewHo
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
         viewHolder.mTripNameTextView.setText(tripList.get(i).getTripName());
-        viewHolder.mAdditionalInfoTextView.setText(tripList.get(i).getTotalNight() + " hari, "
-                + tripList.get(i).getNumGuests() + " orang, Rp "
-                + formatDecimal(tripList.get(i).getTotalPrice()));
+        viewHolder.mAdditionalInfoTextView.setText(tripList.get(i).getTotalNight() + " days, "
+                + tripList.get(i).getNumGuests() + " person, Rp "
+                + FormattingUtil.formatDecimal(tripList.get(i).getTotalPrice()));
     }
 
     @Override
@@ -61,12 +59,5 @@ public class TripListAdapter extends RecyclerView.Adapter<TripListAdapter.ViewHo
             mTripNameTextView = (TextView) itemView.findViewById(R.id.text_view_trip_name);
             mAdditionalInfoTextView = (TextView) itemView.findViewById(R.id.text_view_additional_info);
         }
-    }
-
-    public static String formatDecimal(int number){
-        DecimalFormatSymbols decimalSymbol = new DecimalFormatSymbols(new Locale("in"));
-        DecimalFormat decimalFormat = new DecimalFormat("#,###", decimalSymbol);
-        String formattedDecimal = decimalFormat.format(number);
-        return formattedDecimal;
     }
 }

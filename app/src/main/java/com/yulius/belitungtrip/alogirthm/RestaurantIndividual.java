@@ -39,7 +39,11 @@ public class RestaurantIndividual {
                 do {
                     int restaurantIndex = new Random().nextInt(restaurantList.size());
                     genes[i] = restaurantList.get(restaurantIndex);
-                    if (i % 3 == 2) {//khusus yg mlm hrs type no 2
+                    if (i % 3 == 2) {//khusus yg mlm hrs type no 3
+                        if (genes[i].type == 3) {
+                            break;
+                        }
+                    } else if(i%3 == 1){
                         if (genes[i].type == 2) {
                             break;
                         }
@@ -80,10 +84,12 @@ public class RestaurantIndividual {
         do {
             int newRestaurantIndex = new Random().nextInt(restaurantList.size());
 
-            if(changeIndex % 3 == 2 && restaurantList.get(newRestaurantIndex).type == 2){
+            if(changeIndex % 3 == 2 && restaurantList.get(newRestaurantIndex).type == 3){
             //biar grupin ga brantakan di mutasi, klo crossover ga bkl brantakan krn ambil gen dr urutan yg sama selalu
                 genes[changeIndex] = restaurantList.get(newRestaurantIndex);
-            } else if (changeIndex % 3 != 2 && restaurantList.get(newRestaurantIndex).type == 1){
+            } else if (changeIndex % 3 == 0 && restaurantList.get(newRestaurantIndex).type == 1){
+                genes[changeIndex] = restaurantList.get(newRestaurantIndex);
+            } else if (changeIndex % 3 == 1 && restaurantList.get(newRestaurantIndex).type == 2){
                 genes[changeIndex] = restaurantList.get(newRestaurantIndex);
             }
 

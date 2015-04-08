@@ -43,7 +43,7 @@ public class FlightListFragment extends BaseFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         TAG = getResources().getString(R.string.flight_list_fragment_tag);
-        mTitle = "Daftar Pesawat";
+        mTitle = "Flight List";
     }
 
     @Override

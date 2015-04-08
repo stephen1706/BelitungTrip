@@ -51,7 +51,7 @@ public class FlightListAdapter extends RecyclerView.Adapter<FlightListAdapter.Vi
 
             @Override
             public void onError() {
-                Log.d("Test","fail load flight image");
+                Log.d("Test","fail load flight image from : " + flightEntry.flightLogo);
                 loadImage(flightEntry, viewHolder);//klo fail ulang lg
             }
         });

@@ -40,7 +40,7 @@ public class PoiHomeFragment extends BaseFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         TAG = getResources().getString(R.string.poi_home_fragment_tag);
-        mTitle = "Daftar Objek Wisata";
+        mTitle = "Point of Interset List";
     }
 
     @Override

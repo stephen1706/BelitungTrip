@@ -22,20 +22,11 @@
         android:gravity="center"
         android:fontFamily="sans-serif-medium"
         android:textSize="18dp"
-        android:text="Tidak Ada Koneksi Internet"/>
+        android:text="No Internet Connection"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="2dp" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:fontFamily="sans-serif-light"
-        android:textColor="@color/gray_72"
-        android:textSize="14dp"
-        android:text="Silakan memeriksa koneksi internet Anda dan coba lagi"/>
 
     <View
         android:layout_width="match_parent"
@@ -49,7 +40,7 @@
         android:paddingRight="25dp"
         android:textSize="15dp"
         android:textColor="@color/white"
-        android:background="@color/dark_blue"
-        android:text="Coba Lagi"/>
+        android:background="@color/blue"
+        android:text="Try Again"/>
 
 </LinearLayout>

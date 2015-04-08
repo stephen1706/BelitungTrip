@@ -29,7 +29,7 @@
         android:gravity="center"
         android:fontFamily="sans-serif-medium"
         android:textSize="18dp"
-        android:text="Sedang Memuat"/>
+        android:text="Loading..."/>
 
     <View
         android:layout_width="match_parent"
@@ -42,7 +42,7 @@
         android:fontFamily="sans-serif-light"
         android:textColor="@color/gray_72"
         android:textSize="14dp"
-        android:text="Silakan menunggu." />
+        android:text="Please wait while we load the data" />
 
     <View
         android:layout_width="match_parent"

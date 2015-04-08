@@ -7,7 +7,7 @@ public class PoiDetailResponseData {
     public String poiLongitude;
     public String poiAddress;
     public String poiTelephone;
-    public String poiPrice;
+    public int poiPrice;
     public String poiRating;
     public String photosphere;
     public Asset[] assets;

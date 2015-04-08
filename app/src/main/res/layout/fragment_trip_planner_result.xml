@@ -10,7 +10,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Daftar Wisata"
+            android:text="Point of Interest Visited"
             android:textSize="18dp"/>
         <LinearLayout
             android:id="@+id/frame_poi_list"
@@ -22,7 +22,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Daftar Kuliner"
+            android:text="Culinary Visited"
             android:textSize="18dp"/>
         <LinearLayout
             android:id="@+id/frame_restaurant_list"
@@ -46,7 +46,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Souvenir"
+            android:text="Souvenir Shop Recommendation"
             android:textSize="18dp"/>
         <LinearLayout
             android:id="@+id/frame_souvenir_list"
@@ -58,28 +58,28 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Nama Trip"
+            android:text="Trip Name"
             android:textSize="18dp"/>
         <EditText
             android:id="@+id/edit_text_trip_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Nama Trip"/>
+            android:hint="Insert your trip name here (trip name must be unique)"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Jumlah Penumpang"
+            android:text="Number of Passengers"
             android:textSize="18dp"/>
         <EditText
             android:id="@+id/edit_text_total_guest"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Jumlah Penumpang"
+            android:hint="Insert number of passengers here"
             android:inputType="number"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Total Harga"
+            android:text="Total Price"
             android:layout_marginTop="20dp"
             android:textSize="18dp"/>
         <TextView
@@ -93,7 +93,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="SIMPAN"
+            android:text="SAVE"
             android:textColor="@color/white"
             android:background="@color/blue"/>
     </LinearLayout>

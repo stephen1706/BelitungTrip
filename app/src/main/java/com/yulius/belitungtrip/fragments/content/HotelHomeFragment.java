@@ -40,7 +40,7 @@ public class HotelHomeFragment extends BaseFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         TAG = getResources().getString(R.string.hotel_home_fragment_tag);
-        mTitle = "Daftar Penginapan";
+        mTitle = "Hotel List";
     }
 
     @Override

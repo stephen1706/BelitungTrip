@@ -38,6 +38,7 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import com.yulius.belitungtrip.FormattingUtil;
 import com.yulius.belitungtrip.R;
 import com.yulius.belitungtrip.activities.MainActivity;
 import com.yulius.belitungtrip.api.RestaurantDetailAPI;
@@ -90,6 +91,9 @@ public class RestaurantDetailFragment extends BaseFragment {
 
     private RestaurantDetailAPI mRestaurantDetailAPI;
     private File mPhotosphereFile;
+    private LinearLayout mPhotosphereFrame;
+    private TextView mRatingTextView;
+    private TextView mPriceTextView;
     //================================================================================
     // Constructor
     //================================================================================
@@ -164,10 +168,13 @@ public class RestaurantDetailFragment extends BaseFragment {
         mMapView = (MapView) mLayoutView.findViewById(R.id.mapid);
         mPhotoSphereButton = (Button) mLayoutView.findViewById(R.id.button_view_photosphere);
         mPhotosphereImageView = (ImageView) mLayoutView.findViewById(R.id.image_photosphere);
+        mPhotosphereFrame = (LinearLayout) mLayoutView.findViewById(R.id.frame_photosphere);
         mTextViewPhotosphere = (TextView) mLayoutView.findViewById(R.id.text_view_photosphere);
         mTextViewAddress = (TextView) mLayoutView.findViewById(R.id.text_view_restaurant_address);
         mTextViewWebsite = (TextView) mLayoutView.findViewById(R.id.text_view_restaurant_website);
         mTextViewTelephone = (TextView) mLayoutView.findViewById(R.id.text_view_restaurant_telephone);
+        mRatingTextView = (TextView) mLayoutView.findViewById(R.id.text_view_rating);
+        mPriceTextView = (TextView) mLayoutView.findViewById(R.id.text_view_price);
         mProgressBar = (ProgressBar) mLayoutView.findViewById(R.id.progress_bar);
     }
 
@@ -245,6 +252,9 @@ public class RestaurantDetailFragment extends BaseFragment {
 
         ((MainActivity) getActivity()).getSupportActionBar().setTitle(mRestaurantDetailResponseData.restaurantName);
 
+        mPriceTextView.setText("Rp " + FormattingUtil.formatDecimal(mRestaurantDetailResponseData.restaurantPrice));
+        mRatingTextView.setText(mRestaurantDetailResponseData.restaurantRating+ "/100");
+
         Log.d("test", "url:" + mRestaurantDetailResponseData.photosphere);
 
         final ImageLoadingProgressListener imageLoadingProgressListener = new ImageLoadingProgressListener() {
@@ -317,6 +327,8 @@ public class RestaurantDetailFragment extends BaseFragment {
                     Log.d("Test", "cancel");
                 }
             }, imageLoadingProgressListener);
+        } else {
+            mPhotosphereFrame.setVisibility(View.GONE);
         }
 
         mTextViewTelephone.setText(mRestaurantDetailResponseData.restaurantTelephone);

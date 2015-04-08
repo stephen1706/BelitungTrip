@@ -16,6 +16,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.yulius.belitungtrip.Constans;
+import com.yulius.belitungtrip.FormattingUtil;
 import com.yulius.belitungtrip.R;
 import com.yulius.belitungtrip.alogirthm.PoiAlgorithm;
 import com.yulius.belitungtrip.alogirthm.PoiIndividual;
@@ -39,10 +41,7 @@ import com.yulius.belitungtrip.response.PoiListResponseData;
 import com.yulius.belitungtrip.response.RestaurantListResponseData;
 import com.yulius.belitungtrip.response.SouvenirListResponseData;
 
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.Random;
 
 import io.realm.Realm;
@@ -167,7 +166,7 @@ public class TripResultFragment extends BaseFragment {
                 try {
                     numGuests = Integer.parseInt(s.toString());
                 } catch (Exception e){
-                    Toast.makeText(mContext, "Harap input total penumpang dengan benar", Toast.LENGTH_LONG).show();
+                    Toast.makeText(mContext, "Please insert a valid total passenger number", Toast.LENGTH_LONG).show();
                     return;
                 }
 
@@ -183,7 +182,7 @@ public class TripResultFragment extends BaseFragment {
                 Log.d("test","jmlh kmr : " + numberOfRoom);
                 mTotalPrice += numberOfRoom * (mTotalNight-1) * mSelectedHotel.price;
 
-                mTotalPriceTextView.setText("Rp " + formatDecimal(mTotalPrice));
+                mTotalPriceTextView.setText("Rp " + FormattingUtil.formatDecimal(mTotalPrice));
             }
         });
 
@@ -192,7 +191,7 @@ public class TripResultFragment extends BaseFragment {
             public void onClick(View v) {
                 String tripName = mTripNameEditText.getText().toString();
                 if(tripName.isEmpty()){
-                    Toast.makeText(mContext, "Harap input nama trip dengan benar", Toast.LENGTH_LONG).show();
+                    Toast.makeText(mContext, "Please insert your trip name", Toast.LENGTH_LONG).show();
                     return;
                 }
 
@@ -242,10 +241,11 @@ public class TripResultFragment extends BaseFragment {
                     }
                     trip.setPois(pois);
                     realm.commitTransaction();
-                    Toast.makeText(mContext, "Trip telah disimpan", Toast.LENGTH_LONG).show();
+
+                    showMessage("Your trip has been save", Constans.MessageType.MESSAGE_SUCCESS, Constans.Duration.LONG);
                 } catch (RealmException e){
                     realm.cancelTransaction();
-                    Toast.makeText(mContext, "Nama " + tripName + " sudah digunakan sebagai trip name", Toast.LENGTH_LONG).show();
+                    showMessage(tripName + " has been used for other trip name, please use other name", Constans.MessageType.MESSAGE_ERROR, Constans.Duration.LONG);
                 }
             }
         });
@@ -373,11 +373,11 @@ public class TripResultFragment extends BaseFragment {
             View restaurantRow = mLayoutInflater.inflate(R.layout.row_restaurant_list, mRestaurantListFrame, false);
             ((TextView) restaurantRow.findViewById(R.id.text_view_restaurant_name)).setText(restaurant.name);
             if(i%3 == 0){
-                ((TextView) restaurantRow.findViewById(R.id.text_view_region)).setText("Hari ke-" + ((i/3)+1) + ", makan pagi");
+                ((TextView) restaurantRow.findViewById(R.id.text_view_region)).setText("Day " + ((i/3)+1) + ", lunch");
             } else if(i%3 == 1){
-                ((TextView) restaurantRow.findViewById(R.id.text_view_region)).setText("Hari ke-" + ((i/3)+1) + ", makan siang");
+                ((TextView) restaurantRow.findViewById(R.id.text_view_region)).setText("Day " + ((i/3)+1) + ", dinner");
             } else {
-                ((TextView) restaurantRow.findViewById(R.id.text_view_region)).setText("Hari ke-" + ((i/3)+1) + ", makan malam");
+                ((TextView) restaurantRow.findViewById(R.id.text_view_region)).setText("Day " + ((i/3)+1) + ", midnight snack");
             }
 
             restaurantRow.setOnClickListener(new View.OnClickListener() {
@@ -395,11 +395,11 @@ public class TripResultFragment extends BaseFragment {
             View poiRow = mLayoutInflater.inflate(R.layout.row_poi_list, mPoiListFrame, false);
             ((TextView) poiRow.findViewById(R.id.text_view_poi_name)).setText(poi.name);
             if(i%3 == 0){
-                ((TextView) poiRow.findViewById(R.id.text_view_region)).setText("Hari ke-" + ((i/3)+1));
+                ((TextView) poiRow.findViewById(R.id.text_view_region)).setText("Day " + ((i/3)+1));
             } else if(i%3 == 1){
-                ((TextView) poiRow.findViewById(R.id.text_view_region)).setText("Hari ke-" + ((i/3)+1));
+                ((TextView) poiRow.findViewById(R.id.text_view_region)).setText("Day " + ((i/3)+1));
             } else {
-                ((TextView) poiRow.findViewById(R.id.text_view_region)).setText("Hari ke-" + ((i/3)+1));
+                ((TextView) poiRow.findViewById(R.id.text_view_region)).setText("Day " + ((i/3)+1));
             }
             poiRow.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -412,7 +412,7 @@ public class TripResultFragment extends BaseFragment {
 
         View hotelRow = mLayoutInflater.inflate(R.layout.row_hotel_list, mHotelListFrame, false);
         ((TextView) hotelRow.findViewById(R.id.text_view_hotel_name)).setText(mSelectedHotel.name);
-        ((TextView) hotelRow.findViewById(R.id.text_view_region)).setText("Total biaya : " + mSelectedHotel.price);
+        ((TextView) hotelRow.findViewById(R.id.text_view_region)).setText("Total price : " + mSelectedHotel.price);
         hotelRow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -423,7 +423,7 @@ public class TripResultFragment extends BaseFragment {
 
         View souvenirRow = mLayoutInflater.inflate(R.layout.row_souvenir_list, mSouvenirListFrame, false);
         ((TextView) souvenirRow.findViewById(R.id.text_view_souvenir_name)).setText(mSelectedSouvenir.name);
-        ((TextView) souvenirRow.findViewById(R.id.text_view_region)).setText("Estimasi biaya : " + mSelectedSouvenir.price);
+        ((TextView) souvenirRow.findViewById(R.id.text_view_region)).setText("Cost Estimation : " + mSelectedSouvenir.price);
         souvenirRow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -555,12 +555,5 @@ public class TripResultFragment extends BaseFragment {
 
         actionBar.setDisplayHomeAsUpEnabled(true);
         getParentActivity().setDrawerIndicatorEnabled(false);
-    }
-
-    public static String formatDecimal(int number){
-        DecimalFormatSymbols decimalSymbol = new DecimalFormatSymbols(new Locale("in"));
-        DecimalFormat decimalFormat = new DecimalFormat("#,###", decimalSymbol);
-        String formattedDecimal = decimalFormat.format(number);
-        return formattedDecimal;
     }
 }

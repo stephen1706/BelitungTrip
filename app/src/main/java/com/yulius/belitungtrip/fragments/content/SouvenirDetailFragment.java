@@ -38,6 +38,7 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import com.yulius.belitungtrip.FormattingUtil;
 import com.yulius.belitungtrip.R;
 import com.yulius.belitungtrip.activities.MainActivity;
 import com.yulius.belitungtrip.api.SouvenirDetailAPI;
@@ -88,6 +89,9 @@ public class SouvenirDetailFragment extends BaseFragment {
 
     private SouvenirDetailAPI mSouvenirDetailAPI;
     private File mPhotosphereFile;
+    private LinearLayout mPhotosphereFrame;
+    private TextView mPriceTextView;
+    private TextView mRatingTextView;
     //================================================================================
     // Constructor
     //================================================================================
@@ -162,10 +166,13 @@ public class SouvenirDetailFragment extends BaseFragment {
         mMapView = (MapView) mLayoutView.findViewById(R.id.mapid);
         mPhotoSphereButton = (Button) mLayoutView.findViewById(R.id.button_view_photosphere);
         mPhotosphereImageView = (ImageView) mLayoutView.findViewById(R.id.image_photosphere);
+        mPhotosphereFrame = (LinearLayout) mLayoutView.findViewById(R.id.frame_photosphere);
         mTextViewPhotosphere = (TextView) mLayoutView.findViewById(R.id.text_view_photosphere);
         mTextViewAddress = (TextView) mLayoutView.findViewById(R.id.text_view_souvenir_address);
         mTextViewWebsite = (TextView) mLayoutView.findViewById(R.id.text_view_souvenir_website);
         mTextViewTelephone = (TextView) mLayoutView.findViewById(R.id.text_view_souvenir_telephone);
+        mPriceTextView = (TextView) mLayoutView.findViewById(R.id.text_view_price);
+        mRatingTextView = (TextView) mLayoutView.findViewById(R.id.text_view_rating);
         mProgressBar = (ProgressBar) mLayoutView.findViewById(R.id.progress_bar);
     }
 
@@ -242,6 +249,8 @@ public class SouvenirDetailFragment extends BaseFragment {
         super.refreshFragment();
 
         ((MainActivity) getActivity()).getSupportActionBar().setTitle(mSouvenirDetailResponseData.souvenirName);
+        mPriceTextView.setText("Rp " + FormattingUtil.formatDecimal(mSouvenirDetailResponseData.souvenirPrice));
+        mRatingTextView.setText(mSouvenirDetailResponseData.souvenirRating + "/100");
 
         Log.d("test", "url:" + mSouvenirDetailResponseData.photosphere);
 
@@ -314,6 +323,8 @@ public class SouvenirDetailFragment extends BaseFragment {
                     Log.d("Test", "cancel");
                 }
             }, imageLoadingProgressListener);
+        } else {
+            mPhotosphereFrame.setVisibility(View.GONE);
         }
         mTextViewTelephone.setText(mSouvenirDetailResponseData.souvenirTelephone);
         mTextViewTelephone.setOnClickListener(new View.OnClickListener() {

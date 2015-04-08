@@ -10,7 +10,7 @@ public class HotelDetailResponseData {
     public String photosphere;
     public String hotelTelephone;
     public String hotelRating;
-    public String hotelPrice;
+    public int hotelPrice;
     public Asset[] assets;
 
     public static class Asset {

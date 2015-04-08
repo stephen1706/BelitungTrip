@@ -123,11 +123,11 @@ public class TripDetailFragment extends BaseFragment {
             View restaurantRow = mLayoutInflater.inflate(R.layout.row_restaurant_list, mRestaurantListFrame, false);
             ((TextView) restaurantRow.findViewById(R.id.text_view_restaurant_name)).setText(restaurant.name);
             if(i%3 == 0){
-                ((TextView) restaurantRow.findViewById(R.id.text_view_region)).setText("Hari ke-" + ((i/3)+1) + ", makan pagi");
+                ((TextView) restaurantRow.findViewById(R.id.text_view_region)).setText("Day " + ((i/3)+1) + ", lunch");
             } else if(i%3 == 1){
-                ((TextView) restaurantRow.findViewById(R.id.text_view_region)).setText("Hari ke-" + ((i/3)+1) + ", makan siang");
+                ((TextView) restaurantRow.findViewById(R.id.text_view_region)).setText("Day " + ((i/3)+1) + ", dinner");
             } else {
-                ((TextView) restaurantRow.findViewById(R.id.text_view_region)).setText("Hari ke-" + ((i/3)+1) + ", makan malam");
+                ((TextView) restaurantRow.findViewById(R.id.text_view_region)).setText("Day " + ((i/3)+1) + ", midnight snack");
             }
 
             restaurantRow.setOnClickListener(new View.OnClickListener() {
@@ -145,11 +145,11 @@ public class TripDetailFragment extends BaseFragment {
             View poiRow = mLayoutInflater.inflate(R.layout.row_poi_list, mPoiListFrame, false);
             ((TextView) poiRow.findViewById(R.id.text_view_poi_name)).setText(poi.name);
             if(i%3 == 0){
-                ((TextView) poiRow.findViewById(R.id.text_view_region)).setText("Hari ke-" + ((i/3)+1));
+                ((TextView) poiRow.findViewById(R.id.text_view_region)).setText("Day " + ((i/3)+1));
             } else if(i%3 == 1){
-                ((TextView) poiRow.findViewById(R.id.text_view_region)).setText("Hari ke-" + ((i/3)+1));
+                ((TextView) poiRow.findViewById(R.id.text_view_region)).setText("Day " + ((i/3)+1));
             } else {
-                ((TextView) poiRow.findViewById(R.id.text_view_region)).setText("Hari ke-" + ((i/3)+1));
+                ((TextView) poiRow.findViewById(R.id.text_view_region)).setText("Day " + ((i/3)+1));
             }
             poiRow.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -162,7 +162,7 @@ public class TripDetailFragment extends BaseFragment {
 
         View hotelRow = mLayoutInflater.inflate(R.layout.row_hotel_list, mPoiListFrame, false);
         ((TextView) hotelRow.findViewById(R.id.text_view_hotel_name)).setText(mSelectedHotel.name);
-        ((TextView) hotelRow.findViewById(R.id.text_view_region)).setText("Total biaya : " + mSelectedHotel.price);
+        ((TextView) hotelRow.findViewById(R.id.text_view_region)).setText("Total price : " + mSelectedHotel.price);
         hotelRow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -173,7 +173,7 @@ public class TripDetailFragment extends BaseFragment {
 
         View souvenirRow = mLayoutInflater.inflate(R.layout.row_souvenir_list, mSouvenirListFrame, false);
         ((TextView) souvenirRow.findViewById(R.id.text_view_souvenir_name)).setText(mSelectedSouvenir.name);
-        ((TextView) souvenirRow.findViewById(R.id.text_view_region)).setText("Estimasi biaya : " + mSelectedSouvenir.price);
+        ((TextView) souvenirRow.findViewById(R.id.text_view_region)).setText("Cost Estimation : " + mSelectedSouvenir.price);
         souvenirRow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

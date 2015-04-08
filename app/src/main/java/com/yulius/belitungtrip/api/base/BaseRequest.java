@@ -30,7 +30,7 @@ public class BaseRequest extends StringRequest{
         super(method, url, listener, errorListener);
         mRequestBody = requestBody;
 
-        int socketTimeout = 600000; //30 seconds - change to what you want
+        int socketTimeout = 10000; //10 detik
         RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
         setRetryPolicy(policy);
     }

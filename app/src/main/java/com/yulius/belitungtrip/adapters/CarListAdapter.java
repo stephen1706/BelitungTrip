@@ -51,7 +51,7 @@ public class CarListAdapter extends RecyclerView.Adapter<CarListAdapter.ViewHold
 
             @Override
             public void onError() {
-                Log.d("Test", "fail load car image");
+                Log.d("Test", "fail load car image from : " + carEntry.carLogo);
                 loadImage(carEntry, viewHolder);//klo fail ulang lg
             }
         });

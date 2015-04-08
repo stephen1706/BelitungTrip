@@ -20,7 +20,7 @@
                 android:textColor="#FFFFFF"
                 android:textSize="15dp"
                 android:textStyle="bold"
-                android:text="Trip baru"/>
+                android:text="New Trip"/>
             <ImageView
                 android:id="@+id/image_view_close"
                 android:layout_width="wrap_content"
@@ -41,59 +41,59 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="Silahkan masukkan lama perjalanan dan jumlah budget"/>
+                android:text="Please insert your journey duration and budget"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="Lama Perjalanan"/>
+                android:text="Journey Duration"/>
 
             <EditText
                 android:id="@+id/edit_text_total_night"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
-                android:hint="Lama Perjalanan"
+                android:hint="Insert your journey duration here"
                 android:inputType="number" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Budget Wisata" />
+                android:text="Point of Interest Budget" />
 
             <EditText
                 android:id="@+id/edit_text_poi_budget"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
-                android:hint="Budget Wisata"
+                android:hint="Insert your point of interest budget"
                 android:inputType="number" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Budget Kuliner" />
+                android:text="Culinary Budget" />
 
             <EditText
                 android:id="@+id/edit_text_restaurant_budget"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
-                android:hint="Budget Kuliner"
+                android:hint="Please insert your culinary budget here"
                 android:inputType="number" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Budget Hotel" />
+                android:text="Hotel Budget" />
 
             <EditText
                 android:id="@+id/edit_text_hotel_budget"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
-                android:hint="Budget Hotel"
+                android:hint="Please insert your hotel budget here"
                 android:inputType="number" />
             <LinearLayout
                 android:layout_width="match_parent"
@@ -108,7 +108,7 @@
                     android:fontFamily="sans-serif"
                     android:textSize="14sp"
                     android:textStyle="bold"
-                    android:text="Lanjut"
+                    android:text="Continue"
                     android:textColor="@color/white"
                     android:background="@color/button_orange"/>
 

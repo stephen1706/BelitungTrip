@@ -39,6 +39,7 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListe
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
+import com.yulius.belitungtrip.FormattingUtil;
 import com.yulius.belitungtrip.R;
 import com.yulius.belitungtrip.activities.MainActivity;
 import com.yulius.belitungtrip.api.HotelDetailAPI;
@@ -96,6 +97,9 @@ public class HotelDetailFragment extends BaseFragment {
     private HotelDetailAPI mHotelDetailAPI;
     private Target loadtarget;
     private File mPhotosphereFile;
+    private LinearLayout mPhotosphereFrame;
+    private TextView mPriceTextView;
+    private TextView mRatingTextView;
     //================================================================================
     // Constructor
     //================================================================================
@@ -172,10 +176,13 @@ public class HotelDetailFragment extends BaseFragment {
         mPhotoSphereButton = (Button) mLayoutView.findViewById(R.id.button_view_photosphere);
 //        mPhotosphereImageView = (NetworkImageView) mLayoutView.findViewById(R.id.image);
         mPhotosphereImageView = (ImageView) mLayoutView.findViewById(R.id.image_photosphere);
+        mPhotosphereFrame = (LinearLayout) mLayoutView.findViewById(R.id.frame_photosphere);
         mTextViewPhotosphere = (TextView) mLayoutView.findViewById(R.id.text_view_photosphere);
         mTextViewAddress = (TextView) mLayoutView.findViewById(R.id.text_view_hotel_address);
         mTextViewWebsite = (TextView) mLayoutView.findViewById(R.id.text_view_hotel_website);
         mTextViewTelephone = (TextView) mLayoutView.findViewById(R.id.text_view_hotel_telephone);
+        mRatingTextView = (TextView) mLayoutView.findViewById(R.id.text_view_rating);
+        mPriceTextView = (TextView) mLayoutView.findViewById(R.id.text_view_price);
         mProgressBar = (ProgressBar) mLayoutView.findViewById(R.id.progress_bar);
     }
 
@@ -253,6 +260,8 @@ public class HotelDetailFragment extends BaseFragment {
         super.refreshFragment();
 
         ((MainActivity) getActivity()).getSupportActionBar().setTitle(mHotelDetailResponseData.hotelName);
+        mPriceTextView.setText("Rp " + FormattingUtil.formatDecimal(mHotelDetailResponseData.hotelPrice));
+        mRatingTextView.setText(mHotelDetailResponseData.hotelRating + "/100");
 
         Log.d("test","url:" + mHotelDetailResponseData.photosphere);
 
@@ -329,7 +338,10 @@ public class HotelDetailFragment extends BaseFragment {
                     Log.d("Test", "cancel");
                 }
             }, imageLoadingListener);
+        } else {
+            mPhotosphereFrame.setVisibility(View.GONE);
         }
+
         mTextViewTelephone.setText(mHotelDetailResponseData.hotelTelephone);
         mTextViewTelephone.setOnClickListener(new View.OnClickListener() {
             @Override

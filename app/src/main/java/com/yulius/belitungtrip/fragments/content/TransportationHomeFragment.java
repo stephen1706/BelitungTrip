@@ -34,7 +34,7 @@ public class TransportationHomeFragment extends BaseFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         TAG = getResources().getString(R.string.transportation_home_fragment_tag);
-        mTitle = "Daftar Transportasi";
+        mTitle = "Transportation List";
     }
 
     @Override
@@ -89,7 +89,7 @@ public class TransportationHomeFragment extends BaseFragment {
     @Override
     protected void refreshFragment() {
         super.refreshFragment();
-        mTransportationListAdapter = new TransportationListAdapter(new String[]{"Mobil","Pesawat"}, R.layout.row_transportation_list, mContext);
+        mTransportationListAdapter = new TransportationListAdapter(new String[]{"Car","Flight"}, R.layout.row_transportation_list, mContext);
         mTransportationList.setAdapter(mTransportationListAdapter);
     }
 }

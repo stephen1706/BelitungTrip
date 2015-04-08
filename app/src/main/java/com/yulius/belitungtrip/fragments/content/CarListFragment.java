@@ -44,7 +44,7 @@ public class CarListFragment extends BaseFragment{
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         TAG = getResources().getString(R.string.car_list_fragment_tag);
-        mTitle = "Daftar Mobil";
+        mTitle = "Car List";
     }
 
     @Override
