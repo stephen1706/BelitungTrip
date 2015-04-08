@@ -55,46 +55,5 @@
             android:orientation="vertical"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Nama Trip"
-            android:textSize="18dp"/>
-        <EditText
-            android:id="@+id/edit_text_trip_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Nama Trip"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Jumlah Penumpang"
-            android:textSize="18dp"/>
-        <EditText
-            android:id="@+id/edit_text_total_guest"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Jumlah Penumpang"
-            android:inputType="number"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Total Harga"
-            android:layout_marginTop="20dp"
-            android:textSize="18dp"/>
-        <TextView
-            android:id="@+id/text_view_total_price"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:textSize="18dp"/>
-        <Button
-            android:id="@+id/button_save_trip"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="SIMPAN"
-            android:textColor="@color/white"
-            android:background="@color/blue"/>
     </LinearLayout>
 </ScrollView>

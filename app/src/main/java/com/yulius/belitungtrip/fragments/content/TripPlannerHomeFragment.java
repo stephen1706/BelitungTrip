@@ -88,7 +88,6 @@ public class TripPlannerHomeFragment extends BaseFragment  implements DatePicker
         setUpViewState();
         setUpAdapter();
         setUpListener();
-//        setUpMessageListener();
 
         setUpCalendar();
 
@@ -114,24 +113,7 @@ public class TripPlannerHomeFragment extends BaseFragment  implements DatePicker
         for(com.yulius.belitungtrip.realm.Trip trip : mTripResult){
             tripItems.add(trip);
         }
-//        mItems = new ArrayList<String>();
-//        ActiveAndroid.beginTransaction();
-//        try {
-//            for (int i = 0; i < 20; i++) {
-//                Trip trip = new Trip();
-//                trip.name = "Example " + i;
-//                trip.time = System.currentTimeMillis();
-//                trip.save();
-//            }
-//            ActiveAndroid.setTransactionSuccessful();
-//        }
-//        finally {
-//            ActiveAndroid.endTransaction();
-//        }
-//        List<Trip> tripItems= new Select()
-//                        .from(Trip.class)
-//                        .orderBy("name ASC")
-//                        .execute();
+
         mTripListAdapter = new TripListAdapter(tripItems, R.layout.row_trip_list, mContext);
         mTripList.setAdapter(mTripListAdapter);
     }
@@ -180,7 +162,6 @@ public class TripPlannerHomeFragment extends BaseFragment  implements DatePicker
                                     trip.removeFromRealm();
                                     mRealm.commitTransaction();
 
-//                                    new Delete().from(Trip.class).where("Id = ?", mTripListAdapter.getItemId(position)).execute();
                                     mTripListAdapter.removeItem(position);
                                     mTripListAdapter.notifyItemRemoved(position);
                                 }
@@ -197,7 +178,6 @@ public class TripPlannerHomeFragment extends BaseFragment  implements DatePicker
                                     trip.removeFromRealm();
                                     mRealm.commitTransaction();
 
-//                                    new Delete().from(Trip.class).where("Id = ?", mTripListAdapter.getItemId(position)).execute();
                                     mTripListAdapter.removeItem(position);
                                     mTripListAdapter.notifyItemRemoved(position);
                                 }

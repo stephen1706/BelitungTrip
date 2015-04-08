@@ -6,7 +6,6 @@ import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -34,7 +33,6 @@ public class TripDetailFragment extends BaseFragment {
     private LinearLayout mPoiListFrame;
     private LinearLayout mHotelListFrame;
     private LinearLayout mSouvenirListFrame;
-    private Button mSaveTripButton;
     private String mTripName;
 
     public static TripDetailFragment newInstance(String tripName) {
@@ -70,7 +68,7 @@ public class TripDetailFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        mLayoutView = inflater.inflate(R.layout.fragment_trip_planner_result, container, false);
+        mLayoutView = inflater.inflate(R.layout.fragment_trip_detail, container, false);
 
         setUpAttribute();
         setUpView();
@@ -88,11 +86,9 @@ public class TripDetailFragment extends BaseFragment {
         mRestaurantListFrame = (LinearLayout) mLayoutView.findViewById(R.id.frame_restaurant_list);
         mHotelListFrame = (LinearLayout) mLayoutView.findViewById(R.id.frame_hotel_list);
         mSouvenirListFrame = (LinearLayout) mLayoutView.findViewById(R.id.frame_souvenir_list);
-        mSaveTripButton = (Button) mLayoutView.findViewById(R.id.button_save_trip);
     }
 
     private void setUpViewState() {
-        mSaveTripButton.setVisibility(View.GONE);
         Realm realm = Realm.getInstance(mContext);
 
         RealmResults<Trip> tripResult = realm.where(Trip.class)

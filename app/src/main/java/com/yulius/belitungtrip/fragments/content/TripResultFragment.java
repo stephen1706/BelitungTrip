@@ -3,11 +3,14 @@ package com.yulius.belitungtrip.fragments.content;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,7 +39,10 @@ import com.yulius.belitungtrip.response.PoiListResponseData;
 import com.yulius.belitungtrip.response.RestaurantListResponseData;
 import com.yulius.belitungtrip.response.SouvenirListResponseData;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Random;
 
 import io.realm.Realm;
@@ -61,6 +67,7 @@ public class TripResultFragment extends BaseFragment {
     private int mRestaurantBudget;
     private int mHotelBudget;
     private int mTotalNight;
+    private int mTotalPrice;
     private ArrayList<Restaurant> mRestaurantResultList;
     private ArrayList<Poi> mPoiResultList;
     private Hotel mSelectedHotel;
@@ -71,6 +78,9 @@ public class TripResultFragment extends BaseFragment {
     private LinearLayout mHotelListFrame;
     private LinearLayout mSouvenirListFrame;
     private Button mSaveTripButton;
+    private TextView mTotalPriceTextView;
+    private EditText mTotalGuestEditText;
+    private EditText mTripNameEditText;
 
     public static TripResultFragment newInstance(int poiBudget, int restaurantBudget, int hotelBudget, int totalNight) {
         TripResultFragment fragment = new TripResultFragment();
@@ -104,7 +114,6 @@ public class TripResultFragment extends BaseFragment {
             mRestaurantBudget = getArguments().getInt(PARAM_RESTAURANT_BUDGET);
             mHotelBudget = getArguments().getInt(PARAM_HOTEL_BUDGET);
         }
-
     }
 
     @Override
@@ -129,22 +138,72 @@ public class TripResultFragment extends BaseFragment {
         mHotelListFrame = (LinearLayout) mLayoutView.findViewById(R.id.frame_hotel_list);
         mSouvenirListFrame = (LinearLayout) mLayoutView.findViewById(R.id.frame_souvenir_list);
         mSaveTripButton = (Button) mLayoutView.findViewById(R.id.button_save_trip);
+        mTotalPriceTextView = (TextView) mLayoutView.findViewById(R.id.text_view_total_price);
+        mTotalGuestEditText = (EditText) mLayoutView.findViewById(R.id.edit_text_total_guest);
+        mTripNameEditText = (EditText) mLayoutView.findViewById(R.id.edit_text_trip_name);
     }
 
     private void setUpViewState() {
     }
 
     private void setUpListener() {
+        mTotalGuestEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(s.length() == 0){
+                    return;
+                }
+                int numGuests;
+                try {
+                    numGuests = Integer.parseInt(s.toString());
+                } catch (Exception e){
+                    Toast.makeText(mContext, "Harap input total penumpang dengan benar", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                mTotalPrice = 0;
+                for(Restaurant restaurant:mRestaurantResultList){
+                    mTotalPrice += numGuests * restaurant.price;
+                }
+                for(Poi poi:mPoiResultList){
+                    mTotalPrice += numGuests * poi.price;
+                }
+                mTotalPrice += numGuests * mSelectedSouvenir.price;
+                int numberOfRoom = (1+numGuests)/2;
+                Log.d("test","jmlh kmr : " + numberOfRoom);
+                mTotalPrice += numberOfRoom * (mTotalNight-1) * mSelectedHotel.price;
+
+                mTotalPriceTextView.setText("Rp " + formatDecimal(mTotalPrice));
+            }
+        });
+
         mSaveTripButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String tripName = mTripNameEditText.getText().toString();
+                if(tripName.isEmpty()){
+                    Toast.makeText(mContext, "Harap input nama trip dengan benar", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
                 Realm realm = Realm.getInstance(mContext);
                 try {
                     realm.beginTransaction();
                     Trip trip = realm.createObject(Trip.class); // Create a new object
                     trip.setNumGuests(1);
-                    trip.setTripName("tes 1");
+                    trip.setTripName(tripName);
                     trip.setTotalNight(mTotalNight);
+                    trip.setTotalPrice(mTotalPrice);
 
                     com.yulius.belitungtrip.realm.Hotel hotel = realm.createObject(com.yulius.belitungtrip.realm.Hotel.class);
                     hotel.setHotelId(mSelectedHotel.id);
@@ -183,10 +242,10 @@ public class TripResultFragment extends BaseFragment {
                     }
                     trip.setPois(pois);
                     realm.commitTransaction();
-                    Toast.makeText(mContext, "trip saved", Toast.LENGTH_LONG).show();
+                    Toast.makeText(mContext, "Trip telah disimpan", Toast.LENGTH_LONG).show();
                 } catch (RealmException e){
                     realm.cancelTransaction();
-                    Toast.makeText(mContext, "trip name already exist", Toast.LENGTH_LONG).show();
+                    Toast.makeText(mContext, "Nama " + tripName + " sudah digunakan sebagai trip name", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -372,6 +431,7 @@ public class TripResultFragment extends BaseFragment {
             }
         });
         mSouvenirListFrame.addView(souvenirRow);
+        mTotalGuestEditText.setText("1");
     }
 
     private void findBestPoi() {
@@ -495,5 +555,12 @@ public class TripResultFragment extends BaseFragment {
 
         actionBar.setDisplayHomeAsUpEnabled(true);
         getParentActivity().setDrawerIndicatorEnabled(false);
+    }
+
+    public static String formatDecimal(int number){
+        DecimalFormatSymbols decimalSymbol = new DecimalFormatSymbols(new Locale("in"));
+        DecimalFormat decimalFormat = new DecimalFormat("#,###", decimalSymbol);
+        String formattedDecimal = decimalFormat.format(number);
+        return formattedDecimal;
     }
 }
