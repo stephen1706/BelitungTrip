@@ -14,22 +14,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.activeandroid.ActiveAndroid;
-import com.activeandroid.query.Delete;
-import com.activeandroid.query.Select;
 import com.fourmob.datetimepicker.date.DatePickerDialog;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.sleepbot.datetimepicker.time.RadialPickerLayout;
 import com.sleepbot.datetimepicker.time.TimePickerDialog;
 import com.yulius.belitungtrip.R;
 import com.yulius.belitungtrip.adapters.TripListAdapter;
-import com.yulius.belitungtrip.database.Trip;
 import com.yulius.belitungtrip.fragments.base.BaseFragment;
+import com.yulius.belitungtrip.listeners.RecyclerItemClickListener;
 import com.yulius.belitungtrip.listeners.SwipeableRecyclerViewTouchListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
+
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 public class TripPlannerHomeFragment extends BaseFragment  implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener{
     public static final String DATEPICKER_TAG = "datepicker";
@@ -45,8 +44,9 @@ public class TripPlannerHomeFragment extends BaseFragment  implements DatePicker
     private TripListAdapter mTripListAdapter;
     private DatePickerDialog mDatePickerDialog;
     private TimePickerDialog mTimePickerDialog;
-
+    RealmResults<com.yulius.belitungtrip.realm.Trip> mTripResult;
     private ArrayList<String> mItems;
+    private Realm mRealm;
 
     public static TripPlannerHomeFragment newInstance() {
         TripPlannerHomeFragment fragment = new TripPlannerHomeFragment();
@@ -83,6 +83,7 @@ public class TripPlannerHomeFragment extends BaseFragment  implements DatePicker
 
         mLayoutView = inflater.inflate(R.layout.fragment_trip_planner_home, container, false);
 
+        setUpAttribute();
         setUpView();
         setUpViewState();
         setUpAdapter();
@@ -90,7 +91,12 @@ public class TripPlannerHomeFragment extends BaseFragment  implements DatePicker
 //        setUpMessageListener();
 
         setUpCalendar();
+
         return mLayoutView;
+    }
+
+    private void setUpAttribute() {
+        mRealm = Realm.getInstance(mContext);
     }
 
     private void setUpCalendar() {
@@ -102,32 +108,30 @@ public class TripPlannerHomeFragment extends BaseFragment  implements DatePicker
     }
 
     private void setUpAdapter() {
-        mItems = new ArrayList<String>();
-//        mItems.add("aa");
-//        mItems.add("bb");
-//        mItems.add("aa");
-//        mItems.add("bb");
-//        mItems.add("aa");
-//        mItems.add("bb");
-//        mItems.add("aa");
-//        mItems.add("bb");
-        ActiveAndroid.beginTransaction();
-        try {
-            for (int i = 0; i < 20; i++) {
-                Trip trip = new Trip();
-                trip.name = "Example " + i;
-                trip.time = System.currentTimeMillis();
-                trip.save();
-            }
-            ActiveAndroid.setTransactionSuccessful();
+        mTripResult = mRealm.where(com.yulius.belitungtrip.realm.Trip.class).findAll();
+        ArrayList<com.yulius.belitungtrip.realm.Trip> tripItems = new ArrayList<>();
+
+        for(com.yulius.belitungtrip.realm.Trip trip : mTripResult){
+            tripItems.add(trip);
         }
-        finally {
-            ActiveAndroid.endTransaction();
-        }
-        List<Trip> tripItems= new Select()
-                        .from(Trip.class)
-                        .orderBy("name ASC")
-                        .execute();
+//        mItems = new ArrayList<String>();
+//        ActiveAndroid.beginTransaction();
+//        try {
+//            for (int i = 0; i < 20; i++) {
+//                Trip trip = new Trip();
+//                trip.name = "Example " + i;
+//                trip.time = System.currentTimeMillis();
+//                trip.save();
+//            }
+//            ActiveAndroid.setTransactionSuccessful();
+//        }
+//        finally {
+//            ActiveAndroid.endTransaction();
+//        }
+//        List<Trip> tripItems= new Select()
+//                        .from(Trip.class)
+//                        .orderBy("name ASC")
+//                        .execute();
         mTripListAdapter = new TripListAdapter(tripItems, R.layout.row_trip_list, mContext);
         mTripList.setAdapter(mTripListAdapter);
     }
@@ -142,7 +146,6 @@ public class TripPlannerHomeFragment extends BaseFragment  implements DatePicker
     }
 
     private void setUpListener() {
-
         mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -170,8 +173,14 @@ public class TripPlannerHomeFragment extends BaseFragment  implements DatePicker
                             @Override
                             public void onDismissedBySwipeLeft(RecyclerView recyclerView, int[] reverseSortedPositions) {
                                 for (int position : reverseSortedPositions) {
-                                    Toast.makeText(mContext,"deleted id : " + mTripListAdapter.getItemId(position),Toast.LENGTH_SHORT).show();
-                                    new Delete().from(Trip.class).where("Id = ?", mTripListAdapter.getItemId(position)).execute();
+                                    Toast.makeText(mContext,"deleted name : " + mTripListAdapter.getTripName(position),Toast.LENGTH_SHORT).show();
+
+                                    mRealm.beginTransaction();
+                                    com.yulius.belitungtrip.realm.Trip trip = mTripResult.get(position);
+                                    trip.removeFromRealm();
+                                    mRealm.commitTransaction();
+
+//                                    new Delete().from(Trip.class).where("Id = ?", mTripListAdapter.getItemId(position)).execute();
                                     mTripListAdapter.removeItem(position);
                                     mTripListAdapter.notifyItemRemoved(position);
                                 }
@@ -181,9 +190,14 @@ public class TripPlannerHomeFragment extends BaseFragment  implements DatePicker
                             @Override
                             public void onDismissedBySwipeRight(RecyclerView recyclerView, int[] reverseSortedPositions) {
                                 for (int position : reverseSortedPositions) {
-                                    Toast.makeText(mContext,"deleted id : " + mTripListAdapter.getItemId(position),Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(mContext,"deleted name : " + mTripListAdapter.getTripName(position),Toast.LENGTH_SHORT).show();
 
-                                    new Delete().from(Trip.class).where("Id = ?", mTripListAdapter.getItemId(position)).execute();
+                                    mRealm.beginTransaction();
+                                    com.yulius.belitungtrip.realm.Trip trip = mTripResult.get(position);
+                                    trip.removeFromRealm();
+                                    mRealm.commitTransaction();
+
+//                                    new Delete().from(Trip.class).where("Id = ?", mTripListAdapter.getItemId(position)).execute();
                                     mTripListAdapter.removeItem(position);
                                     mTripListAdapter.notifyItemRemoved(position);
                                 }
@@ -191,6 +205,15 @@ public class TripPlannerHomeFragment extends BaseFragment  implements DatePicker
                             }
                         });
         mTripList.addOnItemTouchListener(swipeTouchListener);
+
+        mTripList.addOnItemTouchListener(
+                new RecyclerItemClickListener(mContext, new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        replaceContentFragment(TripDetailFragment.newInstance(mTripListAdapter.getTripName(position)), getResources().getString(R.string.trip_detail_fragment_tag));
+                    }
+                })
+        );
     }
 
     @Override
@@ -206,16 +229,15 @@ public class TripPlannerHomeFragment extends BaseFragment  implements DatePicker
         Toast.makeText(mContext, "new time:" + hourOfDay + "-" + minute, Toast.LENGTH_LONG).show();
     }
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == Activity.RESULT_OK && requestCode == ROOM_INFO_REQUEST_CODE){
             if(data != null) {
-                int hotelBudget = data.getIntExtra(PARAM_HOTEL_BUDGET, 0);
-                int poiBudget = data.getIntExtra(PARAM_POI_BUDGET, 0);
-                int restaurantBudget = data.getIntExtra(PARAM_RESTAURANT_BUDGET, 0);
-                int totalNight = data.getIntExtra(PARAM_TOTAL_NIGHT, 0);
+                int hotelBudget = (int) data.getLongExtra(PARAM_HOTEL_BUDGET, 0);
+                int poiBudget = (int) data.getLongExtra(PARAM_POI_BUDGET, 0);
+                int restaurantBudget = (int) data.getLongExtra(PARAM_RESTAURANT_BUDGET, 0);
+                int totalNight = (int) data.getLongExtra(PARAM_TOTAL_NIGHT, 0);
                 if (restaurantBudget != 0 && totalNight != 0 && hotelBudget != 0 && poiBudget != 0) {
                     replaceContentFragment(TripResultFragment.newInstance(poiBudget, restaurantBudget, hotelBudget, totalNight), getResources().getString(R.string.trip_result_fragment_tag));
                 } else {

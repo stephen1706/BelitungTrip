@@ -8,11 +8,11 @@ import io.realm.annotations.PrimaryKey;
 public class Trip extends RealmObject {
     @PrimaryKey
     private String tripName;
-    private int price;
     private int numGuests;
+    private int totalNight;
     private RealmList<Restaurant> restaurants;
     private RealmList<Poi> pois;
-    private RealmList<Hotel> hotel;
+    private Hotel hotel;
 
     public String getTripName() {
         return tripName;
@@ -20,14 +20,6 @@ public class Trip extends RealmObject {
 
     public void setTripName(String tripName) {
         this.tripName = tripName;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
     }
 
     public int getNumGuests() {
@@ -54,11 +46,20 @@ public class Trip extends RealmObject {
         this.pois = pois;
     }
 
-    public RealmList<Hotel> getHotel() {
+    public Hotel getHotel() {
         return hotel;
     }
 
-    public void setHotel(RealmList<Hotel> hotel) {
+    public void setHotel(Hotel hotel) {
         this.hotel = hotel;
     }
+
+    public int getTotalNight() {
+        return totalNight;
+    }
+
+    public void setTotalNight(int totalNight) {
+        this.totalNight = totalNight;
+    }
+
 }

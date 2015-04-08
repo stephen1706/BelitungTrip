@@ -106,7 +106,7 @@ public class PoiIndividual {
             if(i%3 == 0){
                 geneString += "\n";
             }
-            geneString += " " + getGene(i).price;
+            geneString += " " + getGene(i).id;
         }
         return geneString;
     }

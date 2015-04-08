@@ -2,12 +2,15 @@ package com.yulius.belitungtrip.fragments.content;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.yulius.belitungtrip.R;
@@ -25,11 +28,16 @@ import com.yulius.belitungtrip.entity.Poi;
 import com.yulius.belitungtrip.entity.Restaurant;
 import com.yulius.belitungtrip.fragments.base.BaseFragment;
 import com.yulius.belitungtrip.listeners.OnMessageActionListener;
+import com.yulius.belitungtrip.realm.Trip;
 import com.yulius.belitungtrip.response.HotelListResponseData;
 import com.yulius.belitungtrip.response.PoiListResponseData;
 import com.yulius.belitungtrip.response.RestaurantListResponseData;
 
 import java.util.ArrayList;
+
+import io.realm.Realm;
+import io.realm.RealmList;
+import io.realm.exceptions.RealmException;
 
 public class TripResultFragment extends BaseFragment {
     private static final String PARAM_TOTAL_NIGHT = "param_total_night";
@@ -53,6 +61,7 @@ public class TripResultFragment extends BaseFragment {
     private LinearLayout mRestaurantListFrame;
     private LinearLayout mPoiListFrame;
     private LinearLayout mHotelListFrame;
+    private Button mSaveTripButton;
 
     public static TripResultFragment newInstance(int poiBudget, int restaurantBudget, int hotelBudget, int totalNight) {
         TripResultFragment fragment = new TripResultFragment();
@@ -98,6 +107,7 @@ public class TripResultFragment extends BaseFragment {
 
         setUpView();
         setUpViewState();
+        setUpListener();
         setUpRequestAPI();
         setUpMessageListener();
 
@@ -108,9 +118,61 @@ public class TripResultFragment extends BaseFragment {
         mPoiListFrame = (LinearLayout) mLayoutView.findViewById(R.id.frame_poi_list);
         mRestaurantListFrame = (LinearLayout) mLayoutView.findViewById(R.id.frame_restaurant_list);
         mHotelListFrame = (LinearLayout) mLayoutView.findViewById(R.id.frame_hotel_list);
+        mSaveTripButton = (Button) mLayoutView.findViewById(R.id.button_save_trip);
     }
 
     private void setUpViewState() {
+    }
+
+    private void setUpListener() {
+        mSaveTripButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Realm realm = Realm.getInstance(mContext);
+                try {
+                    realm.beginTransaction();
+                    Trip trip = realm.createObject(Trip.class); // Create a new object
+                    trip.setNumGuests(1);
+                    trip.setTripName("tes 1");
+                    trip.setTotalNight(mTotalNight);
+
+                    com.yulius.belitungtrip.realm.Hotel hotel = realm.createObject(com.yulius.belitungtrip.realm.Hotel.class);
+                    hotel.setHotelId(mSelectedHotel.id);
+                    hotel.setHotelName(mSelectedHotel.name);
+                    hotel.setHotelPrice(mSelectedHotel.price);
+                    hotel.setHotelRating(mSelectedHotel.rating);
+                    trip.setHotel(hotel);
+
+                    RealmList<com.yulius.belitungtrip.realm.Restaurant> restaurants = new RealmList<>();
+                    for (Restaurant currentRestaurant : mRestaurantResultList) {
+                        com.yulius.belitungtrip.realm.Restaurant restaurant = realm.createObject(com.yulius.belitungtrip.realm.Restaurant.class);
+                        restaurant.setRestaurantId(currentRestaurant.id);
+                        restaurant.setRestaurantName(currentRestaurant.name);
+                        restaurant.setRestaurantPrice(currentRestaurant.price);
+                        restaurant.setRestaurantRating(currentRestaurant.rating);
+                        restaurant.setRestaurantType(currentRestaurant.type);
+                        restaurants.add(restaurant);
+                    }
+                    trip.setRestaurants(restaurants);
+
+                    RealmList<com.yulius.belitungtrip.realm.Poi> pois = new RealmList<>();
+                    for (Poi currentPoi : mPoiResultList) {
+                        com.yulius.belitungtrip.realm.Poi poi = realm.createObject(com.yulius.belitungtrip.realm.Poi.class);
+                        poi.setPoiId(currentPoi.id);
+                        poi.setPoiName(currentPoi.name);
+                        poi.setPoiPrice(currentPoi.price);
+                        poi.setPoiRating(currentPoi.rating);
+                        pois.add(poi);
+                    }
+                    trip.setPois(pois);
+                    realm.commitTransaction();
+                    Toast.makeText(mContext, "trip saved", Toast.LENGTH_LONG).show();
+                } catch (RealmException e){
+                    realm.cancelTransaction();
+                    Toast.makeText(mContext, "trip name already exist", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
     }
 
     private void setUpRequestAPI() {
@@ -255,6 +317,12 @@ public class TripResultFragment extends BaseFragment {
         View hotelRow = mLayoutInflater.inflate(R.layout.row_hotel_list, mPoiListFrame, false);
         ((TextView) hotelRow.findViewById(R.id.text_view_hotel_name)).setText(mSelectedHotel.name);
         ((TextView) hotelRow.findViewById(R.id.text_view_region)).setText("Total biaya : " + mSelectedHotel.price);
+        hotelRow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                replaceContentFragment(HotelDetailFragment.newInstance(Integer.toString(mSelectedHotel.id)), getResources().getString(R.string.restaurant_detail_fragment_tag));
+            }
+        });
         mHotelListFrame.addView(hotelRow);
     }
 
@@ -350,5 +418,13 @@ public class TripResultFragment extends BaseFragment {
         }
 
         refreshFragment();
+    }
+
+    @Override
+    protected void restoreCustomActionBar(ActionBar actionBar) {
+        super.restoreCustomActionBar(actionBar);
+
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        getParentActivity().setDrawerIndicatorEnabled(false);
     }
 }

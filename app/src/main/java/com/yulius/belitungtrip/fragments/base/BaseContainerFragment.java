@@ -159,13 +159,15 @@ public abstract class BaseContainerFragment extends Fragment{
         initFragment(initialFragment, null);
     }
 
-    public void initFragment(Fragment initialFragment, String tag) {
-
-        FragmentManager fragmentManager = getChildFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.container, initialFragment, tag);
-        fragmentTransaction.commit();
-
+    public void initFragment(final Fragment initialFragment, final String tag) {
+        new Handler().post(new Runnable() {
+            public void run() {
+                FragmentManager fragmentManager = getChildFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.container, initialFragment, tag);
+                fragmentTransaction.commitAllowingStateLoss();
+            }
+        });
     }
     public void replaceFragment(Fragment newFragment) {
         replaceFragment(newFragment, null);

@@ -8,12 +8,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.yulius.belitungtrip.R;
-import com.yulius.belitungtrip.database.Trip;
+import com.yulius.belitungtrip.realm.Trip;
 
 import java.util.List;
 
 public class TripListAdapter extends RecyclerView.Adapter<TripListAdapter.ViewHolder>  {
-
     private List<Trip>  tripList;
     private int rowLayout;
     private Context mContext;
@@ -31,13 +30,9 @@ public class TripListAdapter extends RecyclerView.Adapter<TripListAdapter.ViewHo
     }
 
     @Override
-    public long getItemId(int position) {
-        return tripList.get(position).getId();
-    }
-
-    @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
-        viewHolder.tripName.setText(tripList.get(i).name);
+        viewHolder.mTripNameTextView.setText(tripList.get(i).getTripName());
+        viewHolder.mAdditionalInfoTextView.setText(tripList.get(i).getTotalNight() + " hari");
     }
 
     @Override
@@ -45,16 +40,21 @@ public class TripListAdapter extends RecyclerView.Adapter<TripListAdapter.ViewHo
         return tripList == null ? 0 : tripList.size();
     }
 
+    public String getTripName(int position){
+        return tripList.get(position).getTripName();
+    }
     public void removeItem(int position) {
         tripList.remove(position);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView tripName;
+        private TextView mAdditionalInfoTextView;
+        private TextView mTripNameTextView;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            tripName = (TextView) itemView.findViewById(R.id.text_view_trip_name);
+            mTripNameTextView = (TextView) itemView.findViewById(R.id.text_view_trip_name);
+            mAdditionalInfoTextView = (TextView) itemView.findViewById(R.id.text_view_additional_info);
         }
     }
 }

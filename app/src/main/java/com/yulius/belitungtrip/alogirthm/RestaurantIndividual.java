@@ -124,7 +124,7 @@ public class RestaurantIndividual {
             if(i%3 == 0){
                 geneString += "\n";
             }
-            geneString += " " + getGene(i).price + "-" + getGene(i).type;
+            geneString += " " + getGene(i).id + "-" + getGene(i).type;
         }
         return geneString;
     }

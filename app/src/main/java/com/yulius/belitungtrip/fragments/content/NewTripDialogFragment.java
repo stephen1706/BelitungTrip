@@ -115,15 +115,15 @@ public class NewTripDialogFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent();
-                int poiBudget;
-                int restaurantBudget;
-                int hotelBudget;
-                int totalNight;
+                long poiBudget;
+                long restaurantBudget;
+                long hotelBudget;
+                long totalNight;
                 try {
-                    poiBudget = Integer.parseInt(mPoiBudgetEditText.getText().toString());
-                    restaurantBudget = Integer.parseInt(mRestaurantBudgetEditText.getText().toString());
-                    hotelBudget = Integer.parseInt(mHotelBudgetEditText.getText().toString());
-                    totalNight = Integer.parseInt(mTotalNightEditText.getText().toString());
+                    poiBudget = Long.parseLong(mPoiBudgetEditText.getText().toString());
+                    restaurantBudget = Long.parseLong(mRestaurantBudgetEditText.getText().toString());
+                    hotelBudget = Long.parseLong(mHotelBudgetEditText.getText().toString());
+                    totalNight = Long.parseLong(mTotalNightEditText.getText().toString());
                 } catch (Exception e){
                     Toast.makeText(mContext, "Harap lengkapi field dengan benar", Toast.LENGTH_LONG).show();
                     return;
@@ -133,7 +133,7 @@ public class NewTripDialogFragment extends DialogFragment {
                     return;
                 }
 
-                int minBudget = (totalNight-1)*500000/3;
+                long minBudget = (totalNight-1)*500000/3;
                 if(poiBudget < minBudget || hotelBudget < minBudget || restaurantBudget < minBudget){
                     Toast.makeText(mContext, "Minimal budget tiap bagian adalah Rp " + minBudget, Toast.LENGTH_LONG).show();
                     return;
