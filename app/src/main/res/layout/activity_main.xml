@@ -33,7 +33,7 @@
         android:layout_width="240dp"
         android:layout_height="match_parent"
         android:layout_gravity="left"
-        android:name="com.yulius.belitungtrip.fragments.NavigationDrawerFragment"
+        android:name="com.yulius.belitungtourism.fragments.NavigationDrawerFragment"
         tools:layout="@layout/fragment_navigation_drawer" />
 
 </android.support.v4.widget.DrawerLayout>

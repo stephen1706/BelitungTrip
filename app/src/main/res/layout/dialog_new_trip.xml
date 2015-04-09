@@ -55,7 +55,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
                 android:hint="Insert your journey duration here"
-                android:inputType="number" />
+                android:inputType="number"
+                android:textColor="@color/black" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -68,7 +69,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
                 android:hint="Insert your point of interest budget"
-                android:inputType="number" />
+                android:inputType="number"
+                android:textColor="@color/black"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -81,7 +83,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
                 android:hint="Please insert your culinary budget here"
-                android:inputType="number" />
+                android:inputType="number"
+                android:textColor="@color/black" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -94,7 +97,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
                 android:hint="Please insert your hotel budget here"
-                android:inputType="number" />
+                android:inputType="number"
+                android:textColor="@color/black" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
