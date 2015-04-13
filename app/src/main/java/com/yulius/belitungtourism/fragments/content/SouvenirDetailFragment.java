@@ -13,7 +13,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
-import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -71,7 +70,6 @@ public class SouvenirDetailFragment extends BaseFragment {
     private ImageView mPhotosphereImageView;
     private TextView mTextViewPhotosphere;
     private TextView mTextViewAddress;
-    private TextView mTextViewWebsite;
     private TextView mTextViewTelephone;
     private ProgressBar mProgressBar;
 
@@ -92,6 +90,7 @@ public class SouvenirDetailFragment extends BaseFragment {
     private LinearLayout mPhotosphereFrame;
     private TextView mPriceTextView;
     private TextView mRatingTextView;
+    private Button mWebsiteButton;
     //================================================================================
     // Constructor
     //================================================================================
@@ -143,7 +142,9 @@ public class SouvenirDetailFragment extends BaseFragment {
     public void onDestroy() {
         super.onDestroy();
         if (mImageLoader != null) {
-            mImageLoader.cancelDisplayTask(mPhotosphereImageView);//cancel load gambar wkt diback ato home button pressed
+            try {
+                mImageLoader.cancelDisplayTask(mPhotosphereImageView);//cancel load gambar wkt diback ato home button pressed
+            } catch (Exception e){}
         }
     }
 
@@ -163,13 +164,13 @@ public class SouvenirDetailFragment extends BaseFragment {
         mNoPhotoFrame  = (LinearLayout) mLayoutView.findViewById(R.id.frame_no_photo_available);
         mImageHeaderPager = (ViewPager) mLayoutView.findViewById(R.id.pager_souvenir_image_header);
         mMapboxButton = (Button) mLayoutView.findViewById(R.id.button_mapview);
+        mWebsiteButton = (Button) mLayoutView.findViewById(R.id.button_website);
         mMapView = (MapView) mLayoutView.findViewById(R.id.mapid);
         mPhotoSphereButton = (Button) mLayoutView.findViewById(R.id.button_view_photosphere);
         mPhotosphereImageView = (ImageView) mLayoutView.findViewById(R.id.image_photosphere);
         mPhotosphereFrame = (LinearLayout) mLayoutView.findViewById(R.id.frame_photosphere);
         mTextViewPhotosphere = (TextView) mLayoutView.findViewById(R.id.text_view_photosphere);
         mTextViewAddress = (TextView) mLayoutView.findViewById(R.id.text_view_souvenir_address);
-        mTextViewWebsite = (TextView) mLayoutView.findViewById(R.id.text_view_souvenir_website);
         mTextViewTelephone = (TextView) mLayoutView.findViewById(R.id.text_view_souvenir_telephone);
         mPriceTextView = (TextView) mLayoutView.findViewById(R.id.text_view_price);
         mRatingTextView = (TextView) mLayoutView.findViewById(R.id.text_view_rating);
@@ -339,8 +340,15 @@ public class SouvenirDetailFragment extends BaseFragment {
         });
 
         mTextViewAddress.setText(mSouvenirDetailResponseData.souvenirAddress);
-        mTextViewWebsite.setText(mSouvenirDetailResponseData.souvenirWebsite);
-        mTextViewWebsite.setMovementMethod(LinkMovementMethod.getInstance());
+        mWebsiteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url = mSouvenirDetailResponseData.souvenirWebsite;
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
+            }
+        });
 
         final LatLng souvenirLocation = new LatLng(Double.parseDouble(mSouvenirDetailResponseData.souvenirLatitude), Double.parseDouble(mSouvenirDetailResponseData.souvenirLongitude));
         mMapView.setCenter(souvenirLocation);
@@ -356,7 +364,7 @@ public class SouvenirDetailFragment extends BaseFragment {
                 String url = "http://maps.google.com/maps?q=loc:" + mSouvenirDetailResponseData.souvenirLatitude + "," + mSouvenirDetailResponseData.souvenirLongitude + " (" + mSouvenirDetailResponseData.souvenirName + ")";
                 Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(url));
                 startActivity(intent);
-//                MapboxDialogFragment mapboxDialogFragment = MapboxDialogFragment.newInstance(souvenirLocation);
+//                MapboxDialogFragment mapboxDialogFragment = MapboxDialogFragment.newInstance(souvenirAddress);
 //                mapboxDialogFragment.show(((ActionBarActivity) mContext).getSupportFragmentManager(), null);
             }
         });

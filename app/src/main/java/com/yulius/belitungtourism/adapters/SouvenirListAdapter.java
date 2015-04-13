@@ -32,7 +32,7 @@ public class SouvenirListAdapter extends RecyclerView.Adapter<SouvenirListAdapte
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
         SouvenirListResponseData.Entry souvenirEntry = souvenirList[i];
         viewHolder.souvenirName.setText(souvenirEntry.souvenirName);
-        viewHolder.souvenirAddress.setText(souvenirEntry.souvenirLocation);
+        viewHolder.souvenirAddress.setText(souvenirEntry.souvenirAddress);
     }
 
     @Override

@@ -6,7 +6,7 @@ public class SouvenirListResponseData {
     public static class Entry {
         public int souvenirId;
         public String souvenirName;
-        public String souvenirLocation;
+        public String souvenirAddress;
         public int souvenirRating;
         public int souvenirPrice;
     }

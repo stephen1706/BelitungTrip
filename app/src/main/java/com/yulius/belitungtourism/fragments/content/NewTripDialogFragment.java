@@ -125,20 +125,30 @@ public class NewTripDialogFragment extends DialogFragment {
                     hotelBudget = Long.parseLong(mHotelBudgetEditText.getText().toString());
                     totalNight = Long.parseLong(mTotalNightEditText.getText().toString());
                 } catch (Exception e){
-                    Toast.makeText(mContext, "Harap lengkapi field dengan benar", Toast.LENGTH_LONG).show();
+                    Toast.makeText(mContext, "Please fill all the required field correctly", Toast.LENGTH_LONG).show();
                     return;
                 }
                 if(totalNight <= 1) {
-                    Toast.makeText(mContext, "Minimal trip adalah 2 hari", Toast.LENGTH_LONG).show();
+                    Toast.makeText(mContext, "Minimal trip duration is 2 days", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                if(totalNight > 7){
+                    Toast.makeText(mContext, "Maximum trip duration is 7 days", Toast.LENGTH_LONG).show();
                     return;
                 }
 
                 long minBudget = (totalNight-1)*500000/3;
                 if(poiBudget < minBudget || hotelBudget < minBudget || restaurantBudget < minBudget){
-                    Toast.makeText(mContext, "Minimal budget tiap bagian adalah Rp " + minBudget, Toast.LENGTH_LONG).show();
+                    Toast.makeText(mContext, "Minimum budget for every part is Rp " + minBudget, Toast.LENGTH_LONG).show();
                     return;
                 }
 
+                long maxBudget = 50000000;
+                if(poiBudget > maxBudget || hotelBudget > maxBudget || restaurantBudget > maxBudget){
+                    Toast.makeText(mContext, "Maximum budget for every part is Rp " + maxBudget, Toast.LENGTH_LONG).show();
+                    return;
+                }
                 i.putExtra(PARAM_TOTAL_NIGHT, totalNight);
                 i.putExtra(PARAM_RESTAURANT_BUDGET, restaurantBudget);
                 i.putExtra(PARAM_HOTEL_BUDGET, hotelBudget);

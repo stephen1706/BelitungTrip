@@ -16,6 +16,7 @@
     <color name="ratingbar_yellow">#ffcd00</color>
 
     <color name="green">#009700</color>
+    <color name="button_green">#00730E</color>
 
     <color name="light_blue">#1BA0E2</color>
     <color name="dark_blue">#0D7FCC</color>
@@ -69,8 +70,8 @@
 
 
     <!-- Navigation Drawer Layout -->
-    <color name="active_section_background">#42A5F5</color>
-    <color name="inactive_section_background">#BBDEFB</color>
+    <color name="active_section_background">#d1d1d1</color>
+    <color name="inactive_section_background">#d4d4d4</color>
 
     <!-- Flight Search Layout -->
 
@@ -103,6 +104,6 @@
     <color name="pink">#e91e63</color>
     <color name="pink_pressed">#ec407a</color>
 
-    <color name="primary">#0277BD</color>
-    <color name="primary_dark">#9FA8DA</color>
+    <color name="primary">#727272</color>
+    <color name="primary_dark">#ffffff</color>
 </resources>

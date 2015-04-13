@@ -11,7 +11,7 @@
             android:layout_height="44dp"
             android:paddingLeft="16dp"
             android:paddingRight="12dp"
-            android:background="@color/light_blue">
+            android:background="@color/gray_72">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -115,7 +115,7 @@
                     android:textStyle="bold"
                     android:text="Continue"
                     android:textColor="@color/white"
-                    android:background="@color/button_orange"/>
+                    android:background="@color/button_green"/>
 
             </LinearLayout>
         </LinearLayout>

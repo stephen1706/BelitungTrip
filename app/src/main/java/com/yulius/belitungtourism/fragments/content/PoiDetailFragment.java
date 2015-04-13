@@ -13,7 +13,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
-import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -71,7 +70,6 @@ public class PoiDetailFragment extends BaseFragment {
     private ImageView mPhotosphereImageView;
     private TextView mTextViewPhotosphere;
     private TextView mTextViewAddress;
-    private TextView mTextViewWebsite;
     private TextView mTextViewTelephone;
     private ProgressBar mProgressBar;
 
@@ -92,6 +90,7 @@ public class PoiDetailFragment extends BaseFragment {
     private LinearLayout mPhotosphereFrame;
     private TextView mRatingTextView;
     private TextView mPriceTextView;
+    private Button mWebsiteButton;
     //================================================================================
     // Constructor
     //================================================================================
@@ -143,7 +142,9 @@ public class PoiDetailFragment extends BaseFragment {
     public void onDestroy() {
         super.onDestroy();
         if (mImageLoader != null) {
-            mImageLoader.cancelDisplayTask(mPhotosphereImageView);//cancel load gambar wkt diback ato home button pressed
+            try {
+                mImageLoader.cancelDisplayTask(mPhotosphereImageView);//cancel load gambar wkt diback ato home button pressed
+            } catch (Exception e){}
         }
     }
 
@@ -163,13 +164,13 @@ public class PoiDetailFragment extends BaseFragment {
         mNoPhotoFrame  = (LinearLayout) mLayoutView.findViewById(R.id.frame_no_photo_available);
         mImageHeaderPager = (ViewPager) mLayoutView.findViewById(R.id.pager_poi_image_header);
         mMapboxButton = (Button) mLayoutView.findViewById(R.id.button_mapview);
+        mWebsiteButton = (Button) mLayoutView.findViewById(R.id.button_website);
         mMapView = (MapView) mLayoutView.findViewById(R.id.mapid);
         mPhotoSphereButton = (Button) mLayoutView.findViewById(R.id.button_view_photosphere);
         mPhotosphereImageView = (ImageView) mLayoutView.findViewById(R.id.image_photosphere);
         mPhotosphereFrame = (LinearLayout) mLayoutView.findViewById(R.id.frame_photosphere);
         mTextViewPhotosphere = (TextView) mLayoutView.findViewById(R.id.text_view_photosphere);
         mTextViewAddress = (TextView) mLayoutView.findViewById(R.id.text_view_poi_address);
-        mTextViewWebsite = (TextView) mLayoutView.findViewById(R.id.text_view_poi_website);
         mTextViewTelephone = (TextView) mLayoutView.findViewById(R.id.text_view_poi_telephone);
         mRatingTextView = (TextView) mLayoutView.findViewById(R.id.text_view_rating);
         mPriceTextView = (TextView) mLayoutView.findViewById(R.id.text_view_price);
@@ -341,8 +342,15 @@ public class PoiDetailFragment extends BaseFragment {
         });
 
         mTextViewAddress.setText(mPoiDetailResponseData.poiAddress);
-        mTextViewWebsite.setText(mPoiDetailResponseData.poiWebsite);
-        mTextViewWebsite.setMovementMethod(LinkMovementMethod.getInstance());
+        mWebsiteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url = mPoiDetailResponseData.poiWebsite;
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
+            }
+        });
 
         final LatLng poiLocation = new LatLng(Double.parseDouble(mPoiDetailResponseData.poiLatitude), Double.parseDouble(mPoiDetailResponseData.poiLongitude));
         mMapView.setCenter(poiLocation);

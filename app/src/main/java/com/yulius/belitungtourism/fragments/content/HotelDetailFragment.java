@@ -13,7 +13,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
-import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -76,7 +75,6 @@ public class HotelDetailFragment extends BaseFragment {
     private ImageView mPhotosphereImageView;
     private TextView mTextViewPhotosphere;
     private TextView mTextViewAddress;
-    private TextView mTextViewWebsite;
     private TextView mTextViewTelephone;
     private ProgressBar mProgressBar;
 
@@ -100,6 +98,7 @@ public class HotelDetailFragment extends BaseFragment {
     private LinearLayout mPhotosphereFrame;
     private TextView mPriceTextView;
     private TextView mRatingTextView;
+    private Button mWebsiteButton;
     //================================================================================
     // Constructor
     //================================================================================
@@ -159,8 +158,10 @@ public class HotelDetailFragment extends BaseFragment {
     public void onDestroy() {
         super.onDestroy();
         if (mImageLoader != null) {
-            mImageLoader.cancelDisplayTask(mPhotosphereImageView);//cancel load gambar wkt diback ato home button pressed
-            mImageLoader.destroy();
+            try {
+                mImageLoader.cancelDisplayTask(mPhotosphereImageView);//cancel load gambar wkt diback ato home button pressed
+                mImageLoader.destroy();
+            } catch (Exception e){}
         }
     }
 
@@ -171,6 +172,7 @@ public class HotelDetailFragment extends BaseFragment {
         mNoPhotoFrame  = (LinearLayout) mLayoutView.findViewById(R.id.frame_no_photo_available);
         mImageHeaderPager = (ViewPager) mLayoutView.findViewById(R.id.pager_hotel_image_header);
         mMapboxButton = (Button) mLayoutView.findViewById(R.id.button_mapview);
+        mWebsiteButton = (Button) mLayoutView.findViewById(R.id.button_website);
         mRatingLayout = (LinearLayout) mLayoutView.findViewById(R.id.rating_layout);
         mMapView = (MapView) mLayoutView.findViewById(R.id.mapid);
         mPhotoSphereButton = (Button) mLayoutView.findViewById(R.id.button_view_photosphere);
@@ -179,7 +181,6 @@ public class HotelDetailFragment extends BaseFragment {
         mPhotosphereFrame = (LinearLayout) mLayoutView.findViewById(R.id.frame_photosphere);
         mTextViewPhotosphere = (TextView) mLayoutView.findViewById(R.id.text_view_photosphere);
         mTextViewAddress = (TextView) mLayoutView.findViewById(R.id.text_view_hotel_address);
-        mTextViewWebsite = (TextView) mLayoutView.findViewById(R.id.text_view_hotel_website);
         mTextViewTelephone = (TextView) mLayoutView.findViewById(R.id.text_view_hotel_telephone);
         mRatingTextView = (TextView) mLayoutView.findViewById(R.id.text_view_rating);
         mPriceTextView = (TextView) mLayoutView.findViewById(R.id.text_view_price);
@@ -346,7 +347,7 @@ public class HotelDetailFragment extends BaseFragment {
         mTextViewTelephone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mHotelDetailResponseData.hotelTelephone != null) {
+                if (mHotelDetailResponseData.hotelTelephone != null) {
                     Intent callIntent = new Intent(Intent.ACTION_CALL);
                     callIntent.setData(Uri.parse("tel:" + mHotelDetailResponseData.hotelTelephone));
                     startActivity(callIntent);
@@ -354,8 +355,15 @@ public class HotelDetailFragment extends BaseFragment {
             }
         });
         mTextViewAddress.setText(mHotelDetailResponseData.hotelAddress);
-        mTextViewWebsite.setText(mHotelDetailResponseData.hotelWebsite);
-        mTextViewWebsite.setMovementMethod(LinkMovementMethod.getInstance());
+        mWebsiteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url = mHotelDetailResponseData.hotelWebsite;
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
+            }
+        });
 
         double score = Double.parseDouble(mHotelDetailResponseData.hotelStars);
         mRatingLayout.removeAllViews();

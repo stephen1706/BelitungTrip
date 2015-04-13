@@ -25,7 +25,7 @@
                 android:orientation="vertical"
                 android:gravity="center"
                 android:visibility="gone"
-                android:background="@color/light_blue">
+                android:background="@color/button_green">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -86,17 +86,17 @@
             android:layout_gravity="center"
             android:textColor="@color/gray_43"/>
 
-        <TextView
-            android:id="@+id/text_view_souvenir_website"
+        <Button
+            android:id="@+id/button_website"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:autoLink="web"
-            android:layout_gravity="center"
-            android:paddingBottom="5dp"
-            android:textColor="@color/link_blue"/>
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:padding="10dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@color/button_green"
+            android:textColor="@color/white"
+            android:text="More Info"/>
 
         <View android:layout_width="match_parent"
             android:layout_height="2px"

@@ -1,6 +1,7 @@
 package com.yulius.belitungtourism.fragments.content;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.text.Editable;
@@ -247,6 +248,8 @@ public class TripResultFragment extends BaseFragment {
                     realm.cancelTransaction();
                     showMessage(tripName + " has been used for other trip name, please use other name", Constans.MessageType.MESSAGE_ERROR, Constans.Duration.LONG);
                 }
+
+                getFragmentManager().popBackStack();
             }
         });
     }
@@ -337,7 +340,7 @@ public class TripResultFragment extends BaseFragment {
         });
 
         if(mPoiListResponseData == null || mRestaurantListResponseData == null) {
-            mPoiListAPI.requestPoiList();
+            new StartCalculation().execute();
             showLoadingMessage(TAG);
         } else {
             refreshFragment();
@@ -352,7 +355,7 @@ public class TripResultFragment extends BaseFragment {
 
                 hideMessageScreen();
                 if(mPoiListResponseData == null || mRestaurantListResponseData == null) {
-                    mPoiListAPI.requestPoiList();
+                    new StartCalculation().execute();
                     showLoadingMessage(TAG);
                 }
             }
@@ -555,5 +558,15 @@ public class TripResultFragment extends BaseFragment {
 
         actionBar.setDisplayHomeAsUpEnabled(true);
         getParentActivity().setDrawerIndicatorEnabled(false);
+    }
+
+    private class StartCalculation extends AsyncTask<Void,Void,Void>{
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            mPoiListAPI.requestPoiList();
+            return null;
+        }
+
     }
 }

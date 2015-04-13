@@ -13,7 +13,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
-import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -73,7 +72,6 @@ public class RestaurantDetailFragment extends BaseFragment {
     private ImageView mPhotosphereImageView;
     private TextView mTextViewPhotosphere;
     private TextView mTextViewAddress;
-    private TextView mTextViewWebsite;
     private TextView mTextViewTelephone;
     private ProgressBar mProgressBar;
     private ImageLoader mImageLoader;
@@ -94,6 +92,7 @@ public class RestaurantDetailFragment extends BaseFragment {
     private LinearLayout mPhotosphereFrame;
     private TextView mRatingTextView;
     private TextView mPriceTextView;
+    private Button mWebsiteButton;
     //================================================================================
     // Constructor
     //================================================================================
@@ -153,7 +152,9 @@ public class RestaurantDetailFragment extends BaseFragment {
     public void onDestroy() {
         super.onDestroy();
         if (mImageLoader != null) {
-            mImageLoader.cancelDisplayTask(mPhotosphereImageView);//cancel load gambar wkt diback ato home button pressed
+            try {
+                mImageLoader.cancelDisplayTask(mPhotosphereImageView);//cancel load gambar wkt diback ato home button pressed
+            } catch (Exception e){}
         }
     }
 
@@ -164,6 +165,7 @@ public class RestaurantDetailFragment extends BaseFragment {
         mNoPhotoFrame  = (LinearLayout) mLayoutView.findViewById(R.id.frame_no_photo_available);
         mImageHeaderPager = (ViewPager) mLayoutView.findViewById(R.id.pager_restaurant_image_header);
         mMapboxButton = (Button) mLayoutView.findViewById(R.id.button_mapview);
+        mWebsiteButton = (Button) mLayoutView.findViewById(R.id.button_website);
         mRatingLayout = (LinearLayout) mLayoutView.findViewById(R.id.rating_layout);
         mMapView = (MapView) mLayoutView.findViewById(R.id.mapid);
         mPhotoSphereButton = (Button) mLayoutView.findViewById(R.id.button_view_photosphere);
@@ -171,7 +173,6 @@ public class RestaurantDetailFragment extends BaseFragment {
         mPhotosphereFrame = (LinearLayout) mLayoutView.findViewById(R.id.frame_photosphere);
         mTextViewPhotosphere = (TextView) mLayoutView.findViewById(R.id.text_view_photosphere);
         mTextViewAddress = (TextView) mLayoutView.findViewById(R.id.text_view_restaurant_address);
-        mTextViewWebsite = (TextView) mLayoutView.findViewById(R.id.text_view_restaurant_website);
         mTextViewTelephone = (TextView) mLayoutView.findViewById(R.id.text_view_restaurant_telephone);
         mRatingTextView = (TextView) mLayoutView.findViewById(R.id.text_view_rating);
         mPriceTextView = (TextView) mLayoutView.findViewById(R.id.text_view_price);
@@ -344,8 +345,15 @@ public class RestaurantDetailFragment extends BaseFragment {
         });
 
         mTextViewAddress.setText(mRestaurantDetailResponseData.restaurantAddress);
-        mTextViewWebsite.setText(mRestaurantDetailResponseData.restaurantWebsite);
-        mTextViewWebsite.setMovementMethod(LinkMovementMethod.getInstance());
+        mWebsiteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url = mRestaurantDetailResponseData.restaurantWebsite;
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
+            }
+        });
 
         final LatLng restaurantLocation = new LatLng(Double.parseDouble(mRestaurantDetailResponseData.restaurantLatitude), Double.parseDouble(mRestaurantDetailResponseData.restaurantLongitude));
         mMapView.setCenter(restaurantLocation);

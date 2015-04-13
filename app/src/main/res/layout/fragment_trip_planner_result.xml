@@ -64,6 +64,7 @@
             android:id="@+id/edit_text_trip_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/black"
             android:hint="Insert your trip name here (trip name must be unique)"/>
         <TextView
             android:layout_width="match_parent"
@@ -74,6 +75,7 @@
             android:id="@+id/edit_text_total_guest"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/black"
             android:hint="Insert number of passengers here"
             android:inputType="number"/>
         <TextView
@@ -95,6 +97,6 @@
             android:layout_marginTop="20dp"
             android:text="SAVE"
             android:textColor="@color/white"
-            android:background="@color/blue"/>
+            android:background="@color/green"/>
     </LinearLayout>
 </ScrollView>
