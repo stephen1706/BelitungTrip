@@ -6,6 +6,7 @@ public class PoiObjectTransfer {
     public static PoiObjectTransfer instance;
     public int totalNight;
     public int maxBudget;
+    public int minBudget;
     public PoiListResponseData mPoiListResponseData;
 
     public static PoiObjectTransfer getInstance(){

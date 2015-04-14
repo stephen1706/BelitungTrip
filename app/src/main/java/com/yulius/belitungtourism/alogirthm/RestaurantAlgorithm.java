@@ -17,7 +17,7 @@ public class RestaurantAlgorithm {
     // Evolve a restaurantpopulation
     public static RestaurantPopulation evolveRestaurantpopulation(RestaurantPopulation pop) {
         RestaurantObjectTransfer rot = RestaurantObjectTransfer.getInstance();
-        RestaurantPopulation newRestaurantpopulation = new RestaurantPopulation(pop.size(), false, rot.maxBudget, rot.totalNight, rot.mRestaurantListResponseData);
+        RestaurantPopulation newRestaurantpopulation = new RestaurantPopulation(pop.size(), false, rot.minBudget, rot.maxBudget, rot.totalNight, rot.mRestaurantListResponseData);
 
         // Keep our best restaurantindividual
         if (elitism) {
@@ -51,7 +51,8 @@ public class RestaurantAlgorithm {
     // Crossover restaurantindividuals
     private static RestaurantIndividual crossover(RestaurantIndividual indiv1, RestaurantIndividual indiv2) {
         RestaurantObjectTransfer rot = RestaurantObjectTransfer.getInstance();
-        RestaurantIndividual newSol = new RestaurantIndividual(rot.maxBudget, rot.totalNight, rot.mRestaurantListResponseData);
+        //todo
+        RestaurantIndividual newSol = new RestaurantIndividual(rot.minBudget, rot.maxBudget, rot.totalNight, rot.mRestaurantListResponseData);
         // Loop through genes
         do {
             for (int i = 0; i < indiv1.size(); i++) {
@@ -61,7 +62,7 @@ public class RestaurantAlgorithm {
                     newSol.setGene(i, indiv2.getGene(i));
                 }
             }
-        } while (newSol.anyRedundant() || newSol.priceHigherThanBudget());
+        } while (newSol.anyRedundant() || newSol.priceHigherOrLowerThanBudget());
         return newSol;
     }
 
@@ -94,7 +95,7 @@ public class RestaurantAlgorithm {
         // Create a tournament restaurantpopulation
         RestaurantObjectTransfer rot = RestaurantObjectTransfer.getInstance();
 
-        RestaurantPopulation tournament = new RestaurantPopulation(tournamentSize, false, rot.maxBudget, rot.totalNight, rot.mRestaurantListResponseData);
+        RestaurantPopulation tournament = new RestaurantPopulation(tournamentSize, false, rot.minBudget, rot.maxBudget, rot.totalNight, rot.mRestaurantListResponseData);
         // For each place in the tournament get a random restaurantindividual
         for (int i = 0; i < tournamentSize; i++) {
             int randomId = (int) (Math.random() * pop.size());

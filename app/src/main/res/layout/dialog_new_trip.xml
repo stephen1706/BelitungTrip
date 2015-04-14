@@ -62,43 +62,59 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Point of Interest Budget" />
-
-            <EditText
-                android:id="@+id/edit_text_poi_budget"
+            <Spinner
+                android:id="@+id/spinner_poi_budget"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:hint="Insert your point of interest budget"
-                android:inputType="number"
-                android:textColor="@color/black"/>
+                android:layout_marginBottom="20dp">
+            </Spinner>
+            <!--<EditText-->
+                <!--android:id="@+id/edit_text_poi_budget"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginBottom="20dp"-->
+                <!--android:hint="Insert your point of interest budget"-->
+                <!--android:inputType="number"-->
+                <!--android:textColor="@color/black"/>-->
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Culinary Budget" />
 
-            <EditText
-                android:id="@+id/edit_text_restaurant_budget"
+            <Spinner
+                android:id="@+id/spinner_restaurant_budget"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:hint="Please insert your culinary budget here"
-                android:inputType="number"
-                android:textColor="@color/black" />
+                android:layout_marginBottom="20dp"/>
+            <!--<EditText-->
+                <!--android:id="@+id/edit_text_restaurant_budget"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginBottom="20dp"-->
+                <!--android:hint="Please insert your culinary budget here"-->
+                <!--android:inputType="number"-->
+                <!--android:textColor="@color/black" />-->
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Hotel Budget" />
 
-            <EditText
-                android:id="@+id/edit_text_hotel_budget"
+            <Spinner
+                android:id="@+id/spinner_hotel_budget"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:hint="Please insert your hotel budget here"
-                android:inputType="number"
-                android:textColor="@color/black" />
+                android:layout_marginBottom="20dp"/>
+
+            <!--<EditText-->
+                <!--android:id="@+id/edit_text_hotel_budget"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginBottom="20dp"-->
+                <!--android:hint="Please insert your hotel budget here"-->
+                <!--android:inputType="number"-->
+                <!--android:textColor="@color/black" />-->
 
             <LinearLayout
                 android:layout_width="match_parent"

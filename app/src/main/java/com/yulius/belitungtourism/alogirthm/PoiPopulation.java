@@ -7,19 +7,21 @@ public class PoiPopulation {
     private static PoiListResponseData mPoiListResponseData;
     PoiIndividual[] individuals;
 
-    public PoiPopulation(int populationSize, boolean initialise, int maxBudget, int totalNight, PoiListResponseData poiListResponseData) {
+    public PoiPopulation(int populationSize, boolean initialise, int minBudget, int maxBudget, int totalNight, PoiListResponseData poiListResponseData) {
         individuals = new PoiIndividual[populationSize];
         mPoiListResponseData = poiListResponseData;
         PoiObjectTransfer rot = PoiObjectTransfer.getInstance();
 
         rot.maxBudget = maxBudget;
+        rot.minBudget = minBudget;
         rot.totalNight = totalNight;
         rot.mPoiListResponseData = poiListResponseData;
 
         if (initialise) {
             // Loop and create individuals
             for (int i = 0; i < size(); i++) {
-                PoiIndividual newIndividual = new PoiIndividual(maxBudget, totalNight, mPoiListResponseData);
+                //todo
+                PoiIndividual newIndividual = new PoiIndividual(minBudget, maxBudget, totalNight, mPoiListResponseData);
                 newIndividual.generateIndividual();
                 saveIndividual(i, newIndividual);
             }

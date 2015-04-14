@@ -34,9 +34,12 @@ public class TripPlannerHomeFragment extends BaseFragment  implements DatePicker
     public static final String DATEPICKER_TAG = "datepicker";
     public static final String TIMEPICKER_TAG = "timepicker";
     private static final String PARAM_TOTAL_NIGHT = "param_total_night";
-    private static final String PARAM_POI_BUDGET = "param_poi_budget";
-    private static final String PARAM_RESTAURANT_BUDGET = "param_restaurant_budget";
-    private static final String PARAM_HOTEL_BUDGET = "param_hotel_budget";
+    private static final String PARAM_POI_MAX_BUDGET = "param_poi_budget";
+    private static final String PARAM_RESTAURANT_MAX_BUDGET = "param_restaurant_budget";
+    private static final String PARAM_HOTEL_MAX_BUDGET = "param_hotel_budget";
+    private static final String PARAM_POI_MIN_BUDGET = "param_poi_min_budget";
+    private static final String PARAM_RESTAURANT_MIN_BUDGET = "param_restaurant_min_budget";
+    private static final String PARAM_HOTEL_MIN_BUDGET = "param_hotel_min_budget";
     private static final int ROOM_INFO_REQUEST_CODE = 0;
 
     private FloatingActionButton mAddButton;
@@ -103,7 +106,6 @@ public class TripPlannerHomeFragment extends BaseFragment  implements DatePicker
 
         mDatePickerDialog = DatePickerDialog.newInstance(this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
         mTimePickerDialog = TimePickerDialog.newInstance(this, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false, false);
-
     }
 
     private void setUpAdapter() {
@@ -214,12 +216,15 @@ public class TripPlannerHomeFragment extends BaseFragment  implements DatePicker
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == Activity.RESULT_OK && requestCode == ROOM_INFO_REQUEST_CODE){
             if(data != null) {
-                int hotelBudget = (int) data.getLongExtra(PARAM_HOTEL_BUDGET, 0);
-                int poiBudget = (int) data.getLongExtra(PARAM_POI_BUDGET, 0);
-                int restaurantBudget = (int) data.getLongExtra(PARAM_RESTAURANT_BUDGET, 0);
+                int hotelMaxBudget = (int) data.getLongExtra(PARAM_HOTEL_MAX_BUDGET, 0);
+                int poiMaxBudget = (int) data.getLongExtra(PARAM_POI_MAX_BUDGET, 0);
+                int restaurantMaxBudget = (int) data.getLongExtra(PARAM_RESTAURANT_MAX_BUDGET, 0);
+                int hotelMinBudget = (int) data.getLongExtra(PARAM_HOTEL_MIN_BUDGET, 0);
+                int poiMinBudget = (int) data.getLongExtra(PARAM_POI_MIN_BUDGET, 0);
+                int restaurantMinBudget = (int) data.getLongExtra(PARAM_RESTAURANT_MIN_BUDGET, 0);
                 int totalNight = (int) data.getLongExtra(PARAM_TOTAL_NIGHT, 0);
-                if (restaurantBudget != 0 && totalNight != 0 && hotelBudget != 0 && poiBudget != 0) {
-                    replaceContentFragment(TripResultFragment.newInstance(poiBudget, restaurantBudget, hotelBudget, totalNight), getResources().getString(R.string.trip_result_fragment_tag));
+                if (restaurantMaxBudget != 0 && totalNight != 0 && hotelMaxBudget != 0 && poiMaxBudget != 0) {
+                    replaceContentFragment(TripResultFragment.newInstance(poiMinBudget, poiMaxBudget,restaurantMinBudget, restaurantMaxBudget, hotelMinBudget, hotelMaxBudget, totalNight), getResources().getString(R.string.trip_result_fragment_tag));
                 } else {
                     Toast.makeText(mContext, "Harap ulangi", Toast.LENGTH_LONG).show();
                 }

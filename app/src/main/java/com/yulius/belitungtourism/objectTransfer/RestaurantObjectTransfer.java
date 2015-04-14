@@ -6,6 +6,7 @@ public class RestaurantObjectTransfer {
     public static RestaurantObjectTransfer instance;
     public int totalNight;
     public int maxBudget;
+    public int minBudget;
     public RestaurantListResponseData mRestaurantListResponseData;
 
     public static RestaurantObjectTransfer getInstance(){

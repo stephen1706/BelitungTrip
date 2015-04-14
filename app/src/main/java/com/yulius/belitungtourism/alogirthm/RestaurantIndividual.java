@@ -8,13 +8,14 @@ import java.util.Random;
 
 public class RestaurantIndividual {
     static int defaultGeneLength = 9;
+    private int minBudget;
     private Restaurant[] genes;
     private ArrayList<Restaurant> restaurantList;
     private int maxBudget;
     private int totalNight;
     private int fitness = 0;
 
-    public RestaurantIndividual(int maxBudget, int totalNight, RestaurantListResponseData restaurantListResponseData) {
+    public RestaurantIndividual(int minBudget, int maxBudget, int totalNight, RestaurantListResponseData restaurantListResponseData) {
         restaurantList = new ArrayList<>();
         for(int i=0 ; i < restaurantListResponseData.entries.length;i++){
             Restaurant restaurant = new Restaurant();
@@ -26,6 +27,7 @@ public class RestaurantIndividual {
 
             restaurantList.add(restaurant);
         }
+        this.minBudget = minBudget;
         this.maxBudget = maxBudget;
         this.totalNight = totalNight;
         defaultGeneLength = totalNight * 3;
@@ -54,7 +56,7 @@ public class RestaurantIndividual {
                     }
                 } while (true);
             }
-        } while (priceHigherThanBudget() || anyRedundant());
+        } while (priceHigherOrLowerThanBudget() || anyRedundant());
     }
 
     public Restaurant getGene(int index) {
@@ -93,7 +95,7 @@ public class RestaurantIndividual {
                 genes[changeIndex] = restaurantList.get(newRestaurantIndex);
             }
 
-        } while (priceHigherThanBudget() || anyRedundant());
+        } while (priceHigherOrLowerThanBudget() || anyRedundant());
     }
 
     public int getTotalPrice() {
@@ -104,12 +106,12 @@ public class RestaurantIndividual {
         return (totalPrice);
     }
 
-    public boolean priceHigherThanBudget() {
+    public boolean priceHigherOrLowerThanBudget() {
         int totalPrice = 0;
         for (int i = 0; i < size(); i++) {
             totalPrice += genes[i].price;
         }
-        return (totalPrice > maxBudget);
+        return ((totalPrice > maxBudget) || totalPrice < minBudget);
     }
 
     public boolean anyRedundant(){

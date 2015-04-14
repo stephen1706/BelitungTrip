@@ -12,7 +12,7 @@ public class PoiAlgorithm {
 
     public static PoiPopulation evolvePoiPopulation(PoiPopulation pop) {
         PoiObjectTransfer rot = PoiObjectTransfer.getInstance();
-        PoiPopulation newPoipopulation = new PoiPopulation(pop.size(), false, rot.maxBudget, rot.totalNight, rot.mPoiListResponseData);
+        PoiPopulation newPoipopulation = new PoiPopulation(pop.size(), false, rot.minBudget, rot.maxBudget, rot.totalNight, rot.mPoiListResponseData);
 
         if (elitism) {
             newPoipopulation.saveIndividual(0, pop.getFittest());
@@ -41,7 +41,7 @@ public class PoiAlgorithm {
 
     private static PoiIndividual crossover(PoiIndividual indiv1, PoiIndividual indiv2) {
         PoiObjectTransfer rot = PoiObjectTransfer.getInstance();
-        PoiIndividual newSol = new PoiIndividual(rot.maxBudget, rot.totalNight, rot.mPoiListResponseData);
+        PoiIndividual newSol = new PoiIndividual(rot.minBudget, rot.maxBudget, rot.totalNight, rot.mPoiListResponseData);
         do {
             for (int i = 0; i < indiv1.size(); i++) {
                 if (Math.random() <= uniformRate) {
@@ -66,7 +66,7 @@ public class PoiAlgorithm {
     private static PoiIndividual tournamentSelection(PoiPopulation pop) {
         PoiObjectTransfer rot = PoiObjectTransfer.getInstance();
 
-        PoiPopulation tournament = new PoiPopulation(tournamentSize, false, rot.maxBudget, rot.totalNight, rot.mPoiListResponseData);
+        PoiPopulation tournament = new PoiPopulation(tournamentSize, false, rot.minBudget, rot.maxBudget, rot.totalNight, rot.mPoiListResponseData);
         for (int i = 0; i < tournamentSize; i++) {
             int randomId = (int) (Math.random() * pop.size());
             tournament.saveIndividual(i, pop.getIndividual(randomId));

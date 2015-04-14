@@ -24,4 +24,11 @@
     <string name="souvenir_home_fragment_tag">SouvenirHomeFragment</string>
     <string name="souvenir_detail_fragment_tag">SouvenirDetailFragment</string>
 
+    <string-array name="price_range_array">
+        <item>0-500000</item>
+        <item>500000-1000000</item>
+        <item>1000000-1500000</item>
+        <item>1500000-2000000</item>
+        <item>2000000- </item>
+    </string-array>
 </resources>

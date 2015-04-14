@@ -51,9 +51,12 @@ import io.realm.exceptions.RealmException;
 
 public class TripResultFragment extends BaseFragment {
     private static final String PARAM_TOTAL_NIGHT = "param_total_night";
-    private static final String PARAM_POI_BUDGET = "param_poi_budget";
-    private static final String PARAM_RESTAURANT_BUDGET = "param_restaurant_budget";
-    private static final String PARAM_HOTEL_BUDGET = "param_hotel_budget";
+    private static final String PARAM_POI_MAX_BUDGET = "param_poi_budget";
+    private static final String PARAM_RESTAURANT_MAX_BUDGET = "param_restaurant_budget";
+    private static final String PARAM_HOTEL_MAX_BUDGET = "param_hotel_budget";
+    private static final String PARAM_POI_MIN_BUDGET = "param_poi_min_budget";
+    private static final String PARAM_RESTAURANT_MIN_BUDGET = "param_restaurant_min_budget";
+    private static final String PARAM_HOTEL_MIN_BUDGET = "param_hotel_min_budget";
     private static final int POPULATION_SIZE = 10;
     private RestaurantListAPI mRestaurantListAPI;
     private PoiListAPI mPoiListAPI;
@@ -63,9 +66,9 @@ public class TripResultFragment extends BaseFragment {
     private HotelListResponseData mHotelListResponseData;
     private PoiListResponseData mPoiListResponseData;
     private SouvenirListResponseData mSouvenirListResponseData;
-    private int mPoiBudget;
-    private int mRestaurantBudget;
-    private int mHotelBudget;
+    private int mPoiMaxBudget;
+    private int mRestaurantMaxBudget;
+    private int mHotelMaxBudget;
     private int mTotalNight;
     private int mTotalPrice;
     private ArrayList<Restaurant> mRestaurantResultList;
@@ -81,14 +84,21 @@ public class TripResultFragment extends BaseFragment {
     private TextView mTotalPriceTextView;
     private EditText mTotalGuestEditText;
     private EditText mTripNameEditText;
+    private int mPoiMinBudget;
+    private int mRestaurantMinBudget;
+    private int mHotelMinBudget;
 
-    public static TripResultFragment newInstance(int poiBudget, int restaurantBudget, int hotelBudget, int totalNight) {
+    public static TripResultFragment newInstance(int poiMinBudget, int poiMaxBudget, int restaurantMinBudget, int restaurantMaxBudget, int hotelMinBudget, int hotelMaxBudget, int totalNight) {
         TripResultFragment fragment = new TripResultFragment();
         Bundle args = new Bundle();
 
-        args.putInt(PARAM_POI_BUDGET, poiBudget);
-        args.putInt(PARAM_RESTAURANT_BUDGET, restaurantBudget);
-        args.putInt(PARAM_HOTEL_BUDGET, hotelBudget);
+        args.putInt(PARAM_POI_MIN_BUDGET, poiMinBudget);
+        args.putInt(PARAM_RESTAURANT_MIN_BUDGET, restaurantMinBudget);
+        args.putInt(PARAM_HOTEL_MIN_BUDGET, hotelMinBudget);
+
+        args.putInt(PARAM_POI_MAX_BUDGET, poiMaxBudget);
+        args.putInt(PARAM_RESTAURANT_MAX_BUDGET, restaurantMaxBudget);
+        args.putInt(PARAM_HOTEL_MAX_BUDGET, hotelMaxBudget);
         args.putInt(PARAM_TOTAL_NIGHT, totalNight);
         fragment.setArguments(args);
         return fragment;
@@ -110,9 +120,13 @@ public class TripResultFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         if(getArguments() != null){
             mTotalNight = getArguments().getInt(PARAM_TOTAL_NIGHT);
-            mPoiBudget = getArguments().getInt(PARAM_POI_BUDGET);
-            mRestaurantBudget = getArguments().getInt(PARAM_RESTAURANT_BUDGET);
-            mHotelBudget = getArguments().getInt(PARAM_HOTEL_BUDGET);
+            mPoiMaxBudget = getArguments().getInt(PARAM_POI_MAX_BUDGET);
+            mRestaurantMaxBudget = getArguments().getInt(PARAM_RESTAURANT_MAX_BUDGET);
+            mHotelMaxBudget = getArguments().getInt(PARAM_HOTEL_MAX_BUDGET);
+
+            mPoiMinBudget = getArguments().getInt(PARAM_POI_MIN_BUDGET);
+            mRestaurantMinBudget = getArguments().getInt(PARAM_RESTAURANT_MIN_BUDGET);
+            mHotelMinBudget = getArguments().getInt(PARAM_HOTEL_MIN_BUDGET);
         }
     }
 
@@ -438,7 +452,7 @@ public class TripResultFragment extends BaseFragment {
     }
 
     private void findBestPoi() {
-        PoiPopulation poiPopulation = new PoiPopulation(POPULATION_SIZE, true, mPoiBudget, mTotalNight, mPoiListResponseData);
+        PoiPopulation poiPopulation = new PoiPopulation(POPULATION_SIZE, true, mPoiMinBudget, mPoiMaxBudget, mTotalNight, mPoiListResponseData);
 
         int generationCount = 0;
         int numberSameResult = 0;
@@ -476,7 +490,7 @@ public class TripResultFragment extends BaseFragment {
     }
 
     private void findBestRestaurant() {
-        RestaurantPopulation restaurantPopulation = new RestaurantPopulation(POPULATION_SIZE, true, mRestaurantBudget, mTotalNight, mRestaurantListResponseData);
+        RestaurantPopulation restaurantPopulation = new RestaurantPopulation(POPULATION_SIZE, true, mRestaurantMinBudget, mRestaurantMaxBudget, mTotalNight, mRestaurantListResponseData);
 
         int generationCount = 0;
         int numberSameResult = 0;
@@ -517,7 +531,8 @@ public class TripResultFragment extends BaseFragment {
 
     private void findBestHotel() {
         for(int i=0;i<mHotelListResponseData.entries.length;i++){
-            if(mHotelListResponseData.entries[i].hotelPrice * (mTotalNight-1) <= mHotelBudget){
+            int totalPrice = mHotelListResponseData.entries[i].hotelPrice * (mTotalNight-1);
+            if(totalPrice <= mHotelMaxBudget && totalPrice >= mHotelMinBudget){
                 Hotel hotel = new Hotel();
                 hotel.id = mHotelListResponseData.entries[i].hotelId;
                 hotel.name = mHotelListResponseData.entries[i].hotelName;
@@ -525,6 +540,21 @@ public class TripResultFragment extends BaseFragment {
                 hotel.rating = mHotelListResponseData.entries[i].hotelRating;
                 mSelectedHotel = hotel;
                 break;
+            }
+        }
+
+        if(mSelectedHotel == null){//fallback klo null, ambil yg lbh murah aj gpp
+            for(int i=0;i<mHotelListResponseData.entries.length;i++){
+                int totalPrice = mHotelListResponseData.entries[i].hotelPrice * (mTotalNight-1);
+                if(totalPrice <= mHotelMaxBudget){
+                    Hotel hotel = new Hotel();
+                    hotel.id = mHotelListResponseData.entries[i].hotelId;
+                    hotel.name = mHotelListResponseData.entries[i].hotelName;
+                    hotel.price = mHotelListResponseData.entries[i].hotelPrice;
+                    hotel.rating = mHotelListResponseData.entries[i].hotelRating;
+                    mSelectedHotel = hotel;
+                    break;
+                }
             }
         }
         mSouvenirListAPI.requestSouvenirList();

@@ -7,20 +7,22 @@ public class RestaurantPopulation {
     private static RestaurantListResponseData mRestaurantListResponseData;
     RestaurantIndividual[] individuals;
 
-    public RestaurantPopulation(int populationSize, boolean initialise, int maxBudget, int totalNight, RestaurantListResponseData restaurantListResponseData) {
+    public RestaurantPopulation(int populationSize, boolean initialise,int minBudget, int maxBudget, int totalNight, RestaurantListResponseData restaurantListResponseData) {
         individuals = new RestaurantIndividual[populationSize];
         // Initialise population
         mRestaurantListResponseData = restaurantListResponseData;
         RestaurantObjectTransfer rot = RestaurantObjectTransfer.getInstance();
 
         rot.maxBudget = maxBudget;
+        rot.minBudget = minBudget;
         rot.totalNight = totalNight;
         rot.mRestaurantListResponseData = restaurantListResponseData;
 
         if (initialise) {
             // Loop and create individuals
             for (int i = 0; i < size(); i++) {
-                RestaurantIndividual newIndividual = new RestaurantIndividual(maxBudget, totalNight, mRestaurantListResponseData);
+                //todo
+                RestaurantIndividual newIndividual = new RestaurantIndividual(minBudget, maxBudget, totalNight, mRestaurantListResponseData);
                 newIndividual.generateIndividual();
                 saveIndividual(i, newIndividual);
             }

@@ -8,13 +8,14 @@ import java.util.Random;
 
 public class PoiIndividual {
     static int defaultGeneLength = 9;
+    private int minBudget;
     private Poi[] genes;
     private ArrayList<Poi> poiList;
     private int maxBudget;
     private int totalNight;
     private int fitness = 0;
 
-    public PoiIndividual(int maxBudget, int totalNight, PoiListResponseData poiListResponseData) {
+    public PoiIndividual(int minBudget, int maxBudget, int totalNight, PoiListResponseData poiListResponseData) {
         poiList = new ArrayList<>();
         for(int i=0 ; i < poiListResponseData.entries.length;i++){
             Poi poi = new Poi();
@@ -25,6 +26,7 @@ public class PoiIndividual {
 
             poiList.add(poi);
         }
+        this.minBudget = minBudget;
         this.maxBudget = maxBudget;
         this.totalNight = totalNight;
         defaultGeneLength = totalNight * 3;
@@ -77,7 +79,7 @@ public class PoiIndividual {
         for (int i = 0; i < size(); i++) {
             totalPrice += genes[i].price;
         }
-        return (totalPrice > maxBudget);
+        return ((totalPrice > maxBudget) || totalPrice < minBudget);
     }
 
     public int getTotalPrice() {
