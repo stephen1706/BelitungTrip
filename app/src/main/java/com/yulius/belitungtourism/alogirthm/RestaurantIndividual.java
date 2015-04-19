@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class RestaurantIndividual {
+    private static final int LENIENT_ADJUSTMENT = 50000;
     static int defaultGeneLength = 9;
     private int minBudget;
     private Restaurant[] genes;
@@ -111,7 +112,7 @@ public class RestaurantIndividual {
         for (int i = 0; i < size(); i++) {
             totalPrice += genes[i].price;
         }
-        return ((totalPrice > maxBudget) || totalPrice < minBudget);
+        return ((totalPrice - LENIENT_ADJUSTMENT > maxBudget) || totalPrice + LENIENT_ADJUSTMENT < minBudget);
     }
 
     public boolean anyRedundant(){

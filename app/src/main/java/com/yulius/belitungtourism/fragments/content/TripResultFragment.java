@@ -57,7 +57,7 @@ public class TripResultFragment extends BaseFragment {
     private static final String PARAM_POI_MIN_BUDGET = "param_poi_min_budget";
     private static final String PARAM_RESTAURANT_MIN_BUDGET = "param_restaurant_min_budget";
     private static final String PARAM_HOTEL_MIN_BUDGET = "param_hotel_min_budget";
-    private static final int POPULATION_SIZE = 10;
+    private static final int POPULATION_SIZE = 5;
     private RestaurantListAPI mRestaurantListAPI;
     private PoiListAPI mPoiListAPI;
     private HotelListAPI mHotelListAPI;
@@ -275,7 +275,8 @@ public class TripResultFragment extends BaseFragment {
             public void onRequestSuccess(PoiListResponseData poiListResponseData) {
                 mPoiListResponseData = poiListResponseData;
                 if(poiListResponseData != null) {
-                    findBestPoi();
+//                    findBestPoi();
+                    new CalcluatePoi().execute();
                 }
             }
 
@@ -296,7 +297,8 @@ public class TripResultFragment extends BaseFragment {
             public void onRequestSuccess(RestaurantListResponseData restaurantListResponseData) {
                 mRestaurantListResponseData = restaurantListResponseData;
                 if(mRestaurantListResponseData != null) {
-                    findBestRestaurant();
+//                    findBestRestaurant();
+                    new CalcluateRestaurant().execute();
                 }
             }
 
@@ -354,7 +356,9 @@ public class TripResultFragment extends BaseFragment {
         });
 
         if(mPoiListResponseData == null || mRestaurantListResponseData == null) {
-            new StartCalculation().execute();
+//            new StartCalculation().execute();
+
+            mPoiListAPI.requestPoiList();
             showLoadingMessage(TAG);
         } else {
             refreshFragment();
@@ -369,7 +373,8 @@ public class TripResultFragment extends BaseFragment {
 
                 hideMessageScreen();
                 if(mPoiListResponseData == null || mRestaurantListResponseData == null) {
-                    new StartCalculation().execute();
+//                    new StartCalculation().execute();
+                    mPoiListAPI.requestPoiList();
                     showLoadingMessage(TAG);
                 }
             }
@@ -590,11 +595,23 @@ public class TripResultFragment extends BaseFragment {
         getParentActivity().setDrawerIndicatorEnabled(false);
     }
 
-    private class StartCalculation extends AsyncTask<Void,Void,Void>{
+    private class CalcluatePoi extends AsyncTask<Void,Void,Void>{
 
         @Override
         protected Void doInBackground(Void... params) {
-            mPoiListAPI.requestPoiList();
+
+            findBestPoi();
+            return null;
+        }
+
+    }
+
+    private class CalcluateRestaurant extends AsyncTask<Void,Void,Void>{
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            findBestRestaurant();
             return null;
         }
 

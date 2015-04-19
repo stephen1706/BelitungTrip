@@ -7,7 +7,7 @@ import com.yulius.belitungtourism.objectTransfer.PoiObjectTransfer;
 public class PoiAlgorithm {
     private static final double uniformRate = 0.5;
     private static final double mutationRate = 0.01;
-    private static final int tournamentSize = 5;
+    private static final int tournamentSize = 3;
     private static final boolean elitism = true;
 
     public static PoiPopulation evolvePoiPopulation(PoiPopulation pop) {
@@ -50,7 +50,7 @@ public class PoiAlgorithm {
                     newSol.setGene(i, indiv2.getGene(i));
                 }
             }
-        } while (newSol.anyRedundant() || newSol.priceHigherThanBudget());
+        } while (newSol.anyRedundant() || newSol.priceHigherOrLowerThanBudget());
         return newSol;
     }
 
