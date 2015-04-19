@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.yulius.belitungtourism.FormattingUtil;
+
 public class BudgetSpinnerAdapter extends ArrayAdapter<Integer> {
     private int mRange;
     private Context mContext;
@@ -19,7 +21,7 @@ public class BudgetSpinnerAdapter extends ArrayAdapter<Integer> {
 
     @Override
     public View getDropDownView(int position, View convertView, ViewGroup parent) {
-        String text = getItem(position) + " - " + (getItem(position) + mRange);
+        String text = "Rp " + FormattingUtil.formatDecimal(getItem(position)) + " - Rp " + FormattingUtil.formatDecimal((getItem(position) + mRange));
         convertView = LayoutInflater.from(mContext).inflate(android.R.layout.simple_spinner_dropdown_item, parent, false);
         ((TextView) convertView.findViewById(android.R.id.text1)).setText(text);
 
@@ -28,7 +30,7 @@ public class BudgetSpinnerAdapter extends ArrayAdapter<Integer> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        String text = getItem(position) + " - " + (getItem(position) + mRange);
+        String text = "Rp " + FormattingUtil.formatDecimal(getItem(position)) + " - Rp " + FormattingUtil.formatDecimal((getItem(position) + mRange));
         convertView = LayoutInflater.from(mContext).inflate(android.R.layout.simple_spinner_dropdown_item, parent, false);
         ((TextView) convertView.findViewById(android.R.id.text1)).setText(text);
 

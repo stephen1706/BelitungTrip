@@ -251,12 +251,13 @@ public class NewTripDialogFragment extends DialogFragment {
             @Override
             public void afterTextChanged(Editable s) {
                 if(s.toString().length() > 0){
-                    if(Integer.parseInt(s.toString()) <= 5){
+                    if(Integer.parseInt(s.toString()) <= 5 && Integer.parseInt(s.toString()) >= 2){
                         mDays = s.toString();
                         mPoiMaxMinAPI.requestPoiMaxMin(mDays);
                         mProgressDialog = ProgressDialog.show(mContext, "Please Wait", "Getting price range..", true);
+
                     } else {
-                        Toast.makeText(mContext, "Maximum trip duration is 5 days", Toast.LENGTH_LONG).show();
+                        Toast.makeText(mContext, "Minimum trip duration is 2 days and maximum trip duration is 5 days", Toast.LENGTH_LONG).show();
                     }
                 }
             }
