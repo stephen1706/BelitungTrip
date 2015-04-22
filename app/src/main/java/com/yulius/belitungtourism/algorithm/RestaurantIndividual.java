@@ -1,4 +1,4 @@
-package com.yulius.belitungtourism.alogirthm;
+package com.yulius.belitungtourism.algorithm;
 
 import com.yulius.belitungtourism.entity.Restaurant;
 import com.yulius.belitungtourism.response.RestaurantListResponseData;

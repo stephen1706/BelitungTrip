@@ -20,12 +20,13 @@ import com.android.volley.VolleyError;
 import com.yulius.belitungtourism.Constans;
 import com.yulius.belitungtourism.FormattingUtil;
 import com.yulius.belitungtourism.R;
-import com.yulius.belitungtourism.alogirthm.PoiAlgorithm;
-import com.yulius.belitungtourism.alogirthm.PoiIndividual;
-import com.yulius.belitungtourism.alogirthm.PoiPopulation;
-import com.yulius.belitungtourism.alogirthm.RestaurantAlgorithm;
-import com.yulius.belitungtourism.alogirthm.RestaurantIndividual;
-import com.yulius.belitungtourism.alogirthm.RestaurantPopulation;
+import com.yulius.belitungtourism.algorithm.PoiAlgorithm;
+import com.yulius.belitungtourism.algorithm.PoiIndividual;
+import com.yulius.belitungtourism.algorithm.PoiPopulation;
+import com.yulius.belitungtourism.algorithm.RestaurantAlgorithm;
+import com.yulius.belitungtourism.algorithm.RestaurantIndividual;
+import com.yulius.belitungtourism.algorithm.RestaurantPopulation;
+import com.yulius.belitungtourism.algorithm.TSPNearestNeighbour;
 import com.yulius.belitungtourism.api.HotelListAPI;
 import com.yulius.belitungtourism.api.PoiListAPI;
 import com.yulius.belitungtourism.api.RestaurantListAPI;
@@ -491,7 +492,45 @@ public class TripResultFragment extends BaseFragment {
             mPoiResultList.add(bestPoiIndividual.getGene(i));
         }
 
+        applyTspAlgorithm();
+
         mRestaurantListAPI.requestRestaurantList();
+    }
+
+    private void applyTspAlgorithm() {
+        //todo
+        double[][] matrix = new double[mPoiResultList.size()][mPoiResultList.size()];
+        for(int i=0;i<mPoiResultList.size();i++){
+            for(int j=0;j<mPoiResultList.size();j++){
+                if(i == j){
+                    matrix[i][j] = 0;
+                } else {
+                    double selisihLat = Math.pow(mPoiResultList.get(i).latitude - mPoiResultList.get(j).latitude, 2);
+                    double selisihLong = Math.pow(mPoiResultList.get(i).longitude - mPoiResultList.get(j).longitude, 2);
+                    double selisih = Math.sqrt(selisihLat + selisihLong);
+                    matrix[i][j] = selisih;
+                    matrix[j][i] = selisih;
+                }
+
+            }
+        }
+        String out ="";
+        for (int i = 0; i < mPoiResultList.size(); i++) {
+            out += "\n";
+            for (int j = 0; (j) < mPoiResultList.size(); j++) {
+                out += matrix[i][j] + "  ";
+            }
+        }
+
+
+        Log.d("test", out);
+
+        TSPNearestNeighbour tspNearestNeighbour = new TSPNearestNeighbour();
+        ArrayList<Integer> result = tspNearestNeighbour.tsp(matrix);
+        ArrayList<Poi> resultClone = (ArrayList<Poi>) mPoiResultList.clone();
+        for(int i=0;i<mPoiResultList.size();i++){
+            mPoiResultList.set(i, resultClone.get(result.get(i)));
+        }
     }
 
     private void findBestRestaurant() {

@@ -1,4 +1,4 @@
-package com.yulius.belitungtourism.alogirthm;
+package com.yulius.belitungtourism.algorithm;
 
 import com.yulius.belitungtourism.entity.Poi;
 import com.yulius.belitungtourism.response.PoiListResponseData;
@@ -24,6 +24,8 @@ public class PoiIndividual {
             poi.name = poiListResponseData.entries[i].poiName;
             poi.rating = poiListResponseData.entries[i].poiRating;
             poi.price = poiListResponseData.entries[i].poiPrice;
+            poi.latitude = poiListResponseData.entries[i].poiLatitude;
+            poi.longitude = poiListResponseData.entries[i].poiLongitude;
 
             poiList.add(poi);
         }

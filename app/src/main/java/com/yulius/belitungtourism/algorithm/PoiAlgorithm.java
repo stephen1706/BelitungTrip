@@ -1,4 +1,4 @@
-package com.yulius.belitungtourism.alogirthm;
+package com.yulius.belitungtourism.algorithm;
 
 import android.util.Log;
 

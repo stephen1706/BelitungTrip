@@ -5,4 +5,6 @@ public class Poi {
     public String name;
     public int rating;
     public int price;
+    public double latitude;
+    public double longitude;
 }

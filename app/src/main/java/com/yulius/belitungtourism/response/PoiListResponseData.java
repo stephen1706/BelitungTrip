@@ -9,5 +9,7 @@ public class PoiListResponseData {
         public String poiAddress;
         public int poiPrice;
         public int poiRating;
+        public double poiLatitude;
+        public double poiLongitude;
     }
 }
