@@ -61,46 +61,6 @@ public class MainActivity extends BaseActivity implements NavigationDrawerFragme
 //        setUpStreetViewPanoramaIfNeeded(savedInstanceState);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-//        int number_of_nodes;
-//
-//        try
-//        {
-//            number_of_nodes = 9;
-//            int adjacency_matrix[][] = new int[number_of_nodes ][number_of_nodes];
-//            for (int i = 0; i < number_of_nodes; i++)
-//            {
-//                for (int j = 0; j < number_of_nodes; j++)
-//                {
-//                    if(i==j){
-//                        adjacency_matrix[i][j] = 0;
-//                    } else {
-//                        int random = new Random().nextInt(50)+1;
-//                        adjacency_matrix[i][j] = random;
-//                        adjacency_matrix[j][i] = random;
-//                    }
-//                }
-//            }
-//
-//            String out ="";
-//            for (int i = 0; i < number_of_nodes; i++) {
-//                out += "\n";
-//                for (int j = 0; (j) < number_of_nodes; j++) {
-//                    out += adjacency_matrix[i][j] + "  ";
-//                }
-//            }
-//
-//            Log.d("test", out);
-//            System.out.println("the cities are visited as follows");
-//            TSPNearestNeighbour tspNearestNeighbour = new TSPNearestNeighbour();
-//            tspNearestNeighbour.tsp(adjacency_matrix);
-//        } catch (InputMismatchException inputMismatch) {
-//            System.out.println("Wrong Input format");
-//        }
-    }
-
     private void startPanorama() {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);

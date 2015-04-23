@@ -296,7 +296,7 @@ public class NewTripDialogFragment extends DialogFragment {
                 long restaurantBudget = minRestaurantBudget + mRestaurantAdapter.getRange();
 
                 long minHotelBudget = (int) mHotelBudgetSpinner.getSelectedItem();
-                long hotelBudget = minRestaurantBudget + mHotelAdapter.getRange();
+                long hotelBudget = minHotelBudget + mHotelAdapter.getRange();
 
 //                long minBudget = (totalNight-1)*500000/3;
 //                if(poiBudget < minBudget || hotelBudget < minBudget || restaurantBudget < minBudget){

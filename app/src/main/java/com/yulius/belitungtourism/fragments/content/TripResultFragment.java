@@ -30,6 +30,7 @@ import com.yulius.belitungtourism.algorithm.TSPNearestNeighbour;
 import com.yulius.belitungtourism.api.HotelListAPI;
 import com.yulius.belitungtourism.api.PoiListAPI;
 import com.yulius.belitungtourism.api.RestaurantListAPI;
+import com.yulius.belitungtourism.api.RestaurantNearbyPoiAPI;
 import com.yulius.belitungtourism.api.SouvenirListAPI;
 import com.yulius.belitungtourism.entity.Hotel;
 import com.yulius.belitungtourism.entity.Poi;
@@ -41,6 +42,7 @@ import com.yulius.belitungtourism.realm.Trip;
 import com.yulius.belitungtourism.response.HotelListResponseData;
 import com.yulius.belitungtourism.response.PoiListResponseData;
 import com.yulius.belitungtourism.response.RestaurantListResponseData;
+import com.yulius.belitungtourism.response.RestaurantNearbyPoiResponseData;
 import com.yulius.belitungtourism.response.SouvenirListResponseData;
 
 import java.util.ArrayList;
@@ -88,6 +90,8 @@ public class TripResultFragment extends BaseFragment {
     private int mPoiMinBudget;
     private int mRestaurantMinBudget;
     private int mHotelMinBudget;
+    private RestaurantNearbyPoiResponseData mRestaurantNearbyPoiResponseData;
+    private RestaurantNearbyPoiAPI mRestaurantNearbyPoiAPI;
 
     public static TripResultFragment newInstance(int poiMinBudget, int poiMaxBudget, int restaurantMinBudget, int restaurantMaxBudget, int hotelMinBudget, int hotelMaxBudget, int totalNight) {
         TripResultFragment fragment = new TripResultFragment();
@@ -364,6 +368,36 @@ public class TripResultFragment extends BaseFragment {
         } else {
             refreshFragment();
         }
+
+        mRestaurantNearbyPoiAPI = new RestaurantNearbyPoiAPI(mContext);
+        mRestaurantNearbyPoiAPI.setOnResponseListener(new RestaurantNearbyPoiAPI.OnResponseListener() {
+            @Override
+            public void onRequestSuccess(RestaurantNearbyPoiResponseData restaurantNearbyPoiResponseData) {
+                mRestaurantNearbyPoiResponseData = restaurantNearbyPoiResponseData;
+                if (restaurantNearbyPoiResponseData != null) {
+                    findBestRestaurant();
+                }
+            }
+
+            @Override
+            public void onRequestError(VolleyError volleyError) {
+                showConnectionProblemErrorMessage(volleyError, TAG);
+            }
+
+            @Override
+            public void onRequestFailed(String message) {
+                showRequestFailedErrorMessage(message);
+            }
+        });
+
+        if(mPoiListResponseData == null || mRestaurantListResponseData == null) {
+//            new StartCalculation().execute();
+
+            mPoiListAPI.requestPoiList();
+            showLoadingMessage(TAG);
+        } else {
+            refreshFragment();
+        }
     }
 
     private void setUpMessageListener() {
@@ -495,6 +529,7 @@ public class TripResultFragment extends BaseFragment {
         applyTspAlgorithm();
 
         mRestaurantListAPI.requestRestaurantList();
+        mRestaurantNearbyPoiAPI.requestRestaurantNearbyPoiList();
     }
 
     private void applyTspAlgorithm() {
@@ -521,56 +556,61 @@ public class TripResultFragment extends BaseFragment {
                 out += matrix[i][j] + "  ";
             }
         }
-
-
         Log.d("test", out);
 
+        for (int i = 0; i < mPoiResultList.size(); i++) {
+            Log.d("test before shuffle", mPoiResultList.get(i).id + "\t");
+        }
         TSPNearestNeighbour tspNearestNeighbour = new TSPNearestNeighbour();
         ArrayList<Integer> result = tspNearestNeighbour.tsp(matrix);
         ArrayList<Poi> resultClone = (ArrayList<Poi>) mPoiResultList.clone();
         for(int i=0;i<mPoiResultList.size();i++){
             mPoiResultList.set(i, resultClone.get(result.get(i)));
         }
+        for (int i = 0; i < mPoiResultList.size(); i++) {
+            Log.d("test after shuffle", mPoiResultList.get(i).id + "\t");
+        }
     }
 
     private void findBestRestaurant() {
-        RestaurantPopulation restaurantPopulation = new RestaurantPopulation(POPULATION_SIZE, true, mRestaurantMinBudget, mRestaurantMaxBudget, mTotalNight, mRestaurantListResponseData);
+        if(mRestaurantListResponseData != null && mRestaurantNearbyPoiResponseData != null) {
+            RestaurantPopulation restaurantPopulation = new RestaurantPopulation(POPULATION_SIZE, true, mRestaurantMinBudget, mRestaurantMaxBudget, mTotalNight, mRestaurantListResponseData, mRestaurantNearbyPoiResponseData, mPoiResultList);
 
-        int generationCount = 0;
-        int numberSameResult = 0;
-        int lastFitnessResult = 0;
-//        while (restaurantPopulation.getFittest().getFitness() < FitnessCalculation.getMaxFitness()) {
-        while (true) {
-            // Evolve our population until we reach an optimum solution
-            if(numberSameResult >=5){//5x berturut" hasilnya sama break aj
-                break;
+            int generationCount = 0;
+            int numberSameResult = 0;
+            int lastFitnessResult = 0;
+            while (true) {
+                // Evolve our population until we reach an optimum solution
+                if (numberSameResult >= 5) {//5x berturut" hasilnya sama break aj
+                    break;
+                }
+
+                generationCount++;
+                System.out.println("Generation: " + generationCount + " Fittest: " + restaurantPopulation.getFittest().getFitness());
+                restaurantPopulation = RestaurantAlgorithm.evolveRestaurantpopulation(restaurantPopulation);
+                if (lastFitnessResult == restaurantPopulation.getFittest().getFitness()) {
+                    numberSameResult++;
+                } else {
+                    numberSameResult = 0;
+                }
+
+                lastFitnessResult = restaurantPopulation.getFittest().getFitness();
+            }
+            Log.d("test algo", "Solution found!");
+            Log.d("test algo", "Generation: " + generationCount);
+            Log.d("test algo", "Genes:");
+            Log.d("test algo", "pemenang restaurant: " + restaurantPopulation.getFittest());
+            Log.d("test algo", "total price restaurant: " + restaurantPopulation.getFittest().getTotalPrice());
+            //show hasilnya
+            RestaurantIndividual bestRestaurantIndividual = restaurantPopulation.getFittest();
+            mRestaurantResultList = new ArrayList<>();
+
+            for (int i = 0; i < bestRestaurantIndividual.size(); i++) {
+                mRestaurantResultList.add(bestRestaurantIndividual.getGene(i));
             }
 
-            generationCount++;
-            System.out.println("Generation: " + generationCount + " Fittest: " + restaurantPopulation.getFittest().getFitness());
-            restaurantPopulation = RestaurantAlgorithm.evolveRestaurantpopulation(restaurantPopulation);
-            if(lastFitnessResult == restaurantPopulation.getFittest().getFitness()){
-                numberSameResult++;
-            } else{
-                numberSameResult = 0;
-            }
-
-            lastFitnessResult = restaurantPopulation.getFittest().getFitness();
+            mHotelListAPI.requestHotelList();
         }
-        Log.d("test algo", "Solution found!");
-        Log.d("test algo", "Generation: " + generationCount);
-        Log.d("test algo", "Genes:");
-        Log.d("test algo", "pemenang restaurant: " + restaurantPopulation.getFittest());
-        Log.d("test algo", "total price restaurant: " + restaurantPopulation.getFittest().getTotalPrice());
-        //show hasilnya
-        RestaurantIndividual bestRestaurantIndividual = restaurantPopulation.getFittest();
-        mRestaurantResultList = new ArrayList<>();
-
-        for(int i=0;i<bestRestaurantIndividual.size();i++){
-            mRestaurantResultList.add(bestRestaurantIndividual.getGene(i));
-        }
-
-        mHotelListAPI.requestHotelList();
     }
 
     private void findBestHotel() {

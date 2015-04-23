@@ -3,11 +3,7 @@ package com.yulius.belitungtourism.algorithm;
 import java.util.ArrayList;
 import java.util.Stack;
 
-/**
- * Created by stephen on 4/22/15.
- */
-public class TSPNearestNeighbour
-{
+public class TSPNearestNeighbour {
     private int numberOfNodes;
     private Stack<Integer> stack;
 
@@ -30,7 +26,6 @@ public class TSPNearestNeighbour
         double min = Integer.MAX_VALUE;
         boolean minFlag = false;
         System.out.println("city 0 " + "\t");
-
 
         while (!stack.isEmpty()){
             element = stack.peek();

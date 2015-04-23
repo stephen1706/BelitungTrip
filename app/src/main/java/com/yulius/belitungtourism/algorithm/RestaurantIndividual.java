@@ -1,7 +1,11 @@
 package com.yulius.belitungtourism.algorithm;
 
+import com.yulius.belitungtourism.entity.Poi;
 import com.yulius.belitungtourism.entity.Restaurant;
 import com.yulius.belitungtourism.response.RestaurantListResponseData;
+import com.yulius.belitungtourism.response.RestaurantNearbyPoiResponseData;
+
+import org.apache.commons.collections15.multimap.MultiHashMap;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -9,15 +13,17 @@ import java.util.Random;
 public class RestaurantIndividual {
     private static final int LENIENT_ADJUSTMENT = 50000;
     static int defaultGeneLength = 9;
+    private final MultiHashMap<Integer, Integer> mRestaurantNearbyPoiList;
+    private final ArrayList<Poi> mPoiResultList;
     private int minBudget;
     private Restaurant[] genes;
-    private ArrayList<Restaurant> restaurantList;
+    private ArrayList<Restaurant> mRestaurantList;
     private int maxBudget;
     private int totalNight;
     private int fitness = 0;
 
-    public RestaurantIndividual(int minBudget, int maxBudget, int totalNight, RestaurantListResponseData restaurantListResponseData) {
-        restaurantList = new ArrayList<>();
+    public RestaurantIndividual(int minBudget, int maxBudget, int totalNight, RestaurantListResponseData restaurantListResponseData, RestaurantNearbyPoiResponseData restaurantNearbyPoiResponseData, ArrayList<Poi> poiResultList) {
+        mRestaurantList = new ArrayList<>();
         for(int i=0 ; i < restaurantListResponseData.entries.length;i++){
             Restaurant restaurant = new Restaurant();
             restaurant.id = restaurantListResponseData.entries[i].restaurantId;
@@ -26,11 +32,18 @@ public class RestaurantIndividual {
             restaurant.price = restaurantListResponseData.entries[i].restaurantPrice;
             restaurant.type = restaurantListResponseData.entries[i].restaurantType;
 
-            restaurantList.add(restaurant);
+            mRestaurantList.add(restaurant);
         }
         this.minBudget = minBudget;
         this.maxBudget = maxBudget;
         this.totalNight = totalNight;
+        mPoiResultList = poiResultList;
+//        mRestaurantNearbyPoiList = ArrayListMultimap.create();
+        mRestaurantNearbyPoiList = new MultiHashMap<>();
+        for(int i=0;i<restaurantNearbyPoiResponseData.entries.length;i++){
+            mRestaurantNearbyPoiList.put(restaurantNearbyPoiResponseData.entries[i].poiId, restaurantNearbyPoiResponseData.entries[i].restaurantId);
+        }
+
         defaultGeneLength = totalNight * 3;
         genes = new Restaurant[defaultGeneLength];
         generateIndividual();
@@ -39,25 +52,42 @@ public class RestaurantIndividual {
     public void generateIndividual() {
         do {
             for (int i = 0; i < size(); i++) {
-                do {
-                    int restaurantIndex = new Random().nextInt(restaurantList.size());
-                    genes[i] = restaurantList.get(restaurantIndex);
-                    if (i % 3 == 2) {//khusus yg mlm hrs type no 3
-                        if (genes[i].type == 3) {
-                            break;
+                if(i%3==2) {//pake cara lama buat snack mlm
+                    do {
+                        int restaurantIndex = new Random().nextInt(mRestaurantList.size());
+                        genes[i] = mRestaurantList.get(restaurantIndex);
+                        if (i % 3 == 2) {//khusus yg snack mlm hrs type no 3
+                            if (genes[i].type == 3) {
+                                break;
+                            }
+                        } else if (i % 3 == 1) {
+                            if (genes[i].type == 1 || genes[i].type == 2) {
+                                break;
+                            }
+                        } else {
+                            if (genes[i].type == 1 || genes[i].type == 2) {
+                                break;
+                            }
                         }
-                    } else if(i%3 == 1){
-                        if (genes[i].type == 2) {
-                            break;
-                        }
-                    } else {
-                        if (genes[i].type == 1) {
-                            break;
-                        }
-                    }
-                } while (true);
+                    } while (true);
+                } else {//mkn biasa berdasarkan nearby poi
+                    int poiId = mPoiResultList.get(i).id;
+                    ArrayList<Integer> nearbyRestaurantList = (ArrayList<Integer>) mRestaurantNearbyPoiList.get(poiId);
+                    int selectedIndex = new Random().nextInt(nearbyRestaurantList.size());
+                    int selectedRestaurantId = nearbyRestaurantList.get(selectedIndex);
+                    genes[i] = getRestaurantById(selectedRestaurantId);
+                }
             }
         } while (priceHigherOrLowerThanBudget() || anyRedundant());
+    }
+
+    private Restaurant getRestaurantById(int selectedRestaurantId) {
+        for(int i = 0;i<mRestaurantList.size();i++){
+            if(mRestaurantList.get(i).id == selectedRestaurantId){
+                return mRestaurantList.get(i);
+            }
+        }
+        return null;
     }
 
     public Restaurant getGene(int index) {
@@ -85,15 +115,24 @@ public class RestaurantIndividual {
         int changeIndex = new Random().nextInt(defaultGeneLength);
 
         do {
-            int newRestaurantIndex = new Random().nextInt(restaurantList.size());
+            int newRestaurantIndex = new Random().nextInt(mRestaurantList.size());
 
-            if(changeIndex % 3 == 2 && restaurantList.get(newRestaurantIndex).type == 3){
+            if(changeIndex % 3 == 2 && mRestaurantList.get(newRestaurantIndex).type == 3){
             //biar grupin ga brantakan di mutasi, klo crossover ga bkl brantakan krn ambil gen dr urutan yg sama selalu
-                genes[changeIndex] = restaurantList.get(newRestaurantIndex);
-            } else if (changeIndex % 3 == 0 && restaurantList.get(newRestaurantIndex).type == 1){
-                genes[changeIndex] = restaurantList.get(newRestaurantIndex);
-            } else if (changeIndex % 3 == 1 && restaurantList.get(newRestaurantIndex).type == 2){
-                genes[changeIndex] = restaurantList.get(newRestaurantIndex);
+                genes[changeIndex] = mRestaurantList.get(newRestaurantIndex);
+            }
+//            else if (changeIndex % 3 == 0 && mRestaurantList.get(newRestaurantIndex).type == 1){
+//                genes[changeIndex] = mRestaurantList.get(newRestaurantIndex);
+//            } else if (changeIndex % 3 == 1 && mRestaurantList.get(newRestaurantIndex).type == 2){
+//                genes[changeIndex] = mRestaurantList.get(newRestaurantIndex);
+//            }
+            else{
+//                int restaurantId = genes[changeIndex].id;
+                int poiId = mPoiResultList.get(changeIndex).id;
+                ArrayList<Integer> nearbyRestaurantList = (ArrayList<Integer>) mRestaurantNearbyPoiList.get(poiId);
+                int selectedIndex = new Random().nextInt(nearbyRestaurantList.size());
+                int selectedRestaurantId = nearbyRestaurantList.get(selectedIndex);
+                genes[changeIndex] = getRestaurantById(selectedRestaurantId);
             }
 
         } while (priceHigherOrLowerThanBudget() || anyRedundant());
