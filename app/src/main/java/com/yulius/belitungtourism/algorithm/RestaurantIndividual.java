@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class RestaurantIndividual {
-    private static final int LENIENT_ADJUSTMENT = 50000;
+    private static int LENIENT_ADJUSTMENT = 50000;
     static int defaultGeneLength = 9;
     private final MultiHashMap<Integer, Integer> mRestaurantNearbyPoiList;
     private final ArrayList<Poi> mPoiResultList;
@@ -50,7 +50,12 @@ public class RestaurantIndividual {
     }
 
     public void generateIndividual() {
+        int totalRetry = 0;
+        LENIENT_ADJUSTMENT = 50000;
         do {
+            if(totalRetry%5==0) {
+                LENIENT_ADJUSTMENT += 10000;
+            }
             for (int i = 0; i < size(); i++) {
                 if(i%3==2) {//pake cara lama buat snack mlm
                     do {
@@ -78,6 +83,7 @@ public class RestaurantIndividual {
                     genes[i] = getRestaurantById(selectedRestaurantId);
                 }
             }
+            totalRetry++;
         } while (priceHigherOrLowerThanBudget() || anyRedundant());
     }
 
@@ -114,7 +120,12 @@ public class RestaurantIndividual {
     public void mutate(){
         int changeIndex = new Random().nextInt(defaultGeneLength);
 
+        int totalRetry = 0;
+        LENIENT_ADJUSTMENT = 50000;
         do {
+            if(totalRetry % 5 == 0) {
+                LENIENT_ADJUSTMENT += 10000;
+            }
             int newRestaurantIndex = new Random().nextInt(mRestaurantList.size());
 
             if(changeIndex % 3 == 2 && mRestaurantList.get(newRestaurantIndex).type == 3){
@@ -134,7 +145,7 @@ public class RestaurantIndividual {
                 int selectedRestaurantId = nearbyRestaurantList.get(selectedIndex);
                 genes[changeIndex] = getRestaurantById(selectedRestaurantId);
             }
-
+            totalRetry++;
         } while (priceHigherOrLowerThanBudget() || anyRedundant());
     }
 
@@ -151,12 +162,19 @@ public class RestaurantIndividual {
         for (int i = 0; i < size(); i++) {
             totalPrice += genes[i].price;
         }
-        return ((totalPrice - LENIENT_ADJUSTMENT > maxBudget) || totalPrice + LENIENT_ADJUSTMENT < minBudget);
+        boolean isOverBudget = totalPrice > (maxBudget + LENIENT_ADJUSTMENT);
+        boolean isUnderBudget = totalPrice < (minBudget - LENIENT_ADJUSTMENT);
+        return (isOverBudget || isUnderBudget);
     }
 
     public boolean anyRedundant(){
-        for (int i = 0; i < size(); i++) {
+       outer: for (int i = 0; i < size(); i++) {
             for(int j=i+1;j<size();j++) {
+                if(genes[i].id==40){
+                    continue outer;
+                } else if(genes[j].id==40){
+                    continue;
+                }
                 if(genes[i].id == genes[j].id){
                     return true;
                 }
@@ -165,6 +183,12 @@ public class RestaurantIndividual {
         return false;
     }
 
+    public void increaseLenientAdjustment(){
+        LENIENT_ADJUSTMENT += 10000;
+    }
+    public void resetLenientAdjustment(){
+        LENIENT_ADJUSTMENT = 50000;
+    }
     @Override
     public String toString() {
         String geneString = "";

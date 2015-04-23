@@ -59,6 +59,7 @@ public class NewTripDialogFragment extends DialogFragment {
     private BudgetMaxMinResponseData mHotelMaxMinResponseData;
     private ProgressDialog mProgressDialog;
     private String mDays;
+    private int NUMBER_OF_OPTIONS = 3;
 
     public static NewTripDialogFragment newInstance(){
         NewTripDialogFragment fragment = new NewTripDialogFragment();
@@ -204,8 +205,8 @@ public class NewTripDialogFragment extends DialogFragment {
         ArrayList<Integer> poiList = new ArrayList<Integer>();
         int minimumPrice = mPoiMaxMinResponseData.lowest;
         int maximumPrice = mPoiMaxMinResponseData.highest;
-        int range = (maximumPrice - minimumPrice)/5;
-        for(int i=0;i<5;i++){
+        int range = (maximumPrice - minimumPrice)/NUMBER_OF_OPTIONS;
+        for(int i=0;i<NUMBER_OF_OPTIONS;i++){
             poiList.add(range*i + minimumPrice);
         }
         mPoiAdapter = new BudgetSpinnerAdapter(mContext, range);
@@ -214,8 +215,8 @@ public class NewTripDialogFragment extends DialogFragment {
         ArrayList<Integer> restaurantList = new ArrayList<Integer>();
         minimumPrice = mRestaurantMaxMinResponseData.lowest;
         maximumPrice = mRestaurantMaxMinResponseData.highest;
-        range = (maximumPrice - minimumPrice)/5;
-        for(int i=0;i<5;i++){
+        range = (maximumPrice - minimumPrice)/NUMBER_OF_OPTIONS;
+        for(int i=0;i<NUMBER_OF_OPTIONS;i++){
             restaurantList.add(range*i + minimumPrice);
         }
         mRestaurantAdapter = new BudgetSpinnerAdapter(mContext, range);
@@ -224,8 +225,8 @@ public class NewTripDialogFragment extends DialogFragment {
         ArrayList<Integer> hotelList = new ArrayList<Integer>();
         minimumPrice = mHotelMaxMinResponseData.lowest;
         maximumPrice = mHotelMaxMinResponseData.highest;
-        range = (maximumPrice - minimumPrice)/5;
-        for(int i=0;i<5;i++){
+        range = (maximumPrice - minimumPrice)/NUMBER_OF_OPTIONS;
+        for(int i=0;i<NUMBER_OF_OPTIONS;i++){
             hotelList.add(range*i + minimumPrice);
         }
         mHotelAdapter = new BudgetSpinnerAdapter(mContext, range);

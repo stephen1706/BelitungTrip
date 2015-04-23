@@ -54,7 +54,12 @@ public class RestaurantAlgorithm {
         //todo
         RestaurantIndividual newSol = new RestaurantIndividual(rot.minBudget, rot.maxBudget, rot.totalNight, rot.mRestaurantListResponseData, rot.mRestaurantNearbyPoiResponseData, rot.mPoiResultList);
         // Loop through genes
+        int totalRetry = 0;
+        newSol.resetLenientAdjustment();
         do {
+            if(totalRetry % 5==0){
+                newSol.increaseLenientAdjustment();
+            }
             for (int i = 0; i < indiv1.size(); i++) {
                 if (Math.random() <= uniformRate) {
                     newSol.setGene(i, indiv1.getGene(i));
@@ -62,6 +67,7 @@ public class RestaurantAlgorithm {
                     newSol.setGene(i, indiv2.getGene(i));
                 }
             }
+            totalRetry++;
         } while (newSol.anyRedundant() || newSol.priceHigherOrLowerThanBudget());
         return newSol;
     }
