@@ -59,7 +59,7 @@ public class NewTripDialogFragment extends DialogFragment {
     private BudgetMaxMinResponseData mHotelMaxMinResponseData;
     private ProgressDialog mProgressDialog;
     private String mDays;
-    private int NUMBER_OF_OPTIONS = 3;
+    private int NUMBER_OF_OPTIONS = 4;
 
     public static NewTripDialogFragment newInstance(){
         NewTripDialogFragment fragment = new NewTripDialogFragment();
