@@ -204,8 +204,8 @@ public class NewTripDialogFragment extends DialogFragment {
         ArrayList<Integer> poiList = new ArrayList<Integer>();
         int minimumPrice = mPoiMaxMinResponseData.lowest;
         int maximumPrice = mPoiMaxMinResponseData.highest;
-        int range = (maximumPrice - minimumPrice)/5;
-        for(int i=0;i<5;i++){
+        int range = (maximumPrice - minimumPrice)/4;
+        for(int i=0;i<4;i++){
             poiList.add(range*i + minimumPrice);
         }
         mPoiAdapter = new BudgetSpinnerAdapter(mContext, range);
@@ -214,8 +214,8 @@ public class NewTripDialogFragment extends DialogFragment {
         ArrayList<Integer> restaurantList = new ArrayList<Integer>();
         minimumPrice = mRestaurantMaxMinResponseData.lowest;
         maximumPrice = mRestaurantMaxMinResponseData.highest;
-        range = (maximumPrice - minimumPrice)/5;
-        for(int i=0;i<5;i++){
+        range = (maximumPrice - minimumPrice)/4;
+        for(int i=0;i<4;i++){
             restaurantList.add(range*i + minimumPrice);
         }
         mRestaurantAdapter = new BudgetSpinnerAdapter(mContext, range);
@@ -224,8 +224,8 @@ public class NewTripDialogFragment extends DialogFragment {
         ArrayList<Integer> hotelList = new ArrayList<Integer>();
         minimumPrice = mHotelMaxMinResponseData.lowest;
         maximumPrice = mHotelMaxMinResponseData.highest;
-        range = (maximumPrice - minimumPrice)/5;
-        for(int i=0;i<5;i++){
+        range = (maximumPrice - minimumPrice)/4;
+        for(int i=0;i<4;i++){
             hotelList.add(range*i + minimumPrice);
         }
         mHotelAdapter = new BudgetSpinnerAdapter(mContext, range);
