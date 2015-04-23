@@ -33,8 +33,6 @@ android {
 }
 
 dependencies {
-//    compile 'com.google.guava:guava-collections:r03'
-//    compile 'com.google.guava:guava:18.0'
     compile 'io.realm:realm-android:0.79.1'
     compile 'com.google.android.gms:play-services:+'
     compile 'com.android.support:support-v4:21.0.+'
@@ -47,9 +45,7 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.1.1'
     compile 'com.getbase:floatingactionbutton:1.5.1'
     compile 'com.github.flavienlaurent.datetimepicker:library:0.0.2'
-    compile files('libs/guava-collections-r03.jar')
     compile files('libs/collections-generic-4.01.jar')
-//    compile files('libs/guava-18.0.jar')
     compile ('com.mapbox.mapboxsdk:mapbox-android-sdk:0.4.0@aar'){
         transitive=true
     }

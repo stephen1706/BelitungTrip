@@ -71,7 +71,7 @@ public class RestaurantIndividual {
                         }
                     } while (true);
                 } else {//mkn biasa berdasarkan nearby poi
-                    int poiId = mPoiResultList.get(i).id;
+                    int poiId = mPoiResultList.get(i+1).id; // +1 krn makan pertama itu ke poi kedua
                     ArrayList<Integer> nearbyRestaurantList = (ArrayList<Integer>) mRestaurantNearbyPoiList.get(poiId);
                     int selectedIndex = new Random().nextInt(nearbyRestaurantList.size());
                     int selectedRestaurantId = nearbyRestaurantList.get(selectedIndex);
@@ -126,9 +126,9 @@ public class RestaurantIndividual {
 //            } else if (changeIndex % 3 == 1 && mRestaurantList.get(newRestaurantIndex).type == 2){
 //                genes[changeIndex] = mRestaurantList.get(newRestaurantIndex);
 //            }
-            else{
+            else if (changeIndex % 3 != 2) {
 //                int restaurantId = genes[changeIndex].id;
-                int poiId = mPoiResultList.get(changeIndex).id;
+                int poiId = mPoiResultList.get(changeIndex + 1).id; // +1 krn makan pertama itu ke poi kedua
                 ArrayList<Integer> nearbyRestaurantList = (ArrayList<Integer>) mRestaurantNearbyPoiList.get(poiId);
                 int selectedIndex = new Random().nextInt(nearbyRestaurantList.size());
                 int selectedRestaurantId = nearbyRestaurantList.get(selectedIndex);

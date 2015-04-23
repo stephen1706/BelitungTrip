@@ -121,7 +121,6 @@
     <orderEntry type="library" exported="" name="play-services-analytics-7.0.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-games-7.0.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-nearby-7.0.0" level="project" />
-    <orderEntry type="library" exported="" name="guava-collections-r03" level="project" />
     <orderEntry type="library" exported="" name="realm-android-0.79.1" level="project" />
     <orderEntry type="library" exported="" name="okhttp-1.5.4" level="project" />
   </component>
