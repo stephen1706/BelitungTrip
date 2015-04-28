@@ -18,8 +18,8 @@
     </style>
 
     <style name="ActionBar.Solid.Belitung" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">@color/light_blue</item>
-        <item name="background">@color/light_blue</item>
+        <item name="android:background">@color/primary</item>
+        <item name="background">@color/primary</item>
 
         <item name="android:titleTextStyle">@style/TitleTextStyle.ActionBar.Belitung</item>
         <item name="android:subtitleTextStyle">@style/SubtitleTextStyle.ActionBar.Belitung</item>
