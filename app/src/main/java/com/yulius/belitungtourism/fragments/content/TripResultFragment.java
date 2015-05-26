@@ -27,6 +27,7 @@ import com.yulius.belitungtourism.algorithm.RestaurantAlgorithm;
 import com.yulius.belitungtourism.algorithm.RestaurantIndividual;
 import com.yulius.belitungtourism.algorithm.RestaurantPopulation;
 import com.yulius.belitungtourism.algorithm.TSPNearestNeighbour;
+import com.yulius.belitungtourism.api.CarAPI;
 import com.yulius.belitungtourism.api.HotelListAPI;
 import com.yulius.belitungtourism.api.PoiListAPI;
 import com.yulius.belitungtourism.api.RestaurantListAPI;
@@ -39,6 +40,7 @@ import com.yulius.belitungtourism.entity.Souvenir;
 import com.yulius.belitungtourism.fragments.base.BaseFragment;
 import com.yulius.belitungtourism.listeners.OnMessageActionListener;
 import com.yulius.belitungtourism.realm.Trip;
+import com.yulius.belitungtourism.response.CarResponseData;
 import com.yulius.belitungtourism.response.HotelListResponseData;
 import com.yulius.belitungtourism.response.PoiListResponseData;
 import com.yulius.belitungtourism.response.RestaurantListResponseData;
@@ -46,6 +48,7 @@ import com.yulius.belitungtourism.response.RestaurantNearbyPoiResponseData;
 import com.yulius.belitungtourism.response.SouvenirListResponseData;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 import io.realm.Realm;
@@ -93,6 +96,9 @@ public class TripResultFragment extends BaseFragment {
     private RestaurantNearbyPoiResponseData mRestaurantNearbyPoiResponseData;
     private RestaurantNearbyPoiAPI mRestaurantNearbyPoiAPI;
     private ArrayList<Integer> mHotelLotteryList;
+    private CarAPI mCarAPI;
+    private CarResponseData mCarResponseData;
+    private HashMap<Integer, Integer> mCarHashMap;
 
     public static TripResultFragment newInstance(int poiMinBudget, int poiMaxBudget, int restaurantMinBudget, int restaurantMaxBudget, int hotelMinBudget, int hotelMaxBudget, int totalNight) {
         TripResultFragment fragment = new TripResultFragment();
@@ -186,8 +192,13 @@ public class TripResultFragment extends BaseFragment {
                 int numGuests;
                 try {
                     numGuests = Integer.parseInt(s.toString());
+                    if(numGuests < 1 || numGuests > 45){
+                        throw new Exception();
+                    }
                 } catch (Exception e){
                     Toast.makeText(mContext, "Please insert a valid total passenger number", Toast.LENGTH_LONG).show();
+
+                    mTotalPriceTextView.setText("Please insert a valid total passenger number");
                     return;
                 }
 
@@ -203,6 +214,7 @@ public class TripResultFragment extends BaseFragment {
                 Log.d("test","jmlh kmr : " + numberOfRoom);
                 mTotalPrice += numberOfRoom * (mTotalNight-1) * mSelectedHotel.price;
 
+                mTotalPrice += findCarPrice(numGuests) * mTotalNight;
                 mTotalPriceTextView.setText("Rp " + FormattingUtil.formatDecimal(mTotalPrice));
             }
         });
@@ -274,7 +286,41 @@ public class TripResultFragment extends BaseFragment {
         });
     }
 
+    private int findCarPrice(int numGuests) {
+        int personLeft = numGuests;
+        int selectedCapacity = 99;
+        int selectedPrice = 0;
+        for(int i=0;i<mCarResponseData.entries.length;i++){
+            if(mCarResponseData.entries[i].carCapacity >= numGuests && mCarResponseData.entries[i].carCapacity < selectedCapacity){
+                selectedCapacity = mCarResponseData.entries[i].carCapacity;
+                selectedPrice = mCarResponseData.entries[i].carPrice;
+            }
+        }
+
+        Log.d("test", "harga mobil : " + selectedPrice);
+        return selectedPrice;
+    }
+
     private void setUpRequestAPI() {
+        mCarAPI = new CarAPI(mContext);
+        mCarAPI.setOnResponseListener(new CarAPI.OnResponseListener() {
+            @Override
+            public void onRequestSuccess(CarResponseData carResponseData) {
+                mCarResponseData = carResponseData;
+                refreshFragment();
+            }
+
+            @Override
+            public void onRequestError(VolleyError volleyError) {
+                showConnectionProblemErrorMessage(volleyError, TAG);
+            }
+
+            @Override
+            public void onRequestFailed(String message) {
+                showRequestFailedErrorMessage(message);
+            }
+        });
+
         mPoiListAPI = new PoiListAPI(mContext);
         mPoiListAPI.setOnResponseListener(new PoiListAPI.OnResponseListener() {
             @Override
@@ -691,7 +737,9 @@ public class TripResultFragment extends BaseFragment {
                 break;
             }
         }
-        refreshFragment();
+
+        mCarAPI.requestCarList();
+//        refreshFragment();
     }
 
     @Override

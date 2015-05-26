@@ -18,7 +18,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.yulius.belitungtrip"
+        applicationId "com.yulius.belitungtourism"
         minSdkVersion 15
         targetSdkVersion 21
         versionCode 1

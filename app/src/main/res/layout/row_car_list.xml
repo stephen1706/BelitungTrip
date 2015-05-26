@@ -19,12 +19,6 @@
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:orientation="horizontal">
-        <ImageView
-            android:id="@+id/image_car"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:src="@drawable/abc_btn_check_material"/>
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_marginLeft="5dp"
@@ -44,10 +38,9 @@
                 android:textColor="@color/gray_43"
                 android:text="pesawat" />
             <TextView
-                android:id="@+id/text_view_car_website"
+                android:id="@+id/text_view_car_detail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:autoLink="web"
                 android:layout_below="@id/text_view_car_name"
                 android:singleLine="true"
                 android:ellipsize="end"

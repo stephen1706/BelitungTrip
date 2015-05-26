@@ -6,7 +6,8 @@ public class CarResponseData {
     public static class Entry {
         public String carId;
         public String carName;
-        public String carLogo;
-        public String carLink;
+        public int carPrice;
+        public int carCapacity;
+
     }
 }

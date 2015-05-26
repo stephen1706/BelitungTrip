@@ -2,16 +2,13 @@ package com.yulius.belitungtourism.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.text.method.LinkMovementMethod;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
+import com.yulius.belitungtourism.FormattingUtil;
 import com.yulius.belitungtourism.R;
 import com.yulius.belitungtourism.response.CarResponseData;
 
@@ -37,24 +34,7 @@ public class CarListAdapter extends RecyclerView.Adapter<CarListAdapter.ViewHold
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
         CarResponseData.Entry carEntry = carList[i];
         viewHolder.carName.setText(carEntry.carName);
-        viewHolder.carWebsite.setText(carEntry.carLink);
-        viewHolder.carWebsite.setMovementMethod(LinkMovementMethod.getInstance());
-        loadImage(carEntry, viewHolder);
-    }
-
-    private void loadImage(final CarResponseData.Entry carEntry, final ViewHolder viewHolder ) {
-        Picasso.with(mContext).load(carEntry.carLogo).placeholder(R.drawable.abc_btn_check_material).into(viewHolder.carLogo, new Callback() {
-
-            @Override
-            public void onSuccess() {
-            }
-
-            @Override
-            public void onError() {
-                Log.d("Test", "fail load car image from : " + carEntry.carLogo);
-                loadImage(carEntry, viewHolder);//klo fail ulang lg
-            }
-        });
+        viewHolder.carWebsite.setText("Rp " + FormattingUtil.formatDecimal(carEntry.carPrice) + ", untuk " + carEntry.carCapacity + " orang");
     }
 
     @Override
@@ -70,8 +50,7 @@ public class CarListAdapter extends RecyclerView.Adapter<CarListAdapter.ViewHold
         public ViewHolder(View itemView) {
             super(itemView);
             carName = (TextView) itemView.findViewById(R.id.text_view_car_name);
-            carWebsite = (TextView)itemView.findViewById(R.id.text_view_car_website);
-            carLogo = (ImageView)itemView.findViewById(R.id.image_car);
+            carWebsite = (TextView)itemView.findViewById(R.id.text_view_car_detail);
         }
     }
 }

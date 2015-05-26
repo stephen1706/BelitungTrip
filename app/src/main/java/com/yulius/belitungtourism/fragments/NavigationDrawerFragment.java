@@ -267,7 +267,7 @@ public class NavigationDrawerFragment extends Fragment {
         ArrayList<SectionItem> sectionItems = new ArrayList<SectionItem>();
         sectionItems.add(new SectionItem(R.drawable.icon_home, "Home"));
         sectionItems.add(new SectionItem(R.drawable.icon_hotel, "Hotel"));
-        sectionItems.add(new SectionItem(R.drawable.icon_restaurant, "Culinary"));
+        sectionItems.add(new SectionItem(R.drawable.icon_restaurant, "Restaurant"));
         sectionItems.add(new SectionItem(R.drawable.icon_poi, "Point of Interest"));
         sectionItems.add(new SectionItem(R.drawable.icon_souvenir, "Souvenir Shop"));
         sectionItems.add(new SectionItem(R.drawable.icon_car, "Transportation"));
