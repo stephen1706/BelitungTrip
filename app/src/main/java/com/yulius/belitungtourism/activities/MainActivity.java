@@ -164,13 +164,10 @@ public class MainActivity extends BaseActivity implements NavigationDrawerFragme
         }
     }
 
-    public void selectItem(int position){
-        mNavigationDrawerFragment.selectItem(position);
-    }
-
     public void setDrawerIndicatorEnabled(boolean enabled){
         mNavigationDrawerFragment.setDrawerIndicatorEnabled(enabled);
     }
+
     @Override
     public void onBackPressed() {
         Fragment currentContainerFragment = getSupportFragmentManager().findFragmentByTag(this.mFragmentTabHost.getCurrentTabTag());//ambil container yg skrg

@@ -92,6 +92,7 @@ public class TripResultFragment extends BaseFragment {
     private int mHotelMinBudget;
     private RestaurantNearbyPoiResponseData mRestaurantNearbyPoiResponseData;
     private RestaurantNearbyPoiAPI mRestaurantNearbyPoiAPI;
+    private ArrayList<Integer> mHotelLotteryList;
 
     public static TripResultFragment newInstance(int poiMinBudget, int poiMaxBudget, int restaurantMinBudget, int restaurantMaxBudget, int hotelMinBudget, int hotelMaxBudget, int totalNight) {
         TripResultFragment fragment = new TripResultFragment();
@@ -324,7 +325,8 @@ public class TripResultFragment extends BaseFragment {
             public void onRequestSuccess(HotelListResponseData hotelListResponseData) {
                 mHotelListResponseData = hotelListResponseData;
                 if(hotelListResponseData != null) {
-                    findBestHotel();
+//                    findBestHotel();
+                    findBestHotelUsingLottery();
                 }
             }
 
@@ -639,6 +641,32 @@ public class TripResultFragment extends BaseFragment {
                     mSelectedHotel = hotel;
                     break;
                 }
+            }
+        }
+        mSouvenirListAPI.requestSouvenirList();
+    }
+
+    private void findBestHotelUsingLottery() {
+        mHotelLotteryList = new ArrayList<Integer>();
+        for(int i=0;i<mHotelListResponseData.entries.length;i++){
+            int totalPrice = mHotelListResponseData.entries[i].hotelPrice * (mTotalNight-1);
+            if(totalPrice <= mHotelMaxBudget && totalPrice >= mHotelMinBudget){
+                for(int j=0;j<mHotelListResponseData.entries[i].hotelRating;j++){
+                    mHotelLotteryList.add(mHotelListResponseData.entries[i].hotelId);
+                }
+            }
+        }
+        int selectedIndex = new Random().nextInt(mHotelLotteryList.size());
+        int selectedHotelId = mHotelLotteryList.get(selectedIndex);
+        for(int i=0;i<mHotelListResponseData.entries.length;i++){
+            if(mHotelListResponseData.entries[i].hotelId == selectedHotelId){
+                Hotel hotel = new Hotel();
+                hotel.id = mHotelListResponseData.entries[i].hotelId;
+                hotel.name = mHotelListResponseData.entries[i].hotelName;
+                hotel.price = mHotelListResponseData.entries[i].hotelPrice;
+                hotel.rating = mHotelListResponseData.entries[i].hotelRating;
+                mSelectedHotel = hotel;
+                break;
             }
         }
         mSouvenirListAPI.requestSouvenirList();
