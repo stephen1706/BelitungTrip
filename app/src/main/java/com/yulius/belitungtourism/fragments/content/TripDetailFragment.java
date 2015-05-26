@@ -9,12 +9,14 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.yulius.belitungtourism.FormattingUtil;
 import com.yulius.belitungtourism.R;
 import com.yulius.belitungtourism.entity.Hotel;
 import com.yulius.belitungtourism.entity.Poi;
 import com.yulius.belitungtourism.entity.Restaurant;
 import com.yulius.belitungtourism.entity.Souvenir;
 import com.yulius.belitungtourism.fragments.base.BaseFragment;
+import com.yulius.belitungtourism.realm.Car;
 import com.yulius.belitungtourism.realm.Trip;
 
 import java.util.ArrayList;
@@ -33,6 +35,8 @@ public class TripDetailFragment extends BaseFragment {
     private LinearLayout mSouvenirListFrame;
     private String mTripName;
     private LinearLayout mTripListFrame;
+    private LinearLayout mTransportationListFrame;
+    private com.yulius.belitungtourism.entity.Car mSelectedCar;
 
     public static TripDetailFragment newInstance(String tripName) {
         TripDetailFragment fragment = new TripDetailFragment();
@@ -84,6 +88,7 @@ public class TripDetailFragment extends BaseFragment {
         mHotelListFrame = (LinearLayout) mLayoutView.findViewById(R.id.frame_hotel_list);
         mTripListFrame = (LinearLayout) mLayoutView.findViewById(R.id.frame_trip_list);
         mSouvenirListFrame = (LinearLayout) mLayoutView.findViewById(R.id.frame_souvenir_list);
+        mTransportationListFrame = (LinearLayout) mLayoutView.findViewById(R.id.frame_transportation_list);
     }
 
     private void setUpViewState() {
@@ -105,6 +110,9 @@ public class TripDetailFragment extends BaseFragment {
         com.yulius.belitungtourism.realm.Souvenir souvenir = tripResult.first().getSouvenir();
         convertSouvenirRealmToEntity(souvenir);
 
+        com.yulius.belitungtourism.realm.Car car = tripResult.first().getCar();
+        convertCarRealmToEntity(car);
+
         refreshFragment();
     }
 
@@ -115,6 +123,7 @@ public class TripDetailFragment extends BaseFragment {
         mTripListFrame.removeAllViews();
         mHotelListFrame.removeAllViews();
         mSouvenirListFrame.removeAllViews();
+        mTransportationListFrame.removeAllViews();
 
         for(int i = 0 ;i < mRestaurantResultList.size();i++){
             if(i%3 == 0){
@@ -181,6 +190,12 @@ public class TripDetailFragment extends BaseFragment {
             }
         });
         mSouvenirListFrame.addView(souvenirRow);
+
+        View carRow = mLayoutInflater.inflate(R.layout.row_car_list, mTransportationListFrame, false);
+        ((TextView) carRow.findViewById(R.id.text_view_car_name)).setText(mSelectedCar.carName);
+        ((TextView) carRow.findViewById(R.id.text_view_car_detail)).setText("Cost : Rp " + FormattingUtil.formatDecimal(mSelectedCar.carPrice) + ", for " + mSelectedCar.carCapacity + " person");
+
+        mTransportationListFrame.addView(carRow);
     }
 
     @Override
@@ -234,4 +249,11 @@ public class TripDetailFragment extends BaseFragment {
         mSelectedSouvenir.rating = souvenir.getSouvenirRating();
     }
 
+    private void convertCarRealmToEntity(Car car) {
+        mSelectedCar = new com.yulius.belitungtourism.entity.Car();
+        mSelectedCar.carId = car.getCarId();
+        mSelectedCar.carName = car.getCarName();
+        mSelectedCar.carPrice = car.getCarPrice();
+        mSelectedCar.carCapacity = car.getCarCapacity();
+    }
 }

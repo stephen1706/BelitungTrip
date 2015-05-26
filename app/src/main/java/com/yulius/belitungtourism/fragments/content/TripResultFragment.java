@@ -33,6 +33,7 @@ import com.yulius.belitungtourism.api.PoiListAPI;
 import com.yulius.belitungtourism.api.RestaurantListAPI;
 import com.yulius.belitungtourism.api.RestaurantNearbyPoiAPI;
 import com.yulius.belitungtourism.api.SouvenirListAPI;
+import com.yulius.belitungtourism.entity.Car;
 import com.yulius.belitungtourism.entity.Hotel;
 import com.yulius.belitungtourism.entity.Poi;
 import com.yulius.belitungtourism.entity.Restaurant;
@@ -79,6 +80,7 @@ public class TripResultFragment extends BaseFragment {
     private ArrayList<Restaurant> mRestaurantResultList;
     private ArrayList<Poi> mPoiResultList;
     private Hotel mSelectedHotel;
+    private Car mSelectedCar;
     private Souvenir mSelectedSouvenir;
     private ArrayList<Integer> mSouvenirLotteryList;
 //    private LinearLayout mRestaurantListFrame;
@@ -99,6 +101,7 @@ public class TripResultFragment extends BaseFragment {
     private CarResponseData mCarResponseData;
     private LinearLayout mTripListFrame;
     private int mNumGuests;
+    private LinearLayout mTransportationListFrame;
 
     public static TripResultFragment newInstance(int poiMinBudget, int poiMaxBudget, int restaurantMinBudget, int restaurantMaxBudget, int hotelMinBudget, int hotelMaxBudget, int totalNight) {
         TripResultFragment fragment = new TripResultFragment();
@@ -163,6 +166,7 @@ public class TripResultFragment extends BaseFragment {
 //        mPoiListFrame = (LinearLayout) mLayoutView.findViewById(R.id.frame_poi_list);
 //        mRestaurantListFrame = (LinearLayout) mLayoutView.findViewById(R.id.frame_restaurant_list);
         mHotelListFrame = (LinearLayout) mLayoutView.findViewById(R.id.frame_hotel_list);
+        mTransportationListFrame = (LinearLayout) mLayoutView.findViewById(R.id.frame_transportation_list);
         mSouvenirListFrame = (LinearLayout) mLayoutView.findViewById(R.id.frame_souvenir_list);
         mSaveTripButton = (Button) mLayoutView.findViewById(R.id.button_save_trip);
         mTotalPriceTextView = (TextView) mLayoutView.findViewById(R.id.text_view_total_price);
@@ -217,6 +221,13 @@ public class TripResultFragment extends BaseFragment {
                 mTotalPrice += numberOfRoom * (mTotalNight-1) * mSelectedHotel.price;
 
                 mTotalPrice += findCarPrice(numGuests) * mTotalNight;
+
+                mTransportationListFrame.removeAllViews();
+                View carRow = mLayoutInflater.inflate(R.layout.row_car_list, mTransportationListFrame, false);
+                ((TextView) carRow.findViewById(R.id.text_view_car_name)).setText(mSelectedCar.carName);
+                ((TextView) carRow.findViewById(R.id.text_view_car_detail)).setText("Cost : Rp " + FormattingUtil.formatDecimal(mSelectedCar.carPrice) + ", for " + mSelectedCar.carCapacity + " person");
+                mTransportationListFrame.addView(carRow);
+
                 mTotalPriceTextView.setText("Rp " + FormattingUtil.formatDecimal(mTotalPrice));
             }
         });
@@ -252,6 +263,13 @@ public class TripResultFragment extends BaseFragment {
                     souvenir.setSouvenirPrice(mSelectedSouvenir.price);
                     souvenir.setSouvenirRating(mSelectedSouvenir.rating);
                     trip.setSouvenir(souvenir);
+
+                    com.yulius.belitungtourism.realm.Car car = realm.createObject(com.yulius.belitungtourism.realm.Car.class);
+                    car.setCarId(mSelectedCar.carId);
+                    car.setCarName(mSelectedCar.carName);
+                    car.setCarPrice(mSelectedCar.carPrice);
+                    car.setCarCapacity(mSelectedCar.carCapacity);
+                    trip.setCar(car);
 
                     RealmList<com.yulius.belitungtourism.realm.Restaurant> restaurants = new RealmList<>();
                     for (Restaurant currentRestaurant : mRestaurantResultList) {
@@ -289,18 +307,21 @@ public class TripResultFragment extends BaseFragment {
     }
 
     private int findCarPrice(int numGuests) {
-        int personLeft = numGuests;
         int selectedCapacity = 99;
-        int selectedPrice = 0;
         for(int i=0;i<mCarResponseData.entries.length;i++){
             if(mCarResponseData.entries[i].carCapacity >= numGuests && mCarResponseData.entries[i].carCapacity < selectedCapacity){
                 selectedCapacity = mCarResponseData.entries[i].carCapacity;
-                selectedPrice = mCarResponseData.entries[i].carPrice;
+
+                mSelectedCar = new Car();
+                mSelectedCar.carId = mCarResponseData.entries[i].carId;
+                mSelectedCar.carName = mCarResponseData.entries[i].carName;
+                mSelectedCar.carPrice = mCarResponseData.entries[i].carPrice;
+                mSelectedCar.carCapacity = mCarResponseData.entries[i].carCapacity;
             }
         }
 
-        Log.d("test", "harga mobil : " + selectedPrice);
-        return selectedPrice;
+        Log.d("test", "harga mobil : " + mSelectedCar.carPrice);
+        return mSelectedCar.carPrice;
     }
 
     private void setUpRequestAPI() {
@@ -309,6 +330,8 @@ public class TripResultFragment extends BaseFragment {
             @Override
             public void onRequestSuccess(CarResponseData carResponseData) {
                 mCarResponseData = carResponseData;
+                findCarPrice(1);
+
                 refreshFragment();
             }
 
@@ -474,6 +497,7 @@ public class TripResultFragment extends BaseFragment {
 //        mPoiListFrame.removeAllViews();
         mHotelListFrame.removeAllViews();
         mSouvenirListFrame.removeAllViews();
+        mTransportationListFrame.removeAllViews();
 
         for(int i = 0 ;i < mRestaurantResultList.size();i++){
             if(i%3 == 0){
@@ -591,6 +615,13 @@ public class TripResultFragment extends BaseFragment {
             }
         });
         mSouvenirListFrame.addView(souvenirRow);
+
+        View carRow = mLayoutInflater.inflate(R.layout.row_car_list, mTransportationListFrame, false);
+        ((TextView) carRow.findViewById(R.id.text_view_car_name)).setText(mSelectedCar.carName);
+        ((TextView) carRow.findViewById(R.id.text_view_car_detail)).setText("Cost : Rp " + FormattingUtil.formatDecimal(mSelectedCar.carPrice) + ", for " + mSelectedCar.carCapacity + " person");
+
+        mTransportationListFrame.addView(carRow);
+
         mTotalGuestEditText.setText("1");
     }
 

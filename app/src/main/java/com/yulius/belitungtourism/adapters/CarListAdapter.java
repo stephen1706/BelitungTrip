@@ -34,7 +34,7 @@ public class CarListAdapter extends RecyclerView.Adapter<CarListAdapter.ViewHold
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
         CarResponseData.Entry carEntry = carList[i];
         viewHolder.carName.setText(carEntry.carName);
-        viewHolder.carWebsite.setText("Rp " + FormattingUtil.formatDecimal(carEntry.carPrice) + ", untuk " + carEntry.carCapacity + " orang");
+        viewHolder.carWebsite.setText("Rp " + FormattingUtil.formatDecimal(carEntry.carPrice) + ", for " + carEntry.carCapacity + " person");
     }
 
     @Override

@@ -14,7 +14,16 @@ public class Trip extends RealmObject {
     private RealmList<Poi> pois;
     private Hotel hotel;
     private Souvenir souvenir;
+    private Car car;
     private int totalPrice;
+
+    public Car getCar() {
+        return car;
+    }
+
+    public void setCar(Car car) {
+        this.car = car;
+    }
 
     public int getTotalPrice() {
         return totalPrice;
