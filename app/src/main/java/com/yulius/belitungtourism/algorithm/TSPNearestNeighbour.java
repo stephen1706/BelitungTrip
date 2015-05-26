@@ -33,7 +33,7 @@ public class TSPNearestNeighbour {
             min = Double.MAX_VALUE;
             while (i < numberOfNodes) {
                 if (adjacencyMatrix[element][i] > 0 && visited[i] == -1){
-                    if (min > adjacencyMatrix[element][i]){
+                    if (min > adjacencyMatrix[element][i]){//cari nilai minimal yg bs dituju dari titik itu
                         min = adjacencyMatrix[element][i];
                         dst = i;
                         minFlag = true;

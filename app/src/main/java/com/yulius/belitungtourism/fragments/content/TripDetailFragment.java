@@ -29,11 +29,10 @@ public class TripDetailFragment extends BaseFragment {
     private ArrayList<Poi> mPoiResultList;
     private Hotel mSelectedHotel;
     private Souvenir mSelectedSouvenir;
-    private LinearLayout mRestaurantListFrame;
-    private LinearLayout mPoiListFrame;
     private LinearLayout mHotelListFrame;
     private LinearLayout mSouvenirListFrame;
     private String mTripName;
+    private LinearLayout mTripListFrame;
 
     public static TripDetailFragment newInstance(String tripName) {
         TripDetailFragment fragment = new TripDetailFragment();
@@ -82,9 +81,8 @@ public class TripDetailFragment extends BaseFragment {
     }
 
     private void setUpView() {
-        mPoiListFrame = (LinearLayout) mLayoutView.findViewById(R.id.frame_poi_list);
-        mRestaurantListFrame = (LinearLayout) mLayoutView.findViewById(R.id.frame_restaurant_list);
         mHotelListFrame = (LinearLayout) mLayoutView.findViewById(R.id.frame_hotel_list);
+        mTripListFrame = (LinearLayout) mLayoutView.findViewById(R.id.frame_trip_list);
         mSouvenirListFrame = (LinearLayout) mLayoutView.findViewById(R.id.frame_souvenir_list);
     }
 
@@ -113,21 +111,45 @@ public class TripDetailFragment extends BaseFragment {
     @Override
     public void refreshFragment(){
         super.refreshFragment();
-        mRestaurantListFrame.removeAllViews();
-        mPoiListFrame.removeAllViews();
+
+        mTripListFrame.removeAllViews();
         mHotelListFrame.removeAllViews();
+        mSouvenirListFrame.removeAllViews();
 
         for(int i = 0 ;i < mRestaurantResultList.size();i++){
+            if(i%3 == 0){
+                TextView textView = new TextView(getParentActivity());
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                lp.setMargins(0, 20, 0, 20);
+                textView.setLayoutParams(lp);
+                textView.setText("Day " + ((i / 3) + 1));
+
+                mTripListFrame.addView(textView);
+            }
+
+            final Poi poi = mPoiResultList.get(i);
+
+            View poiRow = mLayoutInflater.inflate(R.layout.row_poi_list, mTripListFrame, false);
+            ((TextView) poiRow.findViewById(R.id.text_view_poi_name)).setText(poi.name);
+            ((TextView) poiRow.findViewById(R.id.text_view_region)).setVisibility(View.GONE);
+            poiRow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    replaceContentFragment(PoiDetailFragment.newInstance(Integer.toString(poi.id)), getResources().getString(R.string.poi_detail_fragment_tag));
+                }
+            });
+            mTripListFrame.addView(poiRow);
+
             final Restaurant restaurant = mRestaurantResultList.get(i);
 
-            View restaurantRow = mLayoutInflater.inflate(R.layout.row_restaurant_list, mRestaurantListFrame, false);
+            View restaurantRow = mLayoutInflater.inflate(R.layout.row_restaurant_list, mTripListFrame, false);
             ((TextView) restaurantRow.findViewById(R.id.text_view_restaurant_name)).setText(restaurant.name);
             if(i%3 == 0){
-                ((TextView) restaurantRow.findViewById(R.id.text_view_region)).setText("Day " + ((i/3)+1) + ", lunch");
+                ((TextView) restaurantRow.findViewById(R.id.text_view_region)).setText("Lunch");
             } else if(i%3 == 1){
-                ((TextView) restaurantRow.findViewById(R.id.text_view_region)).setText("Day " + ((i/3)+1) + ", dinner");
+                ((TextView) restaurantRow.findViewById(R.id.text_view_region)).setText("Dinner");
             } else {
-                ((TextView) restaurantRow.findViewById(R.id.text_view_region)).setText("Day " + ((i/3)+1) + ", midnight snack");
+                ((TextView) restaurantRow.findViewById(R.id.text_view_region)).setText("Midnight snack");
             }
 
             restaurantRow.setOnClickListener(new View.OnClickListener() {
@@ -136,31 +158,9 @@ public class TripDetailFragment extends BaseFragment {
                     replaceContentFragment(RestaurantDetailFragment.newInstance(Integer.toString(restaurant.id)), getResources().getString(R.string.restaurant_detail_fragment_tag));
                 }
             });
-            mRestaurantListFrame.addView(restaurantRow);
+            mTripListFrame.addView(restaurantRow);
         }
-
-        for(int i = 0 ;i < mPoiResultList.size();i++){
-            final Poi poi = mPoiResultList.get(i);
-
-            View poiRow = mLayoutInflater.inflate(R.layout.row_poi_list, mPoiListFrame, false);
-            ((TextView) poiRow.findViewById(R.id.text_view_poi_name)).setText(poi.name);
-            if(i%3 == 0){
-                ((TextView) poiRow.findViewById(R.id.text_view_region)).setText("Day " + ((i/3)+1));
-            } else if(i%3 == 1){
-                ((TextView) poiRow.findViewById(R.id.text_view_region)).setText("Day " + ((i/3)+1));
-            } else {
-                ((TextView) poiRow.findViewById(R.id.text_view_region)).setText("Day " + ((i/3)+1));
-            }
-            poiRow.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    replaceContentFragment(PoiDetailFragment.newInstance(Integer.toString(poi.id)), getResources().getString(R.string.restaurant_detail_fragment_tag));
-                }
-            });
-            mPoiListFrame.addView(poiRow);
-        }
-
-        View hotelRow = mLayoutInflater.inflate(R.layout.row_hotel_list, mPoiListFrame, false);
+        View hotelRow = mLayoutInflater.inflate(R.layout.row_hotel_list, mHotelListFrame, false);
         ((TextView) hotelRow.findViewById(R.id.text_view_hotel_name)).setText(mSelectedHotel.name);
         ((TextView) hotelRow.findViewById(R.id.text_view_region)).setText("Total price : " + mSelectedHotel.price);
         hotelRow.setOnClickListener(new View.OnClickListener() {
