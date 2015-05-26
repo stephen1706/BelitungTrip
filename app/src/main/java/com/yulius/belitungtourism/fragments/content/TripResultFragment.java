@@ -98,6 +98,7 @@ public class TripResultFragment extends BaseFragment {
     private CarAPI mCarAPI;
     private CarResponseData mCarResponseData;
     private LinearLayout mTripListFrame;
+    private int mNumGuests;
 
     public static TripResultFragment newInstance(int poiMinBudget, int poiMaxBudget, int restaurantMinBudget, int restaurantMaxBudget, int hotelMinBudget, int hotelMaxBudget, int totalNight) {
         TripResultFragment fragment = new TripResultFragment();
@@ -202,6 +203,7 @@ public class TripResultFragment extends BaseFragment {
                     return;
                 }
 
+                mNumGuests = numGuests;
                 mTotalPrice = 0;
                 for(Restaurant restaurant:mRestaurantResultList){
                     mTotalPrice += numGuests * restaurant.price;
@@ -232,7 +234,7 @@ public class TripResultFragment extends BaseFragment {
                 try {
                     realm.beginTransaction();
                     Trip trip = realm.createObject(Trip.class); // Create a new object
-                    trip.setNumGuests(1);
+                    trip.setNumGuests(mNumGuests);
                     trip.setTripName(tripName);
                     trip.setTotalNight(mTotalNight);
                     trip.setTotalPrice(mTotalPrice);
