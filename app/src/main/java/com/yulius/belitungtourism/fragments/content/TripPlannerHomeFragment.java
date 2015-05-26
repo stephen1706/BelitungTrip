@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -230,5 +231,14 @@ public class TripPlannerHomeFragment extends BaseFragment  implements DatePicker
                 }
             }
         }
+    }
+
+
+    @Override
+    protected void restoreCustomActionBar(ActionBar actionBar) {
+        super.restoreCustomActionBar(actionBar);
+
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        getParentActivity().setDrawerIndicatorEnabled(true);
     }
 }

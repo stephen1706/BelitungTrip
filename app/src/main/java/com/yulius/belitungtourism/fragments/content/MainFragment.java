@@ -2,6 +2,7 @@ package com.yulius.belitungtourism.fragments.content;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,5 +74,13 @@ public class MainFragment extends BaseFragment{
 //        setUpMessageListener();
 
         return mLayoutView;
+    }
+
+    @Override
+    protected void restoreCustomActionBar(ActionBar actionBar) {
+        super.restoreCustomActionBar(actionBar);
+
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        getParentActivity().setDrawerIndicatorEnabled(true);
     }
 }

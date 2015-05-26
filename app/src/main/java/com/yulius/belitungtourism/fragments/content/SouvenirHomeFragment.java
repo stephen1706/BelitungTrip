@@ -2,6 +2,7 @@ package com.yulius.belitungtourism.fragments.content;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -136,5 +137,13 @@ public class SouvenirHomeFragment extends BaseFragment {
                 startRequestSouvenirList();
             }
         });
+    }
+
+    @Override
+    protected void restoreCustomActionBar(ActionBar actionBar) {
+        super.restoreCustomActionBar(actionBar);
+
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        getParentActivity().setDrawerIndicatorEnabled(true);
     }
 }
