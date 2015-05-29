@@ -658,7 +658,11 @@ public class TripResultFragment extends BaseFragment {
                     return true;
                 }
             });
-            mTripListFrame.addView(poiRow);
+            if(i%3 == 0) {
+                mTripListFrame.addView(poiRow);
+            } else {
+                mTripListFrame.addView(poiRow, mTripListFrame.getChildCount() - 1);
+            }
 
             final Restaurant restaurant = mRestaurantResultList.get(i);
 
