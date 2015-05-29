@@ -1,6 +1,9 @@
 package com.yulius.belitungtourism.fragments.content;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -20,6 +23,10 @@ import com.android.volley.VolleyError;
 import com.yulius.belitungtourism.Constans;
 import com.yulius.belitungtourism.FormattingUtil;
 import com.yulius.belitungtourism.R;
+import com.yulius.belitungtourism.activities.HotelListActivity;
+import com.yulius.belitungtourism.activities.PoiListActivity;
+import com.yulius.belitungtourism.activities.RestaurantListActivity;
+import com.yulius.belitungtourism.activities.SouvenirListActivity;
 import com.yulius.belitungtourism.algorithm.PoiAlgorithm;
 import com.yulius.belitungtourism.algorithm.PoiIndividual;
 import com.yulius.belitungtourism.algorithm.PoiPopulation;
@@ -64,6 +71,12 @@ public class TripResultFragment extends BaseFragment {
     private static final String PARAM_RESTAURANT_MIN_BUDGET = "param_restaurant_min_budget";
     private static final String PARAM_HOTEL_MIN_BUDGET = "param_hotel_min_budget";
     private static final int POPULATION_SIZE = 5;
+    private static final int POI_REQUEST_CODE = 1;
+    private static final int RESTAURANT_REQUEST_CODE = 2;
+    private static final int HOTEL_REQUEST_CODE = 3;
+    private static final int SOUVENIR_REQUEST_CODE = 4;
+    public static final String EXTRA_RESPONSE_DATA = "RESPONSE DATA";
+
     private RestaurantListAPI mRestaurantListAPI;
     private PoiListAPI mPoiListAPI;
     private HotelListAPI mHotelListAPI;
@@ -102,6 +115,8 @@ public class TripResultFragment extends BaseFragment {
     private LinearLayout mTripListFrame;
     private int mNumGuests;
     private LinearLayout mTransportationListFrame;
+    private int mSelectedPoiIndex;
+    private int mSelectedRestaurantIndex;
 
     public static TripResultFragment newInstance(int poiMinBudget, int poiMaxBudget, int restaurantMinBudget, int restaurantMaxBudget, int hotelMinBudget, int hotelMaxBudget, int totalNight) {
         TripResultFragment fragment = new TripResultFragment();
@@ -490,6 +505,93 @@ public class TripResultFragment extends BaseFragment {
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode == Activity.RESULT_OK){
+            if(requestCode == POI_REQUEST_CODE){
+                long id = data.getExtras().getLong("result");
+                Poi selectedPoi = getPoiFromId(id);
+                mPoiResultList.set(mSelectedPoiIndex, selectedPoi);
+                refreshFragment();
+            } else if(requestCode == RESTAURANT_REQUEST_CODE){
+                long id = data.getExtras().getLong("result");
+                Restaurant selected = getRestaurantFromId(id);
+                mRestaurantResultList.set(mSelectedRestaurantIndex, selected);
+                refreshFragment();
+            } else if(requestCode == HOTEL_REQUEST_CODE){
+                long id = data.getExtras().getLong("result");
+                Hotel selected = getHotelFromId(id);
+                mSelectedHotel = selected;
+                refreshFragment();
+            } else if(requestCode == SOUVENIR_REQUEST_CODE){
+                long id = data.getExtras().getLong("result");
+                Souvenir selected = getSouvenirFromId(id);
+                mSelectedSouvenir = selected;
+                refreshFragment();
+            }
+        }
+    }
+
+    private Poi getPoiFromId(long id) {
+        for(int i = 0;i<mPoiListResponseData.entries.length;i++){
+            if(mPoiListResponseData.entries[i].poiId == id){
+                Poi poi = new Poi();
+                poi.id = mPoiListResponseData.entries[i].poiId;
+                poi.longitude = mPoiListResponseData.entries[i].poiLongitude;
+                poi.latitude = mPoiListResponseData.entries[i].poiLatitude;
+                poi.name = mPoiListResponseData.entries[i].poiName;
+                poi.price = mPoiListResponseData.entries[i].poiPrice;
+                poi.rating = mPoiListResponseData.entries[i].poiRating;
+                return poi;
+            }
+        }
+        return null;
+    }
+
+    private Restaurant getRestaurantFromId(long id) {
+        for(int i = 0;i<mRestaurantListResponseData.entries.length;i++){
+            if(mRestaurantListResponseData.entries[i].restaurantId == id){
+                Restaurant restaurant = new Restaurant();
+                restaurant.id = mRestaurantListResponseData.entries[i].restaurantId;
+                restaurant.name = mRestaurantListResponseData.entries[i].restaurantName;
+                restaurant.price = mRestaurantListResponseData.entries[i].restaurantPrice;
+                restaurant.rating = mRestaurantListResponseData.entries[i].restaurantRating;
+                return restaurant;
+            }
+        }
+        return null;
+    }
+
+    private Hotel getHotelFromId(long id) {
+        for(int i = 0;i<mHotelListResponseData.entries.length;i++){
+            if(mHotelListResponseData.entries[i].hotelId == id){
+                Hotel hotel = new Hotel();
+                hotel.id = mHotelListResponseData.entries[i].hotelId;
+                hotel.name = mHotelListResponseData.entries[i].hotelName;
+                hotel.price = mHotelListResponseData.entries[i].hotelPrice;
+                hotel.rating = mHotelListResponseData.entries[i].hotelRating;
+                return hotel;
+            }
+        }
+        return null;
+    }
+
+    private Souvenir getSouvenirFromId(long id) {
+        for(int i = 0;i<mSouvenirListResponseData.entries.length;i++){
+            if(mSouvenirListResponseData.entries[i].souvenirId == id){
+                Souvenir souvenir = new Souvenir();
+                souvenir.id = mSouvenirListResponseData.entries[i].souvenirId;
+                souvenir.name = mSouvenirListResponseData.entries[i].souvenirName;
+                souvenir.price = mSouvenirListResponseData.entries[i].souvenirPrice;
+                souvenir.rating = mSouvenirListResponseData.entries[i].souvenirRating;
+                return souvenir;
+            }
+        }
+        return null;
+    }
+
+    @Override
     public void refreshFragment(){
         super.refreshFragment();
         mTripListFrame.removeAllViews();
@@ -528,6 +630,34 @@ public class TripResultFragment extends BaseFragment {
                     replaceContentFragment(PoiDetailFragment.newInstance(Integer.toString(poi.id)), getResources().getString(R.string.poi_detail_fragment_tag));
                 }
             });
+
+            final int finalI = i;
+            poiRow.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    new AlertDialog.Builder(mContext)
+                            .setTitle("Change entry")
+                            .setMessage("Are you sure you want to change this point of interest?")
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Intent intent = new Intent(mContext, PoiListActivity.class);
+                                    intent.putExtra(EXTRA_RESPONSE_DATA, mPoiListResponseData);
+                                    mSelectedPoiIndex = finalI;
+                                    getParentActivity().startActivityForResult(intent, POI_REQUEST_CODE);
+                                }
+                            })
+                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // do nothing
+                                    dialog.cancel();
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+
+                    return true;
+                }
+            });
             mTripListFrame.addView(poiRow);
 
             final Restaurant restaurant = mRestaurantResultList.get(i);
@@ -546,6 +676,33 @@ public class TripResultFragment extends BaseFragment {
                 @Override
                 public void onClick(View v) {
                     replaceContentFragment(RestaurantDetailFragment.newInstance(Integer.toString(restaurant.id)), getResources().getString(R.string.restaurant_detail_fragment_tag));
+                }
+            });
+
+            restaurantRow.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    new AlertDialog.Builder(mContext)
+                            .setTitle("Change entry")
+                            .setMessage("Are you sure you want to change this restaurant?")
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Intent intent = new Intent(mContext, RestaurantListActivity.class);
+                                    intent.putExtra(EXTRA_RESPONSE_DATA, mRestaurantListResponseData);
+                                    mSelectedRestaurantIndex = finalI;
+                                    getParentActivity().startActivityForResult(intent, RESTAURANT_REQUEST_CODE);
+                                }
+                            })
+                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // do nothing
+                                    dialog.cancel();
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+
+                    return true;
                 }
             });
             mTripListFrame.addView(restaurantRow);
@@ -603,6 +760,30 @@ public class TripResultFragment extends BaseFragment {
                 replaceContentFragment(HotelDetailFragment.newInstance(Integer.toString(mSelectedHotel.id)), getResources().getString(R.string.hotel_detail_fragment_tag));
             }
         });
+        hotelRow.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                new AlertDialog.Builder(mContext)
+                        .setTitle("Change entry")
+                        .setMessage("Are you sure you want to change this hotel?")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent = new Intent(mContext, HotelListActivity.class);
+                                intent.putExtra(EXTRA_RESPONSE_DATA, mHotelListResponseData);
+                                getParentActivity().startActivityForResult(intent, HOTEL_REQUEST_CODE);
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+
+                return true;
+            }
+        });
         mHotelListFrame.addView(hotelRow);
 
         View souvenirRow = mLayoutInflater.inflate(R.layout.row_souvenir_list, mSouvenirListFrame, false);
@@ -612,6 +793,30 @@ public class TripResultFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 replaceContentFragment(SouvenirDetailFragment.newInstance(Integer.toString(mSelectedSouvenir.id)), getResources().getString(R.string.souvenir_detail_fragment_tag));
+            }
+        });
+        souvenirRow.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                new AlertDialog.Builder(mContext)
+                        .setTitle("Change entry")
+                        .setMessage("Are you sure you want to change this souvenir shop?")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent = new Intent(mContext, SouvenirListActivity.class);
+                                intent.putExtra(EXTRA_RESPONSE_DATA, mSouvenirListResponseData);
+                                getParentActivity().startActivityForResult(intent, SOUVENIR_REQUEST_CODE);
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+
+                return true;
             }
         });
         mSouvenirListFrame.addView(souvenirRow);

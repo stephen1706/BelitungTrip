@@ -43,6 +43,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activities.PoiListActivity"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.Belitung"/>
+        <activity android:name=".activities.HotelListActivity"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.Belitung"/>
+        <activity android:name=".activities.RestaurantListActivity"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.Belitung"/>
+        <activity android:name=".activities.SouvenirListActivity"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.Belitung"/>
     </application>
 
 </manifest>

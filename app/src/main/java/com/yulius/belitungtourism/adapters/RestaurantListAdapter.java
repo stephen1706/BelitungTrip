@@ -40,6 +40,11 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
         return restaurantList == null ? 0 : restaurantList.length;
     }
 
+    @Override
+    public long getItemId(int position) {
+        return restaurantList[position].restaurantId;
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView restaurantName;
         public TextView restaurantAddress;

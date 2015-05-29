@@ -40,6 +40,11 @@ public class HotelListAdapter extends RecyclerView.Adapter<HotelListAdapter.View
         return hotelList == null ? 0 : hotelList.length;
     }
 
+    @Override
+    public long getItemId(int position) {
+        return hotelList[position].hotelId;
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView hotelName;
         public TextView hotelLocation;

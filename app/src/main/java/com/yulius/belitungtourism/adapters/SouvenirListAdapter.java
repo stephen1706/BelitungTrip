@@ -36,6 +36,11 @@ public class SouvenirListAdapter extends RecyclerView.Adapter<SouvenirListAdapte
     }
 
     @Override
+    public long getItemId(int position) {
+        return souvenirList[position].souvenirId;
+    }
+
+    @Override
     public int getItemCount() {
         return souvenirList == null ? 0 : souvenirList.length;
     }

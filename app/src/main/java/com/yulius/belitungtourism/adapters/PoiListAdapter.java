@@ -40,6 +40,11 @@ public class PoiListAdapter extends RecyclerView.Adapter<PoiListAdapter.ViewHold
         return poiList == null ? 0 : poiList.length;
     }
 
+    @Override
+    public long getItemId(int position) {
+        return poiList[position].poiId;
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView restaurantName;
         public TextView restaurantAddress;
