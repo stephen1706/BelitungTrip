@@ -2,23 +2,26 @@ package com.yulius.belitungtourism.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.yulius.belitungtourism.FormattingUtil;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 import com.yulius.belitungtourism.R;
-import com.yulius.belitungtourism.response.CarResponseData;
+import com.yulius.belitungtourism.response.CarRentalResponseData;
 
 public class CarListAdapter extends RecyclerView.Adapter<CarListAdapter.ViewHolder> {
 
-    private CarResponseData.Entry[] carList;
+    private CarRentalResponseData.Entry[] carList;
     private int rowLayout;
     private Context mContext;
 
-    public CarListAdapter(CarResponseData.Entry[] carList, int rowLayout, Context context) {
+    public CarListAdapter(CarRentalResponseData.Entry[] carList, int rowLayout, Context context) {
         this.carList = carList;
         this.rowLayout = rowLayout;
         this.mContext = context;
@@ -32,9 +35,26 @@ public class CarListAdapter extends RecyclerView.Adapter<CarListAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
-        CarResponseData.Entry carEntry = carList[i];
+        CarRentalResponseData.Entry carEntry = carList[i];
         viewHolder.carName.setText(carEntry.carName);
-        viewHolder.carWebsite.setText("Rp " + FormattingUtil.formatDecimal(carEntry.carPrice) + ", for " + carEntry.carCapacity + " person");
+        viewHolder.carWebsite.setText(carEntry.carLink);
+        viewHolder.carWebsite.setMovementMethod(LinkMovementMethod.getInstance());
+        loadImage(carEntry, viewHolder);
+    }
+
+    private void loadImage(final CarRentalResponseData.Entry carEntry, final ViewHolder viewHolder ) {
+        Picasso.with(mContext).load(carEntry.carLogo).placeholder(R.drawable.abc_btn_check_material).into(viewHolder.carLogo, new Callback() {
+
+            @Override
+            public void onSuccess() {
+            }
+
+            @Override
+            public void onError() {
+                Log.d("Test", "fail load car image from : " + carEntry.carLogo);
+                loadImage(carEntry, viewHolder);//klo fail ulang lg
+            }
+        });
     }
 
     @Override
@@ -51,6 +71,7 @@ public class CarListAdapter extends RecyclerView.Adapter<CarListAdapter.ViewHold
             super(itemView);
             carName = (TextView) itemView.findViewById(R.id.text_view_car_name);
             carWebsite = (TextView)itemView.findViewById(R.id.text_view_car_detail);
+            carLogo = (ImageView)itemView.findViewById(R.id.image_car);
         }
     }
 }

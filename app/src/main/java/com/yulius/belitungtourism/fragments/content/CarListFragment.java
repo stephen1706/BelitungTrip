@@ -13,17 +13,17 @@ import android.view.ViewGroup;
 import com.android.volley.VolleyError;
 import com.yulius.belitungtourism.R;
 import com.yulius.belitungtourism.adapters.CarListAdapter;
-import com.yulius.belitungtourism.api.CarAPI;
+import com.yulius.belitungtourism.api.CarRentalAPI;
 import com.yulius.belitungtourism.fragments.base.BaseFragment;
 import com.yulius.belitungtourism.listeners.OnMessageActionListener;
-import com.yulius.belitungtourism.response.CarResponseData;
+import com.yulius.belitungtourism.response.CarRentalResponseData;
 
 public class CarListFragment extends BaseFragment{
 
     private RecyclerView mCarList;
     private CarListAdapter mCarListAdapter;
-    private CarAPI mCarAPI;
-    private CarResponseData mCarResponseData;
+    private CarRentalAPI mCarAPI;
+    private CarRentalResponseData mCarResponseData;
 
     public static CarListFragment newInstance() {
         CarListFragment fragment = new CarListFragment();
@@ -98,10 +98,10 @@ public class CarListFragment extends BaseFragment{
     }
 
     private void setUpRequestAPI() {
-        mCarAPI = new CarAPI(mContext);
-        mCarAPI.setOnResponseListener(new CarAPI.OnResponseListener() {
+        mCarAPI = new CarRentalAPI(mContext);
+        mCarAPI.setOnResponseListener(new CarRentalAPI.OnResponseListener() {
             @Override
-            public void onRequestSuccess(CarResponseData carResponseData) {
+            public void onRequestSuccess(CarRentalResponseData carResponseData) {
                 mCarResponseData = carResponseData;
                 if (mCarResponseData != null) {
                     refreshFragment();
@@ -124,7 +124,7 @@ public class CarListFragment extends BaseFragment{
     private void startRequestCarList() {
         if(mCarResponseData == null) {//biar wkt back ga usah request ulang
             showLoadingMessage(TAG);
-            mCarAPI.requestCarList();
+            mCarAPI.requestCarRentalList();
         } else {
             refreshFragment();
         }
@@ -133,7 +133,7 @@ public class CarListFragment extends BaseFragment{
     @Override
     protected void refreshFragment() {
         super.refreshFragment();
-        mCarListAdapter = new CarListAdapter(mCarResponseData.entries, R.layout.row_car_list, mContext);
+        mCarListAdapter = new CarListAdapter(mCarResponseData.entries, R.layout.row_car_rental_list, mContext);
         mCarList.setAdapter(mCarListAdapter);
     }
 

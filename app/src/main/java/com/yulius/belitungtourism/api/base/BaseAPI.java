@@ -37,6 +37,7 @@ public class BaseAPI {
     protected static final String API_SUPPER_DETAIL_ROUTES = "SupperDetail.php";
     protected static final String API_FLIGHT_ROUTES = "FlightList.php";
     protected static final String API_CAR_ROUTES = "CarList.php";
+    protected static final String API_CAR_RENTAL_ROUTES = "CarRentalList.php";
     protected static final String API_POI_MAX_MIN_ROUTES = "PoiMaxMin.php";
     protected static final String API_RESTAURANT_MAX_MIN_ROUTES = "RestaurantMaxMin.php";
     protected static final String API_HOTEL_MAX_MIN_ROUTES = "HotelMaxMin.php";
@@ -54,6 +55,7 @@ public class BaseAPI {
     protected static final String API_SOUVENIR_DETAIL_URL = BASE_API_HTTP_URL + API_SOUVENIR_DETAIL_ROUTES;
     protected static final String API_FLIGHT_URL = BASE_API_HTTP_URL + API_FLIGHT_ROUTES;
     protected static final String API_CAR_URL = BASE_API_HTTP_URL + API_CAR_ROUTES;
+    protected static final String API_CAR_RENTAL_URL = BASE_API_HTTP_URL + API_CAR_RENTAL_ROUTES;
     protected static final String API_HOTEL_MAX_MIN_URL = BASE_API_HTTP_URL + API_HOTEL_MAX_MIN_ROUTES;
     protected static final String API_RESTAURANT_MAX_MIN_URL = BASE_API_HTTP_URL + API_RESTAURANT_MAX_MIN_ROUTES;
     protected static final String API_POI_MAX_MIN_URL = BASE_API_HTTP_URL + API_POI_MAX_MIN_ROUTES;
