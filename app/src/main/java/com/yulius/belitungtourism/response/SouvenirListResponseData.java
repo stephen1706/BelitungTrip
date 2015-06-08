@@ -8,12 +8,49 @@ import java.util.Arrays;
 public class SouvenirListResponseData implements Parcelable {
     public Entry[] entries;
 
+    public static class Asset implements Parcelable
+    {
+        public String url;
+
+        public Asset()
+        {}
+
+        public Asset(Parcel in)
+        {
+            url = in.readString();
+        }
+
+        @Override
+        public int describeContents()
+        {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags)
+        {
+            dest.writeString(url);
+        }
+
+        public static final Creator<Asset> CREATOR = new Creator<Asset>()
+        {
+            public Asset createFromParcel(Parcel source) {
+                return new Asset(source);
+            }
+
+            public Asset[] newArray(int size) {
+                return new Asset[size];
+            }
+        };
+    }
+
     public static class Entry implements Parcelable {
         public int souvenirId;
         public String souvenirName;
         public String souvenirAddress;
         public int souvenirRating;
         public int souvenirPrice;
+        public Asset[] assets;
 
         @Override
         public int describeContents() {
@@ -27,6 +64,7 @@ public class SouvenirListResponseData implements Parcelable {
             dest.writeString(this.souvenirAddress);
             dest.writeInt(this.souvenirRating);
             dest.writeInt(this.souvenirPrice);
+            dest.writeParcelableArray(assets, flags);
         }
 
         public Entry() {
@@ -38,6 +76,10 @@ public class SouvenirListResponseData implements Parcelable {
             this.souvenirAddress = in.readString();
             this.souvenirRating = in.readInt();
             this.souvenirPrice = in.readInt();
+
+            Parcelable[] parcelables = in.readParcelableArray(Asset.class.getClassLoader());
+            if(parcelables != null)
+            {this.assets = Arrays.copyOf(parcelables, parcelables.length, Asset[].class);}
         }
 
         public static final Parcelable.Creator<Entry> CREATOR = new Parcelable.Creator<Entry>() {

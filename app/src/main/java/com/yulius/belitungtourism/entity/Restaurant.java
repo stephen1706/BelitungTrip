@@ -6,4 +6,5 @@ public class Restaurant {
     public int rating;
     public int price;
     public int type;
+    public String imageUrl;
 }

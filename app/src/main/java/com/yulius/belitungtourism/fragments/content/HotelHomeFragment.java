@@ -6,6 +6,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -98,6 +99,7 @@ public class HotelHomeFragment extends BaseFragment {
                 if(mHotelListResponseData != null) {
                     refreshFragment();
                 }
+                Log.d("responseHotel", hotelListResponseData.entries[0].hotelName);
             }
 
             @Override

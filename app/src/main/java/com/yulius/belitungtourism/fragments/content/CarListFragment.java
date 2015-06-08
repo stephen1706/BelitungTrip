@@ -1,6 +1,8 @@
 package com.yulius.belitungtourism.fragments.content;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -16,6 +18,7 @@ import com.yulius.belitungtourism.adapters.CarListAdapter;
 import com.yulius.belitungtourism.api.CarRentalAPI;
 import com.yulius.belitungtourism.fragments.base.BaseFragment;
 import com.yulius.belitungtourism.listeners.OnMessageActionListener;
+import com.yulius.belitungtourism.listeners.RecyclerItemClickListener;
 import com.yulius.belitungtourism.response.CarRentalResponseData;
 
 public class CarListFragment extends BaseFragment{
@@ -79,22 +82,22 @@ public class CarListFragment extends BaseFragment{
     }
 
     private void setUpListener() {
-//        mCarList.addOnItemTouchListener(
-//                new RecyclerItemClickListener(mContext, new RecyclerItemClickListener.OnItemClickListener() {
-//                    @Override
-//                    public void onItemClick(View view, int position) {
-//
-//                        String url = mCarResponseData.entries[position].carLink;
-//                        if (!url.startsWith("https://") && !url.startsWith("http://")) {//hrs mulai pk http
-//                            url = "http://" + url;
-//                        }
-//
-//                        Intent i = new Intent(Intent.ACTION_VIEW);
-//                        i.setData(Uri.parse(url));
-//                        startActivity(i);
-//                    }
-//                })
-//        );
+        mCarList.addOnItemTouchListener(
+                new RecyclerItemClickListener(mContext, new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+
+                        String url = mCarResponseData.entries[position].carLink;
+                        if (!url.startsWith("https://") && !url.startsWith("http://")) {//hrs mulai pk http
+                            url = "http://" + url;
+                        }
+
+                        Intent i = new Intent(Intent.ACTION_VIEW);
+                        i.setData(Uri.parse(url));
+                        startActivity(i);
+                    }
+                })
+        );
     }
 
     private void setUpRequestAPI() {

@@ -70,8 +70,8 @@
 
 
     <!-- Navigation Drawer Layout -->
-    <color name="active_section_background">#d1d1d1</color>
-    <color name="inactive_section_background">#d4d4d4</color>
+    <color name="active_section_background">#ffc700</color>
+    <color name="inactive_section_background">#FFFFFF</color>
 
     <!-- Flight Search Layout -->
 
@@ -104,6 +104,12 @@
     <color name="pink">#e91e63</color>
     <color name="pink_pressed">#ec407a</color>
 
-    <color name="primary">#727272</color>
+    <color name="primary">#003b46</color>
     <color name="primary_dark">#ffffff</color>
+
+    <color name="textRowListTitle">#003b46</color>
+    <color name="textRowListSubtitle">#00667d</color>
+    <color name="textRowListRating">#ebb700</color>
+    <color name="line_hotel_list">#4dc4cf</color>
+    <color name="textRowListPrice">#d6001b</color>
 </resources>

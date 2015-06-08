@@ -32,6 +32,12 @@ public class RestaurantIndividual {
             restaurant.price = restaurantListResponseData.entries[i].restaurantPrice;
             restaurant.type = restaurantListResponseData.entries[i].restaurantType;
 
+            if(restaurantListResponseData.entries[i].assets != null)
+            {
+                //System.out.println("RESTAURANT IMAGE URL " + restaurantListResponseData.entries[i].assets[0].url);
+                restaurant.imageUrl = restaurantListResponseData.entries[i].assets[0].url;
+            }
+
             mRestaurantList.add(restaurant);
         }
         this.minBudget = minBudget;

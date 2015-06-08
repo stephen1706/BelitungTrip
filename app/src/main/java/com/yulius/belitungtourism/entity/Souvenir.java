@@ -5,4 +5,5 @@ public class Souvenir {
     public String name;
     public int rating;
     public int price;
+    public String imageUrl;
 }

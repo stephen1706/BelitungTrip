@@ -7,4 +7,5 @@ public class Poi {
     public int price;
     public double latitude;
     public double longitude;
+    public String imageUrl;
 }

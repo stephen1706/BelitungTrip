@@ -18,7 +18,8 @@
         android:paddingBottom="10dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:background="#FFFFFF">
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_marginLeft="5dp"
@@ -34,8 +35,8 @@
                 android:singleLine="true"
                 android:ellipsize="end"
                 android:fontFamily="sans-serif-regular"
-                android:textSize="17dp"
-                android:textColor="@color/gray_43"
+                android:textSize="20dp"
+                android:textColor="@color/primary"
                 android:text="pesawat" />
             <TextView
                 android:id="@+id/text_view_car_detail"
@@ -45,7 +46,7 @@
                 android:singleLine="true"
                 android:ellipsize="end"
                 android:fontFamily="sans-serif-regular"
-                android:textSize="12dp"
+                android:textSize="14dp"
                 android:textColor="@color/gray_72"
                 android:text="www.pesawat.com" />
         </RelativeLayout>

@@ -5,4 +5,6 @@ public class Hotel {
     public String name;
     public int rating;
     public int price;
+    public int star;
+    public String imageUrl;
 }

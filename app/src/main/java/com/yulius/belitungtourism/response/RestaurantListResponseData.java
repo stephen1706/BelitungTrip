@@ -8,6 +8,42 @@ import java.util.Arrays;
 public class RestaurantListResponseData implements Parcelable {
     public Entry[] entries;
 
+    public static class Asset implements Parcelable
+    {
+        public String url;
+
+        public Asset()
+        {}
+
+        public Asset(Parcel in)
+        {
+            url = in.readString();
+        }
+
+        @Override
+        public int describeContents()
+        {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags)
+        {
+            dest.writeString(url);
+        }
+
+        public static final Creator<Asset> CREATOR = new Creator<Asset>()
+        {
+            public Asset createFromParcel(Parcel source) {
+                return new Asset(source);
+            }
+
+            public Asset[] newArray(int size) {
+                return new Asset[size];
+            }
+        };
+    }
+
     public static class Entry implements Parcelable {
         public int restaurantId;
         public String restaurantName;
@@ -15,6 +51,7 @@ public class RestaurantListResponseData implements Parcelable {
         public int restaurantPrice;
         public int restaurantRating;
         public int restaurantType;
+        public Asset[] assets;
 
         @Override
         public int describeContents() {
@@ -29,6 +66,7 @@ public class RestaurantListResponseData implements Parcelable {
             dest.writeInt(this.restaurantPrice);
             dest.writeInt(this.restaurantRating);
             dest.writeInt(this.restaurantType);
+            dest.writeParcelableArray(assets, flags);
         }
 
         public Entry() {
@@ -41,6 +79,10 @@ public class RestaurantListResponseData implements Parcelable {
             this.restaurantPrice = in.readInt();
             this.restaurantRating = in.readInt();
             this.restaurantType = in.readInt();
+
+            Parcelable[] parcelables = in.readParcelableArray(Asset.class.getClassLoader());
+            if(parcelables != null)
+            {this.assets = Arrays.copyOf(parcelables, parcelables.length, Asset[].class);}
         }
 
         public static final Parcelable.Creator<Entry> CREATOR = new Parcelable.Creator<Entry>() {

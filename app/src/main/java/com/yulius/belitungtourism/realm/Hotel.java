@@ -7,6 +7,8 @@ public class Hotel extends RealmObject {
     private String hotelName;
     private int hotelPrice;
     private int hotelRating;
+    private int hotelStar;
+    private String hotelImageUrl;
 
     public int getHotelId() {
         return hotelId;
@@ -38,5 +40,25 @@ public class Hotel extends RealmObject {
 
     public void setHotelRating(int hotelRating) {
         this.hotelRating = hotelRating;
+    }
+
+    public int getHotelStar()
+    {
+        return hotelStar;
+    }
+
+    public void setHotelStar(int hotelStar)
+    {
+        this.hotelStar = hotelStar;
+    }
+
+    public String getHotelImageUrl()
+    {
+        return hotelImageUrl;
+    }
+
+    public void setHotelImageUrl(String hotelImageUrl)
+    {
+        this.hotelImageUrl = hotelImageUrl;
     }
 }

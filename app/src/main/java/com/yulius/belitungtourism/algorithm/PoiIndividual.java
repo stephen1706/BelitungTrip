@@ -1,5 +1,7 @@
 package com.yulius.belitungtourism.algorithm;
 
+import android.util.Log;
+
 import com.yulius.belitungtourism.entity.Poi;
 import com.yulius.belitungtourism.response.PoiListResponseData;
 
@@ -26,6 +28,12 @@ public class PoiIndividual {
             poi.price = poiListResponseData.entries[i].poiPrice;
             poi.latitude = poiListResponseData.entries[i].poiLatitude;
             poi.longitude = poiListResponseData.entries[i].poiLongitude;
+
+            if(poiListResponseData.entries[i].assets != null)
+            {
+                poi.imageUrl = poiListResponseData.entries[i].assets[0].url;
+                //Log.d("imageUrlAtIndividual", poi.imageUrl);
+            }
 
             poiList.add(poi);
         }

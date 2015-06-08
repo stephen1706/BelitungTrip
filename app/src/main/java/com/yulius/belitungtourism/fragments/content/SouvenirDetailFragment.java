@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -75,6 +76,15 @@ public class SouvenirDetailFragment extends BaseFragment {
 
     private String mSouvenirId;
     private ImageLoader mImageLoader;
+
+    private TextView hotelName;
+    private TextView hotelAddress;
+    private TextView hotelRating;
+    private ImageButton hotelPhone;
+    private ImageButton hotelWeb;
+    private ImageButton hotelMaps;
+    private TextView hotelPrice;
+
     //================================================================================
     // Current Fragment Variable
     //================================================================================
@@ -143,7 +153,7 @@ public class SouvenirDetailFragment extends BaseFragment {
         super.onDestroy();
         if (mImageLoader != null) {
             try {
-                mImageLoader.cancelDisplayTask(mPhotosphereImageView);//cancel load gambar wkt diback ato home button pressed
+                mImageLoader.cancelDisplayTask(mPhotosphereImageView);//cancel load gambar wkt diback ato homes button pressed
             } catch (Exception e){}
         }
     }
@@ -175,6 +185,14 @@ public class SouvenirDetailFragment extends BaseFragment {
         mPriceTextView = (TextView) mLayoutView.findViewById(R.id.text_view_price);
         mRatingTextView = (TextView) mLayoutView.findViewById(R.id.text_view_rating);
         mProgressBar = (ProgressBar) mLayoutView.findViewById(R.id.progress_bar);
+
+        hotelName = (TextView) mLayoutView.findViewById(R.id.text_view_hotel_name);
+        hotelAddress = (TextView) mLayoutView.findViewById(R.id.text_view_hotel_address);
+        hotelRating = (TextView) mLayoutView.findViewById(R.id.text_view_hotel_rating);
+        hotelPhone = (ImageButton) mLayoutView.findViewById(R.id.image_button_hotel_phone);
+        hotelWeb = (ImageButton) mLayoutView.findViewById(R.id.image_button_hotel_web);
+        hotelMaps = (ImageButton) mLayoutView.findViewById(R.id.image_button_hotel_maps);
+        hotelPrice = (TextView) mLayoutView.findViewById(R.id.text_view_hotel_price);
     }
 
     private void setUpViewState() {
@@ -249,7 +267,7 @@ public class SouvenirDetailFragment extends BaseFragment {
     protected void refreshFragment() {
         super.refreshFragment();
 
-        ((MainActivity) getActivity()).getSupportActionBar().setTitle(mSouvenirDetailResponseData.souvenirName);
+        //((MainActivity) getActivity()).getSupportActionBar().setTitle(mSouvenirDetailResponseData.souvenirName);
         mPriceTextView.setText("Rp " + FormattingUtil.formatDecimal(mSouvenirDetailResponseData.souvenirPrice));
         mRatingTextView.setText(mSouvenirDetailResponseData.souvenirRating + "/100");
 
@@ -368,6 +386,41 @@ public class SouvenirDetailFragment extends BaseFragment {
 //                mapboxDialogFragment.show(((ActionBarActivity) mContext).getSupportFragmentManager(), null);
             }
         });
+
+        ((MainActivity) getActivity()).getSupportActionBar().setTitle("");
+        hotelPrice.setText("Rp " + FormattingUtil.formatDecimal(mSouvenirDetailResponseData.souvenirPrice));
+        hotelRating.setText(mSouvenirDetailResponseData.souvenirRating + "/100");
+        hotelName.setText(mSouvenirDetailResponseData.souvenirName);
+        hotelAddress.setText(mSouvenirDetailResponseData.souvenirAddress);
+        hotelMaps.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url = "http://maps.google.com/maps?q=loc:" + mSouvenirDetailResponseData.souvenirLatitude + "," + mSouvenirDetailResponseData.souvenirLongitude + " (" + mSouvenirDetailResponseData.souvenirName + ")";
+                Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(url));
+                startActivity(intent);
+//                MapboxDialogFragment mapboxDialogFragment = MapboxDialogFragment.newInstance(hotelLocation);
+//                mapboxDialogFragment.show(((ActionBarActivity) mContext).getSupportFragmentManager(), null);
+            }
+        });
+        hotelWeb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url = mSouvenirDetailResponseData.souvenirWebsite;
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
+            }
+        });
+        hotelPhone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mSouvenirDetailResponseData.souvenirTelephone != null) {
+                    Intent callIntent = new Intent(Intent.ACTION_CALL);
+                    callIntent.setData(Uri.parse("tel:" + mSouvenirDetailResponseData.souvenirTelephone));
+                    startActivity(callIntent);
+                }
+            }
+        });
     }
     private void storeImage(Bitmap image) {
         File pictureFile = getOutputMediaFile();
@@ -437,7 +490,7 @@ public class SouvenirDetailFragment extends BaseFragment {
     protected void restoreCustomActionBar(ActionBar actionBar) {
         super.restoreCustomActionBar(actionBar);
         if(mSouvenirDetailResponseData != null){
-            actionBar.setTitle(mSouvenirDetailResponseData.souvenirName);
+            //actionBar.setTitle(mSouvenirDetailResponseData.souvenirName);
         }
 
         actionBar.setDisplayHomeAsUpEnabled(true);

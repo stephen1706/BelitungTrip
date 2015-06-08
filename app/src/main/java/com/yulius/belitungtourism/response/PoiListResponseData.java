@@ -8,6 +8,42 @@ import java.util.Arrays;
 public class PoiListResponseData implements Parcelable {
     public Entry[] entries;
 
+    public static class Asset implements Parcelable
+    {
+        public String url;
+
+        public Asset()
+        {}
+
+        public Asset(Parcel in)
+        {
+            url = in.readString();
+        }
+
+        @Override
+        public int describeContents()
+        {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags)
+        {
+            dest.writeString(url);
+        }
+
+        public static final Creator<Asset> CREATOR = new Creator<Asset>()
+        {
+            public Asset createFromParcel(Parcel source) {
+                return new Asset(source);
+            }
+
+            public Asset[] newArray(int size) {
+                return new Asset[size];
+            }
+        };
+    }
+
     public static class Entry implements Parcelable {
         public int poiId;
         public String poiName;
@@ -16,6 +52,7 @@ public class PoiListResponseData implements Parcelable {
         public int poiRating;
         public double poiLatitude;
         public double poiLongitude;
+        public Asset[] assets;
 
         @Override
         public int describeContents() {
@@ -31,6 +68,8 @@ public class PoiListResponseData implements Parcelable {
             dest.writeInt(this.poiRating);
             dest.writeDouble(this.poiLatitude);
             dest.writeDouble(this.poiLongitude);
+
+            dest.writeParcelableArray(assets, flags);
         }
 
         public Entry() {
@@ -44,6 +83,12 @@ public class PoiListResponseData implements Parcelable {
             this.poiRating = in.readInt();
             this.poiLatitude = in.readDouble();
             this.poiLongitude = in.readDouble();
+
+            Parcelable[] parcelables = in.readParcelableArray(Asset.class.getClassLoader());
+            if(parcelables != null)
+            {
+                this.assets = Arrays.copyOf(parcelables, parcelables.length, Asset[].class);
+            }
         }
 
         public static final Creator<Entry> CREATOR = new Creator<Entry>() {

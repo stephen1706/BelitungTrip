@@ -13,11 +13,13 @@
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
+        android:id="@+id/transportationContainer"
+        android:paddingTop="30dp"
+        android:paddingBottom="30dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:background="#edb900">
 
         <RelativeLayout
             android:layout_width="0dp"
@@ -25,27 +27,26 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
+            <ImageView
+                android:id="@+id/image_view_transportation_picture"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:src="@drawable/transport_ic_car_2"/>
             <TextView
                 android:id="@+id/text_view_transportation_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
                 android:singleLine="true"
                 android:ellipsize="end"
                 android:fontFamily="sans-serif-regular"
-                android:textSize="17dp"
-                android:textColor="@color/gray_43"
-                android:text="Mobil" />
-
-
+                android:textSize="60dp"
+                android:textColor="#DDFFFFFF"
+                android:text="Mobil"
+                android:textStyle="bold|italic"
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical"/>
         </RelativeLayout>
-
-        <ImageView
-            android:paddingLeft="5dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:src="@drawable/icon_arrow_right_orange"/>
 
     </LinearLayout>
 </android.support.v7.widget.CardView>

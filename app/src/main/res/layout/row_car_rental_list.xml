@@ -14,17 +14,19 @@
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:background="#FFFFFF">
         <ImageView
             android:id="@+id/image_car"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
-            android:src="@drawable/abc_btn_check_material"/>
+            android:src="@drawable/abc_btn_check_material"
+            android:visibility="gone"/>
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_marginLeft="5dp"
@@ -41,8 +43,8 @@
                 android:ellipsize="end"
                 android:autoLink="web"
                 android:fontFamily="sans-serif-regular"
-                android:textSize="17dp"
-                android:textColor="@color/gray_43"
+                android:textSize="25dp"
+                android:textColor="#ffc700"
                 android:text="pesawat" />
             <TextView
                 android:id="@+id/text_view_car_detail"
@@ -54,7 +56,8 @@
                 android:fontFamily="sans-serif-regular"
                 android:textSize="12dp"
                 android:textColor="@color/gray_72"
-                android:text="www.pesawat.com" />
+                android:text="www.pesawat.com"
+                android:visibility="gone"/>
         </RelativeLayout>
 
     </LinearLayout>

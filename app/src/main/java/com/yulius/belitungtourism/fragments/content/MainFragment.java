@@ -1,17 +1,26 @@
 package com.yulius.belitungtourism.fragments.content;
 
 import android.app.Activity;
+import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.yulius.belitungtourism.R;
+import com.yulius.belitungtourism.adapters.MainPagerAdapter;
 import com.yulius.belitungtourism.fragments.base.BaseFragment;
+
+import java.util.ArrayList;
 
 
 public class MainFragment extends BaseFragment{
+    private ViewPager viewPager;
+    private ArrayList<String> mainPagerImageList;
+    private MainPagerAdapter mainPagerAdapter;
+
     public static MainFragment newInstance() {
         MainFragment fragment = new MainFragment();
         Bundle args = new Bundle();
@@ -28,7 +37,7 @@ public class MainFragment extends BaseFragment{
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         TAG = getResources().getString(R.string.main_fragment_tag);
-        mTitle = "Main Page";
+        mTitle = "";
     }
 
     @Override
@@ -73,6 +82,8 @@ public class MainFragment extends BaseFragment{
 //        setUpRequestAPI();
 //        setUpMessageListener();
 
+        setupUIView();
+        setupUIAdapter();
         return mLayoutView;
     }
 
@@ -82,5 +93,25 @@ public class MainFragment extends BaseFragment{
 
         actionBar.setDisplayHomeAsUpEnabled(true);
         getParentActivity().setDrawerIndicatorEnabled(true);
+    }
+
+
+    //================================================================================
+    //
+    //================================================================================
+    public void setupUIView()
+    {
+        viewPager = (ViewPager) mLayoutView.findViewById(R.id.viewPager);
+    }
+
+    public void setupUIAdapter()
+    {
+        TypedArray typedArray = getParentActivity().getResources().obtainTypedArray(R.array.mainPagerImageList);
+        mainPagerImageList = new ArrayList<String>();
+        for(int i=0; i<typedArray.length(); ++i)
+        {mainPagerImageList.add(typedArray.getString(i));}
+
+        mainPagerAdapter = new MainPagerAdapter(getFragmentManager(), getActivity(), mainPagerImageList);
+        viewPager.setAdapter(mainPagerAdapter);
     }
 }

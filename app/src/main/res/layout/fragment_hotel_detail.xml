@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/parent_layout"
-    android:background="@color/white">
-    <LinearLayout
-        android:orientation="vertical"
+    android:layout_height="match_parent"
+    android:id="@+id/layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="16dp"
-        android:id="@+id/layout">
+        android:layout_weight="1">
+
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="150dp" >
+            android:layout_height="match_parent"
+            android:background="#e1e1e1">
             <android.support.v4.view.ViewPager
                 android:id="@+id/pager_hotel_image_header"
                 android:layout_width="match_parent"
@@ -34,13 +35,156 @@
                     android:textColor="@color/white"/>
             </LinearLayout>
         </FrameLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#80000000"
+            android:layout_alignParentBottom="true">
+            <TextView
+                android:id="@+id/text_view_hotel_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:text="Aston Hotel Belitung"
+                android:textSize="30dp"
+                android:textColor="#FFFFFF"/>
+            <TextView
+                android:id="@+id/text_view_hotel_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/text_view_hotel_name"
+                android:paddingTop="3dp"
+                android:text="Jalam Samsuy, Sunda Kelapa, Belitung"
+                android:textSize="14dp"
+                android:textColor="#c1c1c1"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:layout_centerHorizontal="true"/>
+            <LinearLayout
+                android:id="@+id/buttonContainerLL"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="15dp"
+                android:layout_below="@id/text_view_hotel_address"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp">
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent">
+                    <TextView
+                        android:id="@+id/ratingTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="-4dp"
+                        android:text="RATING"
+                        android:textStyle="bold"
+                        android:textSize="9dp"
+                        android:gravity="center"
+                        android:textColor="@color/textRowListRating"/>
+                    <TextView
+                        android:id="@+id/text_view_hotel_rating"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_below="@id/ratingTitle"
+                        android:gravity="center"
+                        android:text="70/100"
+                        android:textSize="19dp"
+                        android:textStyle="italic"
+                        android:textColor="@color/textRowListRating"/>
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="25dp">
+                    <ImageView
+                        android:id="@+id/starIcon"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/star_yellow"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitCenter"/>
+                    <TextView
+                        android:id="@+id/text_view_hotel_star"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@id/starIcon"
+                        android:layout_centerVertical="true"
+                        android:text="4"
+                        android:textSize="25dp"
+                        android:textColor="@color/textRowListRating"/>
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="25dp">
+                    <ImageButton
+                        android:id="@+id/image_button_hotel_phone"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/detail_ic_phone"
+                        android:background="@drawable/shape_detail_info_circle"
+                        android:layout_centerInParent="true"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitCenter"/>
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="25dp">
+                    <ImageButton
+                        android:id="@+id/image_button_hotel_web"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/detail_ic_web"
+                        android:background="@drawable/shape_detail_info_circle"
+                        android:layout_centerInParent="true"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitCenter"/>
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="25dp">
+                    <ImageButton
+                        android:id="@+id/image_button_hotel_maps"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/detail_ic_maps"
+                        android:background="@drawable/shape_detail_info_circle"
+                        android:layout_centerInParent="true"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitCenter"/>
+                </RelativeLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/text_view_hotel_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/buttonContainerLL"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="15dp"
+                android:text="Rp 800.000"
+                android:textColor="#f35065"
+                android:textStyle="bold"
+                android:textSize="28dp"/>
+        </RelativeLayout>
+
         <TableLayout
             android:padding="10dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:visibility="gone">
             <View android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:background="@color/gray_d4" />
+                  android:layout_height="2px"
+                  android:background="@color/gray_d4" />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -79,8 +223,8 @@
                     android:text="Rp 0"/>
             </LinearLayout>
             <View android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:background="@color/gray_d4" />
+                  android:layout_height="2px"
+                  android:background="@color/gray_d4" />
             <TableRow>
                 <LinearLayout
                     android:layout_width="0dp"
@@ -110,12 +254,13 @@
 
             </TableRow>
             <View android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:background="@color/gray_d4" />
+                  android:layout_height="2px"
+                  android:background="@color/gray_d4" />
         </TableLayout>
         <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:visibility="gone">
             <TableRow>
                 <LinearLayout
                     android:layout_width="0dp"
@@ -144,22 +289,22 @@
                         android:textColor="@color/white"
                         android:text="More Info"/>
                     <!--<TextView-->
-                        <!--android:id="@+id/text_view_hotel_website"-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:textSize="14dp"-->
-                        <!--android:layout_gravity="center"-->
-                        <!--android:autoLink="web"-->
-                        <!--android:layout_marginLeft="16dp"-->
-                        <!--android:layout_marginRight="16dp"-->
-                        <!--android:paddingBottom="5dp"-->
-                        <!--android:textColor="@color/link_blue"/>-->
+                    <!--android:id="@+id/text_view_hotel_website"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:textSize="14dp"-->
+                    <!--android:layout_gravity="center"-->
+                    <!--android:autoLink="web"-->
+                    <!--android:layout_marginLeft="16dp"-->
+                    <!--android:layout_marginRight="16dp"-->
+                    <!--android:paddingBottom="5dp"-->
+                    <!--android:textColor="@color/link_blue"/>-->
                 </LinearLayout>
             </TableRow>
 
             <View android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:background="@color/gray_d4" />
+                  android:layout_height="2px"
+                  android:background="@color/gray_d4" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -180,14 +325,15 @@
                 android:paddingBottom="5dp"
                 android:textColor="@color/link_blue"/>
             <View android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:background="@color/gray_d4" />
+                  android:layout_height="2px"
+                  android:background="@color/gray_d4" />
         </TableLayout>
         <LinearLayout
             android:id="@+id/frame_photosphere"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
             <TextView
                 android:id="@+id/text_view_photosphere"
                 android:layout_width="match_parent"
@@ -223,8 +369,8 @@
                 android:background="@color/wallet_holo_blue_light"/>
 
             <View android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:background="@color/gray_d4" />
+                  android:layout_height="2px"
+                  android:background="@color/gray_d4" />
         </LinearLayout>
         <TextView
             android:layout_width="match_parent"
@@ -233,7 +379,8 @@
             android:textSize="14dp"
             android:text="Hotel Address"
             android:gravity="center_horizontal"
-            android:textColor="@color/gray_43"/>
+            android:textColor="@color/gray_43"
+            android:visibility="gone"/>
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
@@ -241,9 +388,10 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginBottom="16dp"
-            android:gravity="top">
+            android:gravity="top"
+            android:visibility="gone">
             <TextView
-                android:id="@+id/text_view_hotel_address"
+                android:id="@+id/text_view_hotel_address2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="14dp"
@@ -251,28 +399,31 @@
                 android:textColor="@color/gray_43"
                 android:text="Jalan pengeak no 5"/>
         </LinearLayout>
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="160dp"
-            android:id="@+id/frame_mapbox"
-            android:focusableInTouchMode="false"
-            android:layout_gravity="bottom|right"
-            android:focusable="false">
+    </RelativeLayout>
 
-            <com.mapbox.mapboxsdk.views.MapView
-                android:id="@+id/mapid"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
-                android:paddingTop="10dp"
-                app:mapid="@string/mapbox_id"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" >
-            </com.mapbox.mapboxsdk.views.MapView>
-            <Button
-                android:id="@+id/button_mapview"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@android:color/transparent"/>
-        </FrameLayout>
-    </LinearLayout>
-</ScrollView>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="3"
+        android:id="@+id/frame_mapbox"
+        android:focusableInTouchMode="false"
+        android:layout_gravity="bottom|right"
+        android:focusable="false"
+        android:visibility="gone">
+
+        <com.mapbox.mapboxsdk.views.MapView
+            android:id="@+id/mapid"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:paddingTop="10dp"
+            app:mapid="@string/mapbox_id"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+        </com.mapbox.mapboxsdk.views.MapView>
+        <Button
+            android:id="@+id/button_mapview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"/>
+    </FrameLayout>
+</LinearLayout>

@@ -31,4 +31,14 @@
         <item>1500000-2000000</item>
         <item>2000000- </item>
     </string-array>
+
+    <string-array name="mainPagerImageList">
+        <item>home_banner_logo</item>
+        <item>ad_1</item>
+        <item>ad_2</item>
+        <item>ad_3</item>
+        <item>ad_4</item>
+        <item>ad_5</item>
+        <item>ad_6</item>
+    </string-array>
 </resources>

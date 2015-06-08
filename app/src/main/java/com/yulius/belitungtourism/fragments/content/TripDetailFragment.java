@@ -1,14 +1,22 @@
 package com.yulius.belitungtourism.fragments.content;
 
 import android.app.Activity;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.yulius.belitungtourism.FormattingUtil;
 import com.yulius.belitungtourism.R;
 import com.yulius.belitungtourism.entity.Hotel;
@@ -129,9 +137,12 @@ public class TripDetailFragment extends BaseFragment {
             if(i%3 == 0){
                 TextView textView = new TextView(getParentActivity());
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                lp.setMargins(0, 20, 0, 20);
+                lp.gravity = Gravity.CENTER;
+                lp.setMargins(0, 75, 0, 20);
                 textView.setLayoutParams(lp);
-                textView.setText("Day " + ((i / 3) + 1));
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
+                textView.setGravity(Gravity.CENTER);
+                textView.setText("DAY " + ((i / 3) + 1));
 
                 mTripListFrame.addView(textView);
             }
@@ -140,6 +151,9 @@ public class TripDetailFragment extends BaseFragment {
 
             View poiRow = mLayoutInflater.inflate(R.layout.row_poi_list, mTripListFrame, false);
             ((TextView) poiRow.findViewById(R.id.text_view_poi_name)).setText(poi.name);
+            ((TextView) poiRow.findViewById(R.id.text_view_poi_rating)).setText("Rating " + poi.rating + "/100");
+            ((TextView) poiRow.findViewById(R.id.text_view_poi_price)).setText("Rp " + FormattingUtil.formatDecimal(poi.price));
+            Picasso.with(mContext).load(poi.imageUrl).into((ImageView) poiRow.findViewById(R.id.image_view_poi_image));
             ((TextView) poiRow.findViewById(R.id.text_view_region)).setVisibility(View.GONE);
             poiRow.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -147,12 +161,20 @@ public class TripDetailFragment extends BaseFragment {
                     replaceContentFragment(PoiDetailFragment.newInstance(Integer.toString(poi.id)), getResources().getString(R.string.poi_detail_fragment_tag));
                 }
             });
-            mTripListFrame.addView(poiRow);
+
+            if(i%3 == 0) {
+                mTripListFrame.addView(poiRow);
+            } else {
+                mTripListFrame.addView(poiRow, mTripListFrame.getChildCount() - 1);
+            }
 
             final Restaurant restaurant = mRestaurantResultList.get(i);
 
             View restaurantRow = mLayoutInflater.inflate(R.layout.row_restaurant_list, mTripListFrame, false);
             ((TextView) restaurantRow.findViewById(R.id.text_view_restaurant_name)).setText(restaurant.name);
+            ((TextView) restaurantRow.findViewById(R.id.text_view_restaurant_rating)).setText("Rating " + restaurant.rating + "/100");
+            ((TextView) restaurantRow.findViewById(R.id.text_view_restaurant_price)).setText("Rp " + FormattingUtil.formatDecimal(restaurant.price));
+            Picasso.with(mContext).load(restaurant.imageUrl).into((ImageView) restaurantRow.findViewById(R.id.image_view_restaurant_image));
             if(i%3 == 0){
                 ((TextView) restaurantRow.findViewById(R.id.text_view_region)).setText("Lunch");
             } else if(i%3 == 1){
@@ -160,6 +182,7 @@ public class TripDetailFragment extends BaseFragment {
             } else {
                 ((TextView) restaurantRow.findViewById(R.id.text_view_region)).setText("Midnight snack");
             }
+            restaurantRow.setAlpha(.8f); restaurantRow.setScaleX(0.8f); restaurantRow.setScaleY(0.8f);
 
             restaurantRow.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -171,7 +194,16 @@ public class TripDetailFragment extends BaseFragment {
         }
         View hotelRow = mLayoutInflater.inflate(R.layout.row_hotel_list, mHotelListFrame, false);
         ((TextView) hotelRow.findViewById(R.id.text_view_hotel_name)).setText(mSelectedHotel.name);
-        ((TextView) hotelRow.findViewById(R.id.text_view_region)).setText("Total price : " + mSelectedHotel.price);
+        //((TextView) hotelRow.findViewById(R.id.text_view_region)).setText("Total price : " + mSelectedHotel.price);
+        ((TextView) hotelRow.findViewById(R.id.text_view_region)).setVisibility(View.GONE);
+        ((TextView) hotelRow.findViewById(R.id.text_view_hotel_rating)).setText("Rating " + mSelectedHotel.rating + "/100");
+        ((TextView) hotelRow.findViewById(R.id.text_view_hotel_price)).setText("Rp " + FormattingUtil.formatDecimal(mSelectedHotel.price));
+        ((RatingBar) hotelRow.findViewById(R.id.star_bar_hotel_list)).setRating((float)mSelectedHotel.star);
+        LayerDrawable stars = (LayerDrawable) ((RatingBar) hotelRow.findViewById(R.id.star_bar_hotel_list)).getProgressDrawable();
+        stars.getDrawable(2).setColorFilter(Color.rgb(255, 199, 0), PorterDuff.Mode.SRC_ATOP);
+        stars.getDrawable(0).setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+        Picasso.with(mContext).load(mSelectedHotel.imageUrl).into((ImageView) hotelRow.findViewById(R.id.image_view_hotel_image));
+
         hotelRow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -182,7 +214,12 @@ public class TripDetailFragment extends BaseFragment {
 
         View souvenirRow = mLayoutInflater.inflate(R.layout.row_souvenir_list, mSouvenirListFrame, false);
         ((TextView) souvenirRow.findViewById(R.id.text_view_souvenir_name)).setText(mSelectedSouvenir.name);
-        ((TextView) souvenirRow.findViewById(R.id.text_view_region)).setText("Cost Estimation : " + mSelectedSouvenir.price);
+        ((TextView) souvenirRow.findViewById(R.id.text_view_region)).setVisibility(View.GONE);
+        //((TextView) souvenirRow.findViewById(R.id.text_view_region)).setText("Cost Estimation : " + mSelectedSouvenir.price);
+        ((TextView) souvenirRow.findViewById(R.id.text_view_souvenir_rating)).setText("Rating " + mSelectedSouvenir.rating + "/100");
+        ((TextView) souvenirRow.findViewById(R.id.text_view_souvenir_price)).setText("Rp " + FormattingUtil.formatDecimal(mSelectedSouvenir.price));
+        Picasso.with(mContext).load(mSelectedSouvenir.imageUrl).into((ImageView) souvenirRow.findViewById(R.id.image_view_souvenir_image));
+
         souvenirRow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -216,6 +253,7 @@ public class TripDetailFragment extends BaseFragment {
             restaurant.price = currentRestaurant.getRestaurantPrice();
             restaurant.rating = currentRestaurant.getRestaurantRating();
             restaurant.type = currentRestaurant.getRestaurantType();
+            restaurant.imageUrl = currentRestaurant.getRestaurantImageUrl();
             mRestaurantResultList.add(restaurant);
         }
     }
@@ -229,6 +267,7 @@ public class TripDetailFragment extends BaseFragment {
             poi.name = currentPoi.getPoiName();
             poi.price = currentPoi.getPoiPrice();
             poi.rating = currentPoi.getPoiRating();
+            poi.imageUrl = currentPoi.getPoiImageUrl();
             mPoiResultList.add(poi);
         }
     }
@@ -239,6 +278,8 @@ public class TripDetailFragment extends BaseFragment {
         mSelectedHotel.name = hotel.getHotelName();
         mSelectedHotel.price = hotel.getHotelPrice();
         mSelectedHotel.rating = hotel.getHotelRating();
+        mSelectedHotel.star = hotel.getHotelStar();
+        mSelectedHotel.imageUrl = hotel.getHotelImageUrl();
     }
 
     private void convertSouvenirRealmToEntity(com.yulius.belitungtourism.realm.Souvenir souvenir) {
@@ -247,6 +288,7 @@ public class TripDetailFragment extends BaseFragment {
         mSelectedSouvenir.name = souvenir.getSouvenirName();
         mSelectedSouvenir.price = souvenir.getSouvenirPrice();
         mSelectedSouvenir.rating = souvenir.getSouvenirRating();
+        mSelectedSouvenir.imageUrl = souvenir.getSouvernirImageUrl();
     }
 
     private void convertCarRealmToEntity(Car car) {

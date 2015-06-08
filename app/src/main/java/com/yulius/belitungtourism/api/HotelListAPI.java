@@ -32,6 +32,7 @@ public class HotelListAPI extends BaseAPI {
                 if(BuildConfig.DEBUG) {
                     Log.v("TEST Response (HotelListAPI)", response);
                 }
+                Log.d("response", response);
 
                 Gson gson = new Gson();
                 HotelListResponseData hotelListResponseData = null;

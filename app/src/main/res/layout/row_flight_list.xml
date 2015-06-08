@@ -14,11 +14,12 @@
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:background="#FFFFFF">
         <ImageView
             android:id="@+id/image_flight"
             android:layout_width="0dp"
@@ -27,10 +28,11 @@
             android:src="@drawable/abc_btn_check_material"/>
         <RelativeLayout
             android:layout_width="0dp"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="10dp"
             android:layout_height="wrap_content"
             android:layout_weight="4"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/text_view_flight_name"
@@ -40,8 +42,8 @@
                 android:singleLine="true"
                 android:ellipsize="end"
                 android:fontFamily="sans-serif-regular"
-                android:textSize="17dp"
-                android:textColor="@color/gray_43"
+                android:textSize="25dp"
+                android:textColor="@color/pink"
                 android:text="pesawat" />
             <TextView
                 android:id="@+id/text_view_flight_website"
@@ -54,7 +56,8 @@
                 android:fontFamily="sans-serif-regular"
                 android:textSize="12dp"
                 android:textColor="@color/gray_72"
-                android:text="www.pesawat.com" />
+                android:text="www.pesawat.com"
+                android:visibility="gone"/>
         </RelativeLayout>
 
     </LinearLayout>

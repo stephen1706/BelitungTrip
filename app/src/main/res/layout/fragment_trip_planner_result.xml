@@ -10,8 +10,10 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Trip Result"
-            android:textSize="18dp"/>
+            android:text="TRIP RESULT"
+            android:textSize="20dp"
+            android:textColor="@color/pink"
+            android:textStyle="bold"/>
         <LinearLayout
             android:id="@+id/frame_trip_list"
             android:layout_width="match_parent"
@@ -19,35 +21,12 @@
             android:orientation="vertical"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"/>
-        <!--<TextView-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="Point of Interest Visited"-->
-            <!--android:textSize="18dp"/>-->
-        <!--<LinearLayout-->
-            <!--android:id="@+id/frame_poi_list"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:orientation="vertical"-->
-            <!--android:layout_marginTop="20dp"-->
-            <!--android:layout_marginBottom="20dp"/>-->
-        <!--<TextView-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="Restaurant Visited"-->
-            <!--android:textSize="18dp"/>-->
-        <!--<LinearLayout-->
-            <!--android:id="@+id/frame_restaurant_list"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:orientation="vertical"-->
-            <!--android:layout_marginTop="20dp"-->
-            <!--android:layout_marginBottom="20dp"/>-->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Hotel"
-            android:textSize="18dp"/>
+            android:text="HOTEL"
+            android:textSize="18dp"
+            android:textColor="@color/primary"/>
         <LinearLayout
             android:id="@+id/frame_hotel_list"
             android:layout_width="match_parent"
@@ -59,7 +38,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Souvenir Shop Recommendation"
-            android:textSize="18dp"/>
+            android:textAllCaps="true"
+            android:textSize="18dp"
+            android:textColor="@color/primary"/>
         <LinearLayout
             android:id="@+id/frame_souvenir_list"
             android:layout_width="match_parent"
@@ -71,7 +52,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Transportation Used"
-            android:textSize="18dp"/>
+            android:textAllCaps="true"
+            android:textSize="18dp"
+            android:textColor="@color/primary"/>
         <LinearLayout
             android:id="@+id/frame_transportation_list"
             android:layout_width="match_parent"
@@ -82,45 +65,60 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Trip Name"
-            android:textSize="18dp"/>
+            android:layout_marginTop="20dp"
+            android:text="TRIP NAME"
+            android:textSize="20dp"
+            android:background="#555555"
+            android:textColor="#ffc907"/>
         <EditText
             android:id="@+id/edit_text_trip_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:hint="Insert your trip name here (trip name must be unique)"/>
+            android:layout_marginTop="10dp"
+            android:textColor="@color/primary"
+            android:hint="Insert your trip name here"
+            android:textColorHint="#e1e1e1"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:text="Number of Passengers"
-            android:textSize="18dp"/>
+            android:textSize="20dp"
+            android:textAllCaps="true"
+            android:background="#555555"
+            android:textColor="#ffc907"/>
         <EditText
             android:id="@+id/edit_text_total_guest"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/primary"
+            android:textColorHint="#e1e1e1"
             android:hint="Insert number of passengers here"
             android:inputType="number"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Total Price"
-            android:layout_marginTop="20dp"
-            android:textSize="18dp"/>
+            android:layout_marginTop="40dp"
+            android:textSize="25dp"
+            android:background="#555555"
+            android:textColor="#ffc907"/>
         <TextView
             android:id="@+id/text_view_total_price"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:textSize="18dp"/>
+            android:textSize="30dp"
+            android:textStyle="bold"
+            android:textColor="@color/pink"/>
         <Button
             android:id="@+id/button_save_trip"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="30dp"
             android:text="SAVE"
-            android:textColor="@color/white"
-            android:background="@color/green"/>
+            android:textColor="#ffc907"
+            android:background="@color/pink"/>
     </LinearLayout>
 </ScrollView>

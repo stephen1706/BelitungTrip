@@ -8,6 +8,7 @@ public class Restaurant extends RealmObject {
     private int restaurantPrice;
     private int restaurantRating;
     private int restaurantType;
+    private String restaurantImageUrl;
 
     public int getRestaurantId() {
         return restaurantId;
@@ -47,5 +48,15 @@ public class Restaurant extends RealmObject {
 
     public void setRestaurantType(int restaurantType) {
         this.restaurantType = restaurantType;
+    }
+
+    public String getRestaurantImageUrl()
+    {
+        return restaurantImageUrl;
+    }
+
+    public void setRestaurantImageUrl(String restaurantImageUrl)
+    {
+        this.restaurantImageUrl = restaurantImageUrl;
     }
 }

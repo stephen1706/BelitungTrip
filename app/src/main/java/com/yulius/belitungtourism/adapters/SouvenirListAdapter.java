@@ -5,8 +5,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.yulius.belitungtourism.R;
 import com.yulius.belitungtourism.response.SouvenirListResponseData;
 
@@ -33,6 +35,13 @@ public class SouvenirListAdapter extends RecyclerView.Adapter<SouvenirListAdapte
         SouvenirListResponseData.Entry souvenirEntry = souvenirList[i];
         viewHolder.souvenirName.setText(souvenirEntry.souvenirName);
         viewHolder.souvenirAddress.setText(souvenirEntry.souvenirAddress);
+        viewHolder.souvenirRating.setText("Rating " + String.valueOf(souvenirEntry.souvenirRating) + "/100");
+
+        String restoPriceWithDot = String.valueOf(souvenirEntry.souvenirPrice).substring(0, 2) + "." + String.valueOf(souvenirEntry.souvenirPrice).substring(2, 5);
+        viewHolder.souvenirPrice.setText("Rp " + restoPriceWithDot);
+
+        if(souvenirEntry.assets != null)
+        {Picasso.with(mContext).load(souvenirEntry.assets[0].url).into(viewHolder.souvenirImage);}
     }
 
     @Override
@@ -48,11 +57,17 @@ public class SouvenirListAdapter extends RecyclerView.Adapter<SouvenirListAdapte
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView souvenirName;
         public TextView souvenirAddress;
+        public TextView souvenirRating;
+        public TextView souvenirPrice;
+        public ImageView souvenirImage;
 
         public ViewHolder(View itemView) {
             super(itemView);
             souvenirName = (TextView) itemView.findViewById(R.id.text_view_souvenir_name);
             souvenirAddress = (TextView)itemView.findViewById(R.id.text_view_region);
+            souvenirRating = (TextView)itemView.findViewById(R.id.text_view_souvenir_rating);
+            souvenirPrice = (TextView)itemView.findViewById(R.id.text_view_souvenir_price);
+            souvenirImage = (ImageView)itemView.findViewById(R.id.image_view_souvenir_image);
         }
     }
 }

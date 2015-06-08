@@ -50,7 +50,6 @@ public class PoiHomeFragment extends BaseFragment {
         if (getArguments() != null) {
 
         }
-
     }
 
     @Override

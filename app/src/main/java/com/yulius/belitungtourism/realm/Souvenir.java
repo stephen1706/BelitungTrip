@@ -7,6 +7,7 @@ public class Souvenir extends RealmObject {
     private String souvenirName;
     private int souvenirPrice;
     private int souvenirRating;
+    private String souvernirImageUrl;
 
     public int getSouvenirId() {
         return souvenirId;
@@ -38,5 +39,15 @@ public class Souvenir extends RealmObject {
 
     public void setSouvenirRating(int souvenirRating) {
         this.souvenirRating = souvenirRating;
+    }
+
+    public String getSouvernirImageUrl()
+    {
+        return souvernirImageUrl;
+    }
+
+    public void setSouvernirImageUrl(String souvernirImageUrl)
+    {
+        this.souvernirImageUrl = souvernirImageUrl;
     }
 }

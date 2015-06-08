@@ -90,7 +90,7 @@ public class TransportationHomeFragment extends BaseFragment {
     @Override
     protected void refreshFragment() {
         super.refreshFragment();
-        mTransportationListAdapter = new TransportationListAdapter(new String[]{"Car","Flight"}, R.layout.row_transportation_list, mContext);
+        mTransportationListAdapter = new TransportationListAdapter(new String[]{"CAR","FLIGHT"}, R.layout.row_transportation_list, mContext);
         mTransportationList.setAdapter(mTransportationListAdapter);
     }
 

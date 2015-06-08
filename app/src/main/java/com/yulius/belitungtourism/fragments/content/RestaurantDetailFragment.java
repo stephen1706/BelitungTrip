@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -76,6 +77,14 @@ public class RestaurantDetailFragment extends BaseFragment {
     private ProgressBar mProgressBar;
     private ImageLoader mImageLoader;
     private String mRestaurantId;
+
+    private TextView restName;
+    private TextView restAddress;
+    private TextView restRating;
+    private ImageButton restPhone;
+    private ImageButton restWeb;
+    private ImageButton restMaps;
+    private TextView restPrice;
 
     //================================================================================
     // Current Fragment Variable
@@ -153,7 +162,7 @@ public class RestaurantDetailFragment extends BaseFragment {
         super.onDestroy();
         if (mImageLoader != null) {
             try {
-                mImageLoader.cancelDisplayTask(mPhotosphereImageView);//cancel load gambar wkt diback ato home button pressed
+                mImageLoader.cancelDisplayTask(mPhotosphereImageView);//cancel load gambar wkt diback ato homes button pressed
             } catch (Exception e){}
         }
     }
@@ -177,6 +186,14 @@ public class RestaurantDetailFragment extends BaseFragment {
         mRatingTextView = (TextView) mLayoutView.findViewById(R.id.text_view_rating);
         mPriceTextView = (TextView) mLayoutView.findViewById(R.id.text_view_price);
         mProgressBar = (ProgressBar) mLayoutView.findViewById(R.id.progress_bar);
+
+        restName = (TextView) mLayoutView.findViewById(R.id.text_view_hotel_name);
+        restAddress = (TextView) mLayoutView.findViewById(R.id.text_view_hotel_address);
+        restRating = (TextView) mLayoutView.findViewById(R.id.text_view_hotel_rating);
+        restPhone = (ImageButton) mLayoutView.findViewById(R.id.image_button_hotel_phone);
+        restWeb = (ImageButton) mLayoutView.findViewById(R.id.image_button_hotel_web);
+        restMaps = (ImageButton) mLayoutView.findViewById(R.id.image_button_hotel_maps);
+        restPrice = (TextView) mLayoutView.findViewById(R.id.text_view_hotel_price);
     }
 
     private void setUpViewState() {
@@ -251,7 +268,7 @@ public class RestaurantDetailFragment extends BaseFragment {
     protected void refreshFragment() {
         super.refreshFragment();
 
-        ((MainActivity) getActivity()).getSupportActionBar().setTitle(mRestaurantDetailResponseData.restaurantName);
+        //((MainActivity) getActivity()).getSupportActionBar().setTitle(mRestaurantDetailResponseData.restaurantName);
 
         mPriceTextView.setText("Rp " + FormattingUtil.formatDecimal(mRestaurantDetailResponseData.restaurantPrice));
         mRatingTextView.setText(mRestaurantDetailResponseData.restaurantRating+ "/100");
@@ -373,6 +390,49 @@ public class RestaurantDetailFragment extends BaseFragment {
 //                mapboxDialogFragment.show(((ActionBarActivity) mContext).getSupportFragmentManager(), null);
             }
         });
+
+
+        ((MainActivity) getActivity()).getSupportActionBar().setTitle("");
+        restPrice.setText("Rp " + FormattingUtil.formatDecimal(mRestaurantDetailResponseData.restaurantPrice));
+        restRating.setText(mRestaurantDetailResponseData.restaurantRating + "/100");
+        restName.setText(mRestaurantDetailResponseData.restaurantName);
+        restAddress.setText(mRestaurantDetailResponseData.restaurantAddress);
+        restMaps.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                String url = "http://maps.google.com/maps?q=loc:" + mRestaurantDetailResponseData.restaurantLatitude + "," + mRestaurantDetailResponseData.restaurantLongitude + " (" + mRestaurantDetailResponseData.restaurantName + ")";
+                Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(url));
+                startActivity(intent);
+//                MapboxDialogFragment mapboxDialogFragment = MapboxDialogFragment.newInstance(hotelLocation);
+//                mapboxDialogFragment.show(((ActionBarActivity) mContext).getSupportFragmentManager(), null);
+            }
+        });
+        restWeb.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                String url = mRestaurantDetailResponseData.restaurantWebsite;
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
+            }
+        });
+        restPhone.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if(mRestaurantDetailResponseData.restaurantTelephone != null)
+                {
+                    Intent callIntent = new Intent(Intent.ACTION_CALL);
+                    callIntent.setData(Uri.parse("tel:" + mRestaurantDetailResponseData.restaurantTelephone));
+                    startActivity(callIntent);
+                }
+            }
+        });
     }
     private void storeImage(Bitmap image) {
         File pictureFile = getOutputMediaFile();
@@ -442,7 +502,7 @@ public class RestaurantDetailFragment extends BaseFragment {
     protected void restoreCustomActionBar(ActionBar actionBar) {
         super.restoreCustomActionBar(actionBar);
         if(mRestaurantDetailResponseData != null){
-            actionBar.setTitle(mRestaurantDetailResponseData.restaurantName);
+            //actionBar.setTitle(mRestaurantDetailResponseData.restaurantName);
         }
 
         actionBar.setDisplayHomeAsUpEnabled(true);

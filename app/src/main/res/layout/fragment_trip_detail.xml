@@ -10,8 +10,10 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Trip Result"
-            android:textSize="18dp"/>
+            android:text="TRIP RESULT"
+            android:textSize="20dp"
+            android:textColor="@color/pink"
+            android:textStyle="bold"/>
         <LinearLayout
             android:id="@+id/frame_trip_list"
             android:layout_width="match_parent"
@@ -22,8 +24,9 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Hotel"
-            android:textSize="18dp"/>
+            android:text="HOTEL"
+            android:textSize="18dp"
+            android:textColor="@color/primary"/>
         <LinearLayout
             android:id="@+id/frame_hotel_list"
             android:layout_width="match_parent"
@@ -35,7 +38,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Souvenir Shop Recommendation"
-            android:textSize="18dp"/>
+            android:textAllCaps="true"
+            android:textSize="18dp"
+            android:textColor="@color/primary"/>
         <LinearLayout
             android:id="@+id/frame_souvenir_list"
             android:layout_width="match_parent"
@@ -47,7 +52,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Transportation Used"
-            android:textSize="18dp"/>
+            android:textAllCaps="true"
+            android:textSize="18dp"
+            android:textColor="@color/primary"/>
         <LinearLayout
             android:id="@+id/frame_transportation_list"
             android:layout_width="match_parent"

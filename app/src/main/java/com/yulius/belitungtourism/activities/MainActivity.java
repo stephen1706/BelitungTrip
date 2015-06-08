@@ -57,6 +57,7 @@ public class MainActivity extends BaseActivity implements NavigationDrawerFragme
 
         setUpTabHost();
         setUpNavigationDrawer();
+        decorActionBar();
 
 //        setUpStreetViewPanoramaIfNeeded(savedInstanceState);
     }
@@ -113,6 +114,12 @@ public class MainActivity extends BaseActivity implements NavigationDrawerFragme
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
     }
+
+    private void decorActionBar()
+    {
+        getSupportActionBar().setElevation(0f); // to remove shadow on android lollipop
+    }
+
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         switchTab(position);

@@ -7,6 +7,7 @@ public class Poi extends RealmObject {
     private String poiName;
     private int poiPrice;
     private int poiRating;
+    private String poiImageUrl;
 
     public int getPoiId() {
         return poiId;
@@ -38,5 +39,15 @@ public class Poi extends RealmObject {
 
     public void setPoiRating(int poiRating) {
         this.poiRating = poiRating;
+    }
+
+    public String getPoiImageUrl()
+    {
+        return poiImageUrl;
+    }
+
+    public void setPoiImageUrl(String poiImageUrl)
+    {
+        this.poiImageUrl = poiImageUrl;
     }
 }

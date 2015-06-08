@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -75,6 +76,13 @@ public class PoiDetailFragment extends BaseFragment {
 
     private String mPoiId;
     private ImageLoader mImageLoader;
+
+    private TextView poiName;
+    private TextView poiAddress;
+    private TextView poiRating;
+    private ImageButton poiWeb;
+    private ImageButton poiMaps;
+    private TextView poiPrice;
     //================================================================================
     // Current Fragment Variable
     //================================================================================
@@ -143,7 +151,7 @@ public class PoiDetailFragment extends BaseFragment {
         super.onDestroy();
         if (mImageLoader != null) {
             try {
-                mImageLoader.cancelDisplayTask(mPhotosphereImageView);//cancel load gambar wkt diback ato home button pressed
+                mImageLoader.cancelDisplayTask(mPhotosphereImageView);//cancel load gambar wkt diback ato homes button pressed
             } catch (Exception e){}
         }
     }
@@ -175,6 +183,13 @@ public class PoiDetailFragment extends BaseFragment {
         mRatingTextView = (TextView) mLayoutView.findViewById(R.id.text_view_rating);
         mPriceTextView = (TextView) mLayoutView.findViewById(R.id.text_view_price);
         mProgressBar = (ProgressBar) mLayoutView.findViewById(R.id.progress_bar);
+
+        poiName = (TextView) mLayoutView.findViewById(R.id.text_view_hotel_name);
+        poiAddress = (TextView) mLayoutView.findViewById(R.id.text_view_hotel_address);
+        poiRating = (TextView) mLayoutView.findViewById(R.id.text_view_hotel_rating);
+        poiWeb = (ImageButton) mLayoutView.findViewById(R.id.image_button_hotel_web);
+        poiMaps = (ImageButton) mLayoutView.findViewById(R.id.image_button_hotel_maps);
+        poiPrice = (TextView) mLayoutView.findViewById(R.id.text_view_hotel_price);
     }
 
     private void setUpViewState() {
@@ -249,7 +264,7 @@ public class PoiDetailFragment extends BaseFragment {
     protected void refreshFragment() {
         super.refreshFragment();
 
-        ((MainActivity) getActivity()).getSupportActionBar().setTitle(mPoiDetailResponseData.poiName);
+        //((MainActivity) getActivity()).getSupportActionBar().setTitle(mPoiDetailResponseData.poiName);
 
         mPriceTextView.setText("Rp " + FormattingUtil.formatDecimal(mPoiDetailResponseData.poiPrice));
         mRatingTextView.setText(mPoiDetailResponseData.poiRating + "/100");
@@ -370,6 +385,36 @@ public class PoiDetailFragment extends BaseFragment {
 //                mapboxDialogFragment.show(((ActionBarActivity) mContext).getSupportFragmentManager(), null);
             }
         });
+
+
+        ((MainActivity) getActivity()).getSupportActionBar().setTitle("");
+        poiPrice.setText("Rp " + FormattingUtil.formatDecimal(mPoiDetailResponseData.poiPrice));
+        poiRating.setText(mPoiDetailResponseData.poiRating + "/100");
+        poiName.setText(mPoiDetailResponseData.poiName);
+        poiAddress.setText(mPoiDetailResponseData.poiAddress);
+        poiMaps.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                String url = "http://maps.google.com/maps?q=loc:" + mPoiDetailResponseData.poiLatitude + "," + mPoiDetailResponseData.poiLongitude + " (" + mPoiDetailResponseData.poiPrice + ")";
+                Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(url));
+                startActivity(intent);
+//                MapboxDialogFragment mapboxDialogFragment = MapboxDialogFragment.newInstance(hotelLocation);
+//                mapboxDialogFragment.show(((ActionBarActivity) mContext).getSupportFragmentManager(), null);
+            }
+        });
+        poiWeb.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                String url = mPoiDetailResponseData.poiWebsite;
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
+            }
+        });
     }
     private void storeImage(Bitmap image) {
         File pictureFile = getOutputMediaFile();
@@ -439,7 +484,7 @@ public class PoiDetailFragment extends BaseFragment {
     protected void restoreCustomActionBar(ActionBar actionBar) {
         super.restoreCustomActionBar(actionBar);
         if(mPoiDetailResponseData != null){
-            actionBar.setTitle(mPoiDetailResponseData.poiName);
+            //actionBar.setTitle(mPoiDetailResponseData.poiName);
         }
 
         actionBar.setDisplayHomeAsUpEnabled(true);
