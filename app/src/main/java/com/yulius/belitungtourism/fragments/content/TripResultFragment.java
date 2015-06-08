@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.LayerDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -786,7 +789,12 @@ public class TripResultFragment extends BaseFragment {
         ((TextView) hotelRow.findViewById(R.id.text_view_region)).setVisibility(View.GONE);
         ((TextView) hotelRow.findViewById(R.id.text_view_hotel_rating)).setText("Rating " + mSelectedHotel.rating + "/100");
         ((TextView) hotelRow.findViewById(R.id.text_view_hotel_price)).setText("Rp " + FormattingUtil.formatDecimal(mSelectedHotel.price));
+
+        LayerDrawable stars = (LayerDrawable) ((RatingBar) hotelRow.findViewById(R.id.star_bar_hotel_list)).getProgressDrawable();
+        stars.getDrawable(2).setColorFilter(Color.rgb(255, 199, 0), PorterDuff.Mode.SRC_ATOP);
+        stars.getDrawable(0).setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
         ((RatingBar) hotelRow.findViewById(R.id.star_bar_hotel_list)).setRating(mSelectedHotel.star);
+
         Picasso.with(mContext).load(mSelectedHotel.imageUrl).into((ImageView)hotelRow.findViewById(R.id.image_view_hotel_image));
         hotelRow.setOnClickListener(new View.OnClickListener() {
             @Override
