@@ -75,15 +75,15 @@
                 android:layout_below="@id/text_view_souvenir_rating"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"/>
-            <TextView
-                android:id="@+id/text_view_souvenir_price"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/line_souvenir_list"
-                android:text="Around Rp 30.000"
-                android:textSize="17dp"
-                android:textStyle="bold"
-                android:textColor="@color/textRowListPrice"/>
+            <!--<TextView-->
+                <!--android:id="@+id/text_view_souvenir_price"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_below="@id/line_souvenir_list"-->
+                <!--android:text="Around Rp 30.000"-->
+                <!--android:textSize="17dp"-->
+                <!--android:textStyle="bold"-->
+                <!--android:textColor="@color/textRowListPrice"/>-->
 
         </RelativeLayout>
 

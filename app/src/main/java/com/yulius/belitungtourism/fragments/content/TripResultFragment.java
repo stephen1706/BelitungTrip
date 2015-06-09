@@ -238,7 +238,7 @@ public class TripResultFragment extends BaseFragment {
                 for(Poi poi:mPoiResultList){
                     mTotalPrice += numGuests * poi.price;
                 }
-                mTotalPrice += numGuests * mSelectedSouvenir.price;
+//                mTotalPrice += numGuests * mSelectedSouvenir.price;
                 int numberOfRoom = (1+numGuests)/2;
                 Log.d("test","jmlh kmr : " + numberOfRoom);
                 mTotalPrice += numberOfRoom * (mTotalNight-1) * mSelectedHotel.price;
@@ -587,6 +587,7 @@ public class TripResultFragment extends BaseFragment {
                 hotel.name = mHotelListResponseData.entries[i].hotelName;
                 hotel.price = mHotelListResponseData.entries[i].hotelPrice;
                 hotel.rating = mHotelListResponseData.entries[i].hotelRating;
+                hotel.star = mHotelListResponseData.entries[i].hotelStar;
                 hotel.imageUrl = mHotelListResponseData.entries[i].assets[0].url;
                 return hotel;
             }
@@ -833,7 +834,7 @@ public class TripResultFragment extends BaseFragment {
         //((TextView) souvenirRow.findViewById(R.id.text_view_region)).setText("Cost Estimation : " + mSelectedSouvenir.price);
         ((TextView) souvenirRow.findViewById(R.id.text_view_region)).setVisibility(View.GONE);
         ((TextView) souvenirRow.findViewById(R.id.text_view_souvenir_rating)).setText("Rating " + mSelectedSouvenir.rating + "/100");
-        ((TextView) souvenirRow.findViewById(R.id.text_view_souvenir_price)).setText("Rp " + FormattingUtil.formatDecimal(mSelectedSouvenir.price));
+//        ((TextView) souvenirRow.findViewById(R.id.text_view_souvenir_price)).setText("Rp " + FormattingUtil.formatDecimal(mSelectedSouvenir.price));
         Picasso.with(mContext).load(mSelectedSouvenir.imageUrl).into((ImageView)souvenirRow.findViewById(R.id.image_view_souvenir_image));
 
         souvenirRow.setOnClickListener(new View.OnClickListener() {

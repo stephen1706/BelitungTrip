@@ -66,7 +66,7 @@ public class SouvenirListAdapter extends RecyclerView.Adapter<SouvenirListAdapte
             souvenirName = (TextView) itemView.findViewById(R.id.text_view_souvenir_name);
             souvenirAddress = (TextView)itemView.findViewById(R.id.text_view_region);
             souvenirRating = (TextView)itemView.findViewById(R.id.text_view_souvenir_rating);
-            souvenirPrice = (TextView)itemView.findViewById(R.id.text_view_souvenir_price);
+//            souvenirPrice = (TextView)itemView.findViewById(R.id.text_view_souvenir_price);
             souvenirImage = (ImageView)itemView.findViewById(R.id.image_view_souvenir_image);
         }
     }

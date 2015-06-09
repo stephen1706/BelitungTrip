@@ -217,7 +217,7 @@ public class TripDetailFragment extends BaseFragment {
         ((TextView) souvenirRow.findViewById(R.id.text_view_region)).setVisibility(View.GONE);
         //((TextView) souvenirRow.findViewById(R.id.text_view_region)).setText("Cost Estimation : " + mSelectedSouvenir.price);
         ((TextView) souvenirRow.findViewById(R.id.text_view_souvenir_rating)).setText("Rating " + mSelectedSouvenir.rating + "/100");
-        ((TextView) souvenirRow.findViewById(R.id.text_view_souvenir_price)).setText("Rp " + FormattingUtil.formatDecimal(mSelectedSouvenir.price));
+//        ((TextView) souvenirRow.findViewById(R.id.text_view_souvenir_price)).setText("Rp " + FormattingUtil.formatDecimal(mSelectedSouvenir.price));
         Picasso.with(mContext).load(mSelectedSouvenir.imageUrl).into((ImageView) souvenirRow.findViewById(R.id.image_view_souvenir_image));
 
         souvenirRow.setOnClickListener(new View.OnClickListener() {
