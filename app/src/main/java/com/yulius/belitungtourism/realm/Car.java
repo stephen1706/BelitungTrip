@@ -2,9 +2,6 @@ package com.yulius.belitungtourism.realm;
 
 import io.realm.RealmObject;
 
-/**
- * Created by stephen on 5/27/15.
- */
 public class Car extends RealmObject {
     private String carId;
     private String carName;

@@ -14,9 +14,6 @@ import com.yulius.belitungtourism.fragments.content.TripResultFragment;
 import com.yulius.belitungtourism.listeners.RecyclerItemClickListener;
 import com.yulius.belitungtourism.response.PoiListResponseData;
 
-/**
- * Created by stephen on 5/29/15.
- */
 public class PoiListActivity extends BaseActivity {
     private RecyclerView mPoiList;
     private PoiListAdapter mPoiListAdapter;

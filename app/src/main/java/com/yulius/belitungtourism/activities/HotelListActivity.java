@@ -14,9 +14,6 @@ import com.yulius.belitungtourism.fragments.content.TripResultFragment;
 import com.yulius.belitungtourism.listeners.RecyclerItemClickListener;
 import com.yulius.belitungtourism.response.HotelListResponseData;
 
-/**
- * Created by stephen on 5/29/15.
- */
 public class HotelListActivity extends BaseActivity {
     private RecyclerView mHotelList;
     private HotelListAdapter mHotelListAdapter;
