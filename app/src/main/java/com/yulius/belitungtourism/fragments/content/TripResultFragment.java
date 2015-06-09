@@ -325,12 +325,12 @@ public class TripResultFragment extends BaseFragment {
                     realm.commitTransaction();
 
                     showMessage("Your trip has been save", Constans.MessageType.MESSAGE_SUCCESS, Constans.Duration.LONG);
+
+                    getFragmentManager().popBackStack();
                 } catch (RealmException e){
                     realm.cancelTransaction();
                     showMessage(tripName + " has been used for other trip name, please use other name", Constans.MessageType.MESSAGE_ERROR, Constans.Duration.LONG);
                 }
-
-                getFragmentManager().popBackStack();
             }
         });
     }
