@@ -279,7 +279,7 @@ public class TripResultFragment extends BaseFragment {
                     hotel.setHotelPrice(mSelectedHotel.price);
                     hotel.setHotelRating(mSelectedHotel.rating);
                     hotel.setHotelStar(mSelectedHotel.star);
-                    hotel.setHotelImageUrl(mSelectedHotel.imageUrl);
+                    hotel.setHotelImageUrl(avoidNull(mSelectedHotel.imageUrl));
                     trip.setHotel(hotel);
 
                     com.yulius.belitungtourism.realm.Souvenir souvenir = realm.createObject(com.yulius.belitungtourism.realm.Souvenir.class);
@@ -287,7 +287,7 @@ public class TripResultFragment extends BaseFragment {
                     souvenir.setSouvenirName(mSelectedSouvenir.name);
                     souvenir.setSouvenirPrice(mSelectedSouvenir.price);
                     souvenir.setSouvenirRating(mSelectedSouvenir.rating);
-                    souvenir.setSouvernirImageUrl(mSelectedSouvenir.imageUrl);
+                    souvenir.setSouvernirImageUrl(avoidNull(mSelectedSouvenir.imageUrl));
                     trip.setSouvenir(souvenir);
 
                     com.yulius.belitungtourism.realm.Car car = realm.createObject(com.yulius.belitungtourism.realm.Car.class);
@@ -305,7 +305,7 @@ public class TripResultFragment extends BaseFragment {
                         restaurant.setRestaurantPrice(currentRestaurant.price);
                         restaurant.setRestaurantRating(currentRestaurant.rating);
                         restaurant.setRestaurantType(currentRestaurant.type);
-                        restaurant.setRestaurantImageUrl(currentRestaurant.imageUrl);
+                        restaurant.setRestaurantImageUrl(avoidNull(currentRestaurant.imageUrl));
                         restaurants.add(restaurant);
                     }
                     trip.setRestaurants(restaurants);
@@ -317,7 +317,7 @@ public class TripResultFragment extends BaseFragment {
                         poi.setPoiName(currentPoi.name);
                         poi.setPoiPrice(currentPoi.price);
                         poi.setPoiRating(currentPoi.rating);
-                        poi.setPoiImageUrl(currentPoi.imageUrl); //TODO
+                        poi.setPoiImageUrl(avoidNull(currentPoi.imageUrl));
                         Log.d("imageUrlAtRealmSaving", poi.getPoiImageUrl());
                         pois.add(poi);
                     }
@@ -333,6 +333,14 @@ public class TripResultFragment extends BaseFragment {
                 }
             }
         });
+    }
+
+    private String avoidNull(String str) {
+        if(str == null){
+            return "";
+        } else{
+            return str;
+        }
     }
 
     private int findCarPrice(int numGuests) {
