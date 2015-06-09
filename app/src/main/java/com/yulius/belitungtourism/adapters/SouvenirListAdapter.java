@@ -37,8 +37,8 @@ public class SouvenirListAdapter extends RecyclerView.Adapter<SouvenirListAdapte
         viewHolder.souvenirAddress.setText(souvenirEntry.souvenirAddress);
         viewHolder.souvenirRating.setText("Rating " + String.valueOf(souvenirEntry.souvenirRating) + "/100");
 
-        String restoPriceWithDot = String.valueOf(souvenirEntry.souvenirPrice).substring(0, 2) + "." + String.valueOf(souvenirEntry.souvenirPrice).substring(2, 5);
-        viewHolder.souvenirPrice.setText("Rp " + restoPriceWithDot);
+//        String restoPriceWithDot = String.valueOf(souvenirEntry.souvenirPrice).substring(0, 2) + "." + String.valueOf(souvenirEntry.souvenirPrice).substring(2, 5);
+//        viewHolder.souvenirPrice.setText("Rp " + restoPriceWithDot);
 
         if(souvenirEntry.assets != null)
         {Picasso.with(mContext).load(souvenirEntry.assets[0].url).into(viewHolder.souvenirImage);}
@@ -58,7 +58,7 @@ public class SouvenirListAdapter extends RecyclerView.Adapter<SouvenirListAdapte
         public TextView souvenirName;
         public TextView souvenirAddress;
         public TextView souvenirRating;
-        public TextView souvenirPrice;
+//        public TextView souvenirPrice;
         public ImageView souvenirImage;
 
         public ViewHolder(View itemView) {
