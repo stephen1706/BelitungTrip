@@ -7,10 +7,10 @@
     android:background="@color/white"
     android:gravity="center">
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:src="@drawable/icon_big_wifi"/>
+    <!--<ImageView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:src="@drawable/icon_big_wifi"/>-->
 
     <View
         android:layout_width="match_parent"

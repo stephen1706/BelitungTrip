@@ -111,6 +111,7 @@ public class TripPlannerHomeFragment extends BaseFragment  implements DatePicker
 
     private void setUpAdapter() {
         mTripResult = mRealm.where(com.yulius.belitungtourism.realm.Trip.class).findAll();
+        mTripResult.sort("tripName");
         ArrayList<com.yulius.belitungtourism.realm.Trip> tripItems = new ArrayList<>();
 
         for(com.yulius.belitungtourism.realm.Trip trip : mTripResult){
@@ -161,12 +162,22 @@ public class TripPlannerHomeFragment extends BaseFragment  implements DatePicker
                                     Toast.makeText(mContext,"deleted name : " + mTripListAdapter.getTripName(position),Toast.LENGTH_SHORT).show();
 
                                     mRealm.beginTransaction();
-                                    com.yulius.belitungtourism.realm.Trip trip = mTripResult.get(position);
-                                    trip.removeFromRealm();
+                                    com.yulius.belitungtourism.realm.Trip deletedTrip = mTripResult.get(position);
+                                    deletedTrip.removeFromRealm();
                                     mRealm.commitTransaction();
 
-                                    mTripListAdapter.removeItem(position);
-                                    mTripListAdapter.notifyItemRemoved(position);
+                                    mTripResult = mRealm.where(com.yulius.belitungtourism.realm.Trip.class).findAll();
+                                    mTripResult.sort("tripName");
+                                    ArrayList<com.yulius.belitungtourism.realm.Trip> tripItems = new ArrayList<>();
+
+                                    for(com.yulius.belitungtourism.realm.Trip trip : mTripResult){
+                                        tripItems.add(trip);
+                                    }
+
+                                    mTripListAdapter = new TripListAdapter(tripItems, R.layout.row_trip_list, mContext);
+                                    mTripList.setAdapter(mTripListAdapter);
+//                                    mTripListAdapter.removeItem(position);
+//                                    mTripListAdapter.notifyItemRemoved(position);
                                 }
                                 mTripListAdapter.notifyDataSetChanged();
                             }
@@ -177,12 +188,22 @@ public class TripPlannerHomeFragment extends BaseFragment  implements DatePicker
                                     Toast.makeText(mContext,"deleted name : " + mTripListAdapter.getTripName(position),Toast.LENGTH_SHORT).show();
 
                                     mRealm.beginTransaction();
-                                    com.yulius.belitungtourism.realm.Trip trip = mTripResult.get(position);
-                                    trip.removeFromRealm();
+                                    com.yulius.belitungtourism.realm.Trip deletedTrip = mTripResult.get(position);
+                                    deletedTrip.removeFromRealm();
                                     mRealm.commitTransaction();
 
-                                    mTripListAdapter.removeItem(position);
-                                    mTripListAdapter.notifyItemRemoved(position);
+                                    mTripResult = mRealm.where(com.yulius.belitungtourism.realm.Trip.class).findAll();
+                                    mTripResult.sort("tripName");
+                                    ArrayList<com.yulius.belitungtourism.realm.Trip> tripItems = new ArrayList<>();
+
+                                    for(com.yulius.belitungtourism.realm.Trip trip : mTripResult){
+                                        tripItems.add(trip);
+                                    }
+
+                                    mTripListAdapter = new TripListAdapter(tripItems, R.layout.row_trip_list, mContext);
+                                    mTripList.setAdapter(mTripListAdapter);
+//                                    mTripListAdapter.removeItem(position);
+//                                    mTripListAdapter.notifyItemRemoved(position);
                                 }
                                 mTripListAdapter.notifyDataSetChanged();
                             }
