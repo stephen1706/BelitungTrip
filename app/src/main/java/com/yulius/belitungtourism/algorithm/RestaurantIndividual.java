@@ -118,7 +118,7 @@ public class RestaurantIndividual {
     public int getFitness() {
         fitness = 0;
         for(int i=0;i<defaultGeneLength;i++){
-            fitness += genes[i].rating;
+            fitness += (genes[i].rating * 1000000/genes[i].price);
         }
         return fitness;
     }

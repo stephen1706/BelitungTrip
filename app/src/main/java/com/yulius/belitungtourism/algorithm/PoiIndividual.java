@@ -1,7 +1,5 @@
 package com.yulius.belitungtourism.algorithm;
 
-import android.util.Log;
-
 import com.yulius.belitungtourism.entity.Poi;
 import com.yulius.belitungtourism.response.PoiListResponseData;
 
@@ -71,7 +69,7 @@ public class PoiIndividual {
     public int getFitness() {
         fitness = 0;
         for(int i=0;i<defaultGeneLength;i++){
-            fitness += genes[i].rating;
+            fitness += (genes[i].rating * 1000000/genes[i].price);
         }
         return fitness;
     }
