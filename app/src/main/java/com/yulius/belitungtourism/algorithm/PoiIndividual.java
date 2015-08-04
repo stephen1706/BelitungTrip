@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class PoiIndividual {
-    private static final int LENIENT_ADJUSTMENT = 50000;
+    private static int LENIENT_ADJUSTMENT = 0;
     private static final int MIN_RATING = 70;
     private static final int MAX_RATING = 93;
     static int defaultGeneLength = 9;
@@ -46,12 +46,19 @@ public class PoiIndividual {
     }
 
     public void generateIndividual() {
+        int totalRetry = 0;
+        LENIENT_ADJUSTMENT = 0;
         do {
+            if(totalRetry%5==0) {
+                LENIENT_ADJUSTMENT += 10000;
+            }
+
             for (int i = 0; i < size(); i++) {
                 int poiIndex = new Random().nextInt(poiList.size());
 
                 genes[i] = poiList.get(poiIndex);
             }
+            totalRetry++;
         } while (priceHigherOrLowerThanBudget() || anyRedundant());
     }
 
@@ -94,7 +101,8 @@ public class PoiIndividual {
 
     public boolean priceHigherOrLowerThanBudget() {
         int totalPrice = 0;
-        for (int i = 0; i < size(); i++) {
+        int maxSize = size();
+        for (int i = 0; i < maxSize; i++) {
             totalPrice += genes[i].price;
         }
         return ((totalPrice - LENIENT_ADJUSTMENT > maxBudget) || totalPrice + LENIENT_ADJUSTMENT < minBudget);

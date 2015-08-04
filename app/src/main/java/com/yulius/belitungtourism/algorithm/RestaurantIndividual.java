@@ -13,7 +13,7 @@ import java.util.Random;
 public class RestaurantIndividual {
     private static final int MIN_RATING = 70;
     private static final int MAX_RATING = 90;
-    private static int LENIENT_ADJUSTMENT = 50000;
+    private static int LENIENT_ADJUSTMENT = 0;
     static int defaultGeneLength = 9;
     private final MultiHashMap<Integer, Integer> mRestaurantNearbyPoiList;
     private final ArrayList<Poi> mPoiResultList;
@@ -59,7 +59,7 @@ public class RestaurantIndividual {
 
     public void generateIndividual() {
         int totalRetry = 0;
-        LENIENT_ADJUSTMENT = 50000;
+        LENIENT_ADJUSTMENT = 0;
         do {
             if(totalRetry%5==0) {
                 LENIENT_ADJUSTMENT += 10000;
