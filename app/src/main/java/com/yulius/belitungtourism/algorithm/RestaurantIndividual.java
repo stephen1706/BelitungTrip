@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class RestaurantIndividual {
+    private static final int MIN_RATING = 70;
+    private static final int MAX_RATING = 90;
     private static int LENIENT_ADJUSTMENT = 50000;
     static int defaultGeneLength = 9;
     private final MultiHashMap<Integer, Integer> mRestaurantNearbyPoiList;
@@ -20,7 +22,7 @@ public class RestaurantIndividual {
     private ArrayList<Restaurant> mRestaurantList;
     private int maxBudget;
     private int totalNight;
-    private int fitness = 0;
+    private double fitness = 0;
 
     public RestaurantIndividual(int minBudget, int maxBudget, int totalNight, RestaurantListResponseData restaurantListResponseData, RestaurantNearbyPoiResponseData restaurantNearbyPoiResponseData, ArrayList<Poi> poiResultList) {
         mRestaurantList = new ArrayList<>();
@@ -115,11 +117,18 @@ public class RestaurantIndividual {
         return genes.length;
     }
 
-    public int getFitness() {
+    public double getTotalRating() {
         fitness = 0;
         for(int i=0;i<defaultGeneLength;i++){
-            fitness += (genes[i].rating * 1000000/genes[i].price);
+            fitness += genes[i].rating;
         }
+        return fitness;
+    }
+
+    public double getFitness(){
+        double pembilang = ((double)(getTotalRating() - 3*totalNight*MIN_RATING)/(double)((MAX_RATING*3*totalNight) - (MIN_RATING*3*totalNight)));
+        double penyebut = ((double) (getTotalPrice() - minBudget)/(double)(maxBudget - minBudget));
+        fitness =  pembilang/penyebut;
         return fitness;
     }
 
@@ -155,10 +164,14 @@ public class RestaurantIndividual {
         } while (priceHigherOrLowerThanBudget() || anyRedundant());
     }
 
-    public int getTotalPrice() {
+    public double getTotalPrice() {
         int totalPrice = 0;
         for (int i = 0; i < size(); i++) {
             totalPrice += genes[i].price;
+        }
+
+        if(totalPrice < minBudget || totalPrice > maxBudget){
+            return Double.MAX_VALUE;
         }
         return (totalPrice);
     }
@@ -195,6 +208,7 @@ public class RestaurantIndividual {
     public void resetLenientAdjustment(){
         LENIENT_ADJUSTMENT = 50000;
     }
+
     @Override
     public String toString() {
         String geneString = "";

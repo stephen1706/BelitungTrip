@@ -8,13 +8,15 @@ import java.util.Random;
 
 public class PoiIndividual {
     private static final int LENIENT_ADJUSTMENT = 50000;
+    private static final int MIN_RATING = 70;
+    private static final int MAX_RATING = 93;
     static int defaultGeneLength = 9;
     private int minBudget;
     private Poi[] genes;
     private ArrayList<Poi> poiList;
     private int maxBudget;
     private int totalNight;
-    private int fitness = 0;
+    private double fitness = 0;
 
     public PoiIndividual(int minBudget, int maxBudget, int totalNight, PoiListResponseData poiListResponseData) {
         poiList = new ArrayList<>();
@@ -59,20 +61,27 @@ public class PoiIndividual {
 
     public void setGene(int index, Poi value) {
         genes[index] = value;
-        fitness = 0;
     }
 
     public int size() {
         return genes.length;
     }
 
-    public int getFitness() {
-        fitness = 0;
+    public double getTotalRating() {
+        int totalRating = 0;
         for(int i=0;i<defaultGeneLength;i++){
-            fitness += (genes[i].rating * 1000000/genes[i].price);
+            totalRating += (genes[i].rating);
         }
+        return totalRating;
+    }
+
+    public double getFitness(){
+        double pembilang = ((double)(getTotalRating() - 3*totalNight*MIN_RATING)/(double)((MAX_RATING*3*totalNight) - (MIN_RATING*3*totalNight)));
+        double penyebut = ((double) (getTotalPrice() - minBudget)/(double)(maxBudget - minBudget));
+        fitness =  pembilang/penyebut;
         return fitness;
     }
+
 
     public void mutate(){
         int changeIndex = new Random().nextInt(defaultGeneLength);
@@ -91,10 +100,14 @@ public class PoiIndividual {
         return ((totalPrice - LENIENT_ADJUSTMENT > maxBudget) || totalPrice + LENIENT_ADJUSTMENT < minBudget);
     }
 
-    public int getTotalPrice() {
+    public double getTotalPrice() {
         int totalPrice = 0;
         for (int i = 0; i < size(); i++) {
             totalPrice += genes[i].price;
+        }
+
+        if(totalPrice < minBudget || totalPrice > maxBudget){
+            return Double.MAX_VALUE;
         }
         return (totalPrice);
     }

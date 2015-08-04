@@ -891,7 +891,7 @@ public class TripResultFragment extends BaseFragment {
 
         int generationCount = 0;
         int numberSameResult = 0;
-        int lastFitnessResult = 0;
+        double lastFitnessResult = 0;
         while (true) {
             // Evolve our population until we reach an optimum solution
             if(numberSameResult >=5){//5x berturut" hasilnya sama break aj
@@ -973,7 +973,7 @@ public class TripResultFragment extends BaseFragment {
 
             int generationCount = 0;
             int numberSameResult = 0;
-            int lastFitnessResult = 0;
+            double lastFitnessResult = 0;
             while (true) {
                 // Evolve our population until we reach an optimum solution
                 if (numberSameResult >= 5) {//5x berturut" hasilnya sama break aj
