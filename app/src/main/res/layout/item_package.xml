@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView
+        android:id="@+id/text_view_trip_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TRIP RESULT"
+        android:textSize="20dp"
+        android:textColor="@color/pink"
+        android:textStyle="bold"/>
+    <LinearLayout
+        android:id="@+id/frame_trip_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="HOTEL"
+        android:textSize="18dp"
+        android:textColor="@color/primary"/>
+    <LinearLayout
+        android:id="@+id/frame_hotel_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Souvenir Shop Recommendation"
+        android:textAllCaps="true"
+        android:textSize="18dp"
+        android:textColor="@color/primary"/>
+    <LinearLayout
+        android:id="@+id/frame_souvenir_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Transportation Used"
+        android:textAllCaps="true"
+        android:textSize="18dp"
+        android:textColor="@color/primary"/>
+    <LinearLayout
+        android:id="@+id/frame_transportation_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="TRIP NAME"
+        android:textSize="20dp"
+        android:background="#555555"
+        android:textColor="#ffc907"/>
+    <EditText
+        android:id="@+id/edit_text_trip_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/primary"
+        android:hint="Insert your trip name here"
+        android:textColorHint="#e1e1e1"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Number of Passengers"
+        android:textSize="20dp"
+        android:textAllCaps="true"
+        android:background="#555555"
+        android:textColor="#ffc907"/>
+    <EditText
+        android:id="@+id/edit_text_total_guest"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/primary"
+        android:textColorHint="#e1e1e1"
+        android:hint="Insert number of passengers here"
+        android:inputType="number"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Total Price"
+        android:layout_marginTop="40dp"
+        android:textSize="25dp"
+        android:background="#555555"
+        android:textColor="#ffc907"/>
+    <TextView
+        android:id="@+id/text_view_total_price"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        android:textColor="@color/pink"/>
+    <Button
+        android:id="@+id/button_save_trip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="SAVE"
+        android:textColor="#ffc907"
+        android:background="@color/pink"/>
+</LinearLayout>

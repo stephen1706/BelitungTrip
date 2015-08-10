@@ -9,6 +9,8 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.LayerDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v7.app.ActionBar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -98,20 +100,23 @@ public class TripResultFragment extends BaseFragment {
     private int mHotelMaxBudget;
     private int mTotalNight;
     private int mTotalPrice;
-    private ArrayList<Restaurant> mRestaurantResultList;
-    private ArrayList<Poi> mPoiResultList;
-    private Hotel mSelectedHotel;
-    private Car mSelectedCar;
-    private Souvenir mSelectedSouvenir;
+    private ArrayList<Restaurant>[] mRestaurantResultList;
+    private ArrayList<Poi>[] mPoiResultList;
+    private Hotel[] mSelectedHotel;
+    private Car[] mSelectedCar;
+    private Souvenir[] mSelectedSouvenir;
     private ArrayList<Integer> mSouvenirLotteryList;
 //    private LinearLayout mRestaurantListFrame;
 //    private LinearLayout mPoiListFrame;
-    private LinearLayout mHotelListFrame;
-    private LinearLayout mSouvenirListFrame;
-    private Button mSaveTripButton;
-    private TextView mTotalPriceTextView;
-    private EditText mTotalGuestEditText;
-    private EditText mTripNameEditText;
+//    private LinearLayout mHotelListFrame;
+//    private LinearLayout mSouvenirListFrame;
+//    private Button mSaveTripButton;
+//    private TextView mTotalPriceTextView;
+//    private EditText mTotalGuestEditText;
+//    private EditText mTripNameEditText;
+//    private LinearLayout tripListFrame;
+//    private LinearLayout mTransportationListFrame;
+//    private LinearLayout mCurrentPackage;
     private int mPoiMinBudget;
     private int mRestaurantMinBudget;
     private int mHotelMinBudget;
@@ -120,11 +125,12 @@ public class TripResultFragment extends BaseFragment {
     private ArrayList<Integer> mHotelLotteryList;
     private CarAPI mCarAPI;
     private CarResponseData mCarResponseData;
-    private LinearLayout mTripListFrame;
     private int mNumGuests;
-    private LinearLayout mTransportationListFrame;
     private int mSelectedPoiIndex;
     private int mSelectedRestaurantIndex;
+    private LinearLayout mPackageListFrame;
+    private int mOptionNumber;
+    private int mSelectedPackage;
 
     public static TripResultFragment newInstance(int poiMinBudget, int poiMaxBudget, int restaurantMinBudget, int restaurantMaxBudget, int hotelMinBudget, int hotelMaxBudget, int totalNight) {
         TripResultFragment fragment = new TripResultFragment();
@@ -185,154 +191,16 @@ public class TripResultFragment extends BaseFragment {
     }
 
     private void setUpView() {
-        mTripListFrame = (LinearLayout) mLayoutView.findViewById(R.id.frame_trip_list);
+        mPackageListFrame = (LinearLayout) mLayoutView.findViewById(R.id.frame_package_list);
 //        mPoiListFrame = (LinearLayout) mLayoutView.findViewById(R.id.frame_poi_list);
 //        mRestaurantListFrame = (LinearLayout) mLayoutView.findViewById(R.id.frame_restaurant_list);
-        mHotelListFrame = (LinearLayout) mLayoutView.findViewById(R.id.frame_hotel_list);
-        mTransportationListFrame = (LinearLayout) mLayoutView.findViewById(R.id.frame_transportation_list);
-        mSouvenirListFrame = (LinearLayout) mLayoutView.findViewById(R.id.frame_souvenir_list);
-        mSaveTripButton = (Button) mLayoutView.findViewById(R.id.button_save_trip);
-        mTotalPriceTextView = (TextView) mLayoutView.findViewById(R.id.text_view_total_price);
-        mTotalGuestEditText = (EditText) mLayoutView.findViewById(R.id.edit_text_total_guest);
-        mTripNameEditText = (EditText) mLayoutView.findViewById(R.id.edit_text_trip_name);
     }
 
     private void setUpViewState() {
     }
 
     private void setUpListener() {
-        mTotalGuestEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if(s.length() == 0){
-                    return;
-                }
-                int numGuests;
-                try {
-                    numGuests = Integer.parseInt(s.toString());
-                    if(numGuests < 1 || numGuests > 45){
-                        throw new Exception();
-                    }
-                } catch (Exception e){
-                    Toast.makeText(mContext, "Please insert a valid total passenger number", Toast.LENGTH_LONG).show();
-
-                    mTotalPriceTextView.setText("Please insert a valid total passenger number");
-                    return;
-                }
-
-                mNumGuests = numGuests;
-                mTotalPrice = 0;
-                for(Restaurant restaurant:mRestaurantResultList){
-                    mTotalPrice += numGuests * restaurant.price;
-                }
-                for(Poi poi:mPoiResultList){
-                    mTotalPrice += numGuests * poi.price;
-                }
-//                mTotalPrice += numGuests * mSelectedSouvenir.price;
-                int numberOfRoom = (1+numGuests)/2;
-                Log.d("test","jmlh kmr : " + numberOfRoom);
-                mTotalPrice += numberOfRoom * (mTotalNight-1) * mSelectedHotel.price;
-
-                mTotalPrice += findCarPrice(numGuests) * mTotalNight;
-
-                mTransportationListFrame.removeAllViews();
-                View carRow = mLayoutInflater.inflate(R.layout.row_car_list, mTransportationListFrame, false);
-                ((TextView) carRow.findViewById(R.id.text_view_car_name)).setText(mSelectedCar.carName);
-                ((TextView) carRow.findViewById(R.id.text_view_car_detail)).setText("Cost : Rp " + FormattingUtil.formatDecimal(mSelectedCar.carPrice) + ", for " + mSelectedCar.carCapacity + " person");
-                mTransportationListFrame.addView(carRow);
-
-                mTotalPriceTextView.setText("Rp " + FormattingUtil.formatDecimal(mTotalPrice));
-            }
-        });
-
-        mSaveTripButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String tripName = mTripNameEditText.getText().toString();
-                if(tripName.isEmpty()){
-                    Toast.makeText(mContext, "Please insert your trip name", Toast.LENGTH_LONG).show();
-                    return;
-                }
-
-                Realm realm = Realm.getInstance(mContext);
-                try {
-                    realm.beginTransaction();
-                    Trip trip = realm.createObject(Trip.class); // Create a new object
-                    trip.setNumGuests(mNumGuests);
-                    trip.setTripName(tripName);
-                    trip.setTotalNight(mTotalNight);
-                    trip.setTotalPrice(mTotalPrice);
-
-                    com.yulius.belitungtourism.realm.Hotel hotel = realm.createObject(com.yulius.belitungtourism.realm.Hotel.class);
-                    hotel.setHotelId(mSelectedHotel.id);
-                    hotel.setHotelName(mSelectedHotel.name);
-                    hotel.setHotelPrice(mSelectedHotel.price);
-                    hotel.setHotelRating(mSelectedHotel.rating);
-                    hotel.setHotelStar(mSelectedHotel.star);
-                    hotel.setHotelImageUrl(avoidNull(mSelectedHotel.imageUrl));
-                    trip.setHotel(hotel);
-
-                    com.yulius.belitungtourism.realm.Souvenir souvenir = realm.createObject(com.yulius.belitungtourism.realm.Souvenir.class);
-                    souvenir.setSouvenirId(mSelectedSouvenir.id);
-                    souvenir.setSouvenirName(mSelectedSouvenir.name);
-                    souvenir.setSouvenirPrice(mSelectedSouvenir.price);
-                    souvenir.setSouvenirRating(mSelectedSouvenir.rating);
-                    souvenir.setSouvernirImageUrl(avoidNull(mSelectedSouvenir.imageUrl));
-                    trip.setSouvenir(souvenir);
-
-                    com.yulius.belitungtourism.realm.Car car = realm.createObject(com.yulius.belitungtourism.realm.Car.class);
-                    car.setCarId(mSelectedCar.carId);
-                    car.setCarName(mSelectedCar.carName);
-                    car.setCarPrice(mSelectedCar.carPrice);
-                    car.setCarCapacity(mSelectedCar.carCapacity);
-                    trip.setCar(car);
-
-                    RealmList<com.yulius.belitungtourism.realm.Restaurant> restaurants = new RealmList<>();
-                    for (Restaurant currentRestaurant : mRestaurantResultList) {
-                        com.yulius.belitungtourism.realm.Restaurant restaurant = realm.createObject(com.yulius.belitungtourism.realm.Restaurant.class);
-                        restaurant.setRestaurantId(currentRestaurant.id);
-                        restaurant.setRestaurantName(currentRestaurant.name);
-                        restaurant.setRestaurantPrice(currentRestaurant.price);
-                        restaurant.setRestaurantRating(currentRestaurant.rating);
-                        restaurant.setRestaurantType(currentRestaurant.type);
-                        restaurant.setRestaurantImageUrl(avoidNull(currentRestaurant.imageUrl));
-                        restaurants.add(restaurant);
-                    }
-                    trip.setRestaurants(restaurants);
-
-                    RealmList<com.yulius.belitungtourism.realm.Poi> pois = new RealmList<>();
-                    for (Poi currentPoi : mPoiResultList) {
-                        com.yulius.belitungtourism.realm.Poi poi = realm.createObject(com.yulius.belitungtourism.realm.Poi.class);
-                        poi.setPoiId(currentPoi.id);
-                        poi.setPoiName(currentPoi.name);
-                        poi.setPoiPrice(currentPoi.price);
-                        poi.setPoiRating(currentPoi.rating);
-                        poi.setPoiImageUrl(avoidNull(currentPoi.imageUrl));
-                        Log.d("imageUrlAtRealmSaving", poi.getPoiImageUrl());
-                        pois.add(poi);
-                    }
-                    trip.setPois(pois);
-                    realm.commitTransaction();
-
-                    showMessage("Your trip has been save", Constans.MessageType.MESSAGE_SUCCESS, Constans.Duration.LONG);
-
-                    getFragmentManager().popBackStack();
-                } catch (RealmException e){
-                    realm.cancelTransaction();
-                    showMessage(tripName + " has been used for other trip name, please use other name", Constans.MessageType.MESSAGE_ERROR, Constans.Duration.LONG);
-                }
-            }
-        });
     }
 
     private String avoidNull(String str) {
@@ -343,22 +211,22 @@ public class TripResultFragment extends BaseFragment {
         }
     }
 
-    private int findCarPrice(int numGuests) {
+    private int findCarPrice(int numGuests, int packageNum) {
         int selectedCapacity = 99;
         for(int i=0;i<mCarResponseData.entries.length;i++){
             if(mCarResponseData.entries[i].carCapacity >= numGuests && mCarResponseData.entries[i].carCapacity < selectedCapacity){
                 selectedCapacity = mCarResponseData.entries[i].carCapacity;
 
-                mSelectedCar = new Car();
-                mSelectedCar.carId = mCarResponseData.entries[i].carId;
-                mSelectedCar.carName = mCarResponseData.entries[i].carName;
-                mSelectedCar.carPrice = mCarResponseData.entries[i].carPrice;
-                mSelectedCar.carCapacity = mCarResponseData.entries[i].carCapacity;
+                mSelectedCar[packageNum] = new Car();
+                mSelectedCar[packageNum].carId = mCarResponseData.entries[i].carId;
+                mSelectedCar[packageNum].carName = mCarResponseData.entries[i].carName;
+                mSelectedCar[packageNum].carPrice = mCarResponseData.entries[i].carPrice;
+                mSelectedCar[packageNum].carCapacity = mCarResponseData.entries[i].carCapacity;
             }
         }
 
-        Log.d("test", "harga mobil : " + mSelectedCar.carPrice);
-        return mSelectedCar.carPrice;
+        Log.d("test", "harga mobil : " + mSelectedCar[packageNum].carPrice);
+        return mSelectedCar[packageNum].carPrice;
     }
 
     private void setUpRequestAPI() {
@@ -367,9 +235,20 @@ public class TripResultFragment extends BaseFragment {
             @Override
             public void onRequestSuccess(CarResponseData carResponseData) {
                 mCarResponseData = carResponseData;
-                findCarPrice(1);
+                findCarPrice(1, mOptionNumber);
 
                 refreshFragment();
+                if(mOptionNumber < 3){
+                    mOptionNumber++;
+                    findBestPoi();
+                } else {
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            hideMessageScreen();
+                        }
+                    });
+                }
             }
 
             @Override
@@ -390,7 +269,11 @@ public class TripResultFragment extends BaseFragment {
                 mPoiListResponseData = poiListResponseData;
                 if(poiListResponseData != null) {
 //                    findBestPoi();
-                    new CalcluatePoi().execute();
+                    resetPackage();
+                    mPackageListFrame.removeAllViews();
+//                    new CalcluatePoi().execute();
+                    findBestPoi();
+//                    hideMessageScreen();
                 }
             }
 
@@ -474,10 +357,11 @@ public class TripResultFragment extends BaseFragment {
 //            new StartCalculation().execute();
 
             mPoiListAPI.requestPoiList();
-            showLoadingMessage(TAG);
-        } else {
-            refreshFragment();
+            showLoadingMessage(TripResultFragment.this.TAG);
         }
+//        else {
+//            refreshFragment();
+//        }
 
         mRestaurantNearbyPoiAPI = new RestaurantNearbyPoiAPI(mContext);
         mRestaurantNearbyPoiAPI.setOnResponseListener(new RestaurantNearbyPoiAPI.OnResponseListener() {
@@ -485,7 +369,8 @@ public class TripResultFragment extends BaseFragment {
             public void onRequestSuccess(RestaurantNearbyPoiResponseData restaurantNearbyPoiResponseData) {
                 mRestaurantNearbyPoiResponseData = restaurantNearbyPoiResponseData;
                 if (restaurantNearbyPoiResponseData != null) {
-                    findBestRestaurant();
+//                    findBestRestaurant();
+                    new CalcluateRestaurant().execute();
                 }
             }
 
@@ -502,12 +387,21 @@ public class TripResultFragment extends BaseFragment {
 
         if(mPoiListResponseData == null || mRestaurantListResponseData == null) {
 //            new StartCalculation().execute();
-
             mPoiListAPI.requestPoiList();
             showLoadingMessage(TAG);
         } else {
             refreshFragment();
         }
+    }
+
+    private void resetPackage() {
+        mOptionNumber = 0;
+        mSelectedPackage = 0;
+        mSelectedHotel = new Hotel[3];
+        mSelectedSouvenir = new Souvenir[3];
+        mSelectedCar = new Car[3];
+        mPoiResultList = new ArrayList[3];
+        mRestaurantResultList = new ArrayList[3];
     }
 
     private void setUpMessageListener() {
@@ -517,11 +411,11 @@ public class TripResultFragment extends BaseFragment {
                 super.onMessageActionTryAgain();
 
                 hideMessageScreen();
-                if(mPoiListResponseData == null || mRestaurantListResponseData == null) {
+//                if(mPoiListResponseData == null || mRestaurantListResponseData == null) {
 //                    new StartCalculation().execute();
-                    mPoiListAPI.requestPoiList();
-                    showLoadingMessage(TAG);
-                }
+                mPoiListAPI.requestPoiList();
+                showLoadingMessage(TAG);
+//                }
             }
         });
     }
@@ -534,22 +428,22 @@ public class TripResultFragment extends BaseFragment {
             if(requestCode == POI_REQUEST_CODE){
                 long id = data.getExtras().getLong("result");
                 Poi selectedPoi = getPoiFromId(id);
-                mPoiResultList.set(mSelectedPoiIndex, selectedPoi);
+                mPoiResultList[mSelectedPackage].set(mSelectedPoiIndex, selectedPoi);
                 refreshFragment();
             } else if(requestCode == RESTAURANT_REQUEST_CODE){
                 long id = data.getExtras().getLong("result");
                 Restaurant selected = getRestaurantFromId(id);
-                mRestaurantResultList.set(mSelectedRestaurantIndex, selected);
+                mRestaurantResultList[mSelectedPackage].set(mSelectedRestaurantIndex, selected);
                 refreshFragment();
             } else if(requestCode == HOTEL_REQUEST_CODE){
                 long id = data.getExtras().getLong("result");
                 Hotel selected = getHotelFromId(id);
-                mSelectedHotel = selected;
+                mSelectedHotel[mSelectedPackage] = selected;
                 refreshFragment();
             } else if(requestCode == SOUVENIR_REQUEST_CODE){
                 long id = data.getExtras().getLong("result");
                 Souvenir selected = getSouvenirFromId(id);
-                mSelectedSouvenir = selected;
+                mSelectedSouvenir[mSelectedPackage] = selected;
                 refreshFragment();
             }
         }
@@ -619,37 +513,54 @@ public class TripResultFragment extends BaseFragment {
     }
 
     @Override
-    public void refreshFragment(){
-        super.refreshFragment();
-        mTripListFrame.removeAllViews();
-//        mRestaurantListFrame.removeAllViews();
-//        mPoiListFrame.removeAllViews();
-        mHotelListFrame.removeAllViews();
-        mSouvenirListFrame.removeAllViews();
-        mTransportationListFrame.removeAllViews();
-
-        for(int i = 0 ;i < mRestaurantResultList.size();i++){
-            if(i%3 == 0){
-                TextView textView = new TextView(getParentActivity());
-                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                lp.setMargins(0, 50, 0, 30);
-                lp.gravity = Gravity.CENTER;
-                textView.setLayoutParams(lp);
-                textView.setText("DAY " + ((i / 3) + 1));
-                textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
-                textView.setGravity(Gravity.CENTER);
-
-                mTripListFrame.addView(textView);
+    public void refreshFragment() {
+//        super.refreshFragment();
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                mPackageListFrame.removeAllViews();
             }
+        });
+        for (int k = 0; k <= mOptionNumber; k++) {
+//            inflateNewTrip();
+            final LinearLayout currentPackage = (LinearLayout) mLayoutInflater.inflate(R.layout.item_package, mPackageListFrame, false);
+            LinearLayout tripListFrame = (LinearLayout) currentPackage.findViewById(R.id.frame_trip_list);
+            LinearLayout mHotelListFrame = (LinearLayout) currentPackage.findViewById(R.id.frame_hotel_list);
+            final LinearLayout mTransportationListFrame = (LinearLayout) currentPackage.findViewById(R.id.frame_transportation_list);
+            LinearLayout mSouvenirListFrame = (LinearLayout) currentPackage.findViewById(R.id.frame_souvenir_list);
+            final TextView mTotalPriceTextView = (TextView) currentPackage.findViewById(R.id.text_view_total_price);
+            final EditText mTotalGuestEditText = (EditText) currentPackage.findViewById(R.id.edit_text_total_guest);
+            final EditText tripNameEditText = (EditText) currentPackage.findViewById(R.id.edit_text_trip_name);
+            TextView tripNumber = (TextView) currentPackage.findViewById(R.id.text_view_trip_number);
+            Button saveTripButton = (Button) currentPackage.findViewById(R.id.button_save_trip);
 
-            final Poi poi = mPoiResultList.get(i);
+            tripListFrame.removeAllViews();
+            mHotelListFrame.removeAllViews();
+            mSouvenirListFrame.removeAllViews();
+            mTransportationListFrame.removeAllViews();
+            tripNumber.setText("Option Number " + (k + 1));
+            for (int i = 0; i < mRestaurantResultList[k].size(); i++) {
+                if (i % 3 == 0) {
+                    TextView textView = new TextView(getParentActivity());
+                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    lp.setMargins(0, 50, 0, 30);
+                    lp.gravity = Gravity.CENTER;
+                    textView.setLayoutParams(lp);
+                    textView.setText("DAY " + ((i / 3) + 1));
+                    textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
+                    textView.setGravity(Gravity.CENTER);
 
-            View poiRow = mLayoutInflater.inflate(R.layout.row_poi_list, mTripListFrame, false);
-            ((TextView) poiRow.findViewById(R.id.text_view_poi_name)).setText(poi.name);
-            ((TextView) poiRow.findViewById(R.id.text_view_poi_rating)).setText("Rating " + poi.rating + "/100");
-            ((TextView) poiRow.findViewById(R.id.text_view_poi_price)).setText("Rp " + FormattingUtil.formatDecimal(poi.price));
-            Picasso.with(mContext).load(poi.imageUrl).into((ImageView) poiRow.findViewById(R.id.image_view_poi_image));
-            ((TextView) poiRow.findViewById(R.id.text_view_region)).setVisibility(View.GONE);
+                    tripListFrame.addView(textView);
+                }
+
+                final Poi poi = mPoiResultList[k].get(i);
+
+                View poiRow = mLayoutInflater.inflate(R.layout.row_poi_list, tripListFrame, false);
+                ((TextView) poiRow.findViewById(R.id.text_view_poi_name)).setText(poi.name);
+                ((TextView) poiRow.findViewById(R.id.text_view_poi_rating)).setText("Rating " + poi.rating + "/100");
+                ((TextView) poiRow.findViewById(R.id.text_view_poi_price)).setText("Rp " + FormattingUtil.formatDecimal(poi.price));
+                Picasso.with(mContext).load(poi.imageUrl).into((ImageView) poiRow.findViewById(R.id.image_view_poi_image));
+                ((TextView) poiRow.findViewById(R.id.text_view_region)).setVisibility(View.GONE);
 //            if(i%3 == 0){
 //                ((TextView) poiRow.findViewById(R.id.text_view_region)).setText("Day " + ((i/3)+1));
 //            } else if(i%3 == 1){
@@ -657,31 +568,139 @@ public class TripResultFragment extends BaseFragment {
 //            } else {
 //                ((TextView) poiRow.findViewById(R.id.text_view_region)).setText("Day " + ((i/3)+1));
 //            }
-            poiRow.setOnClickListener(new View.OnClickListener() {
+                poiRow.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        replaceContentFragment(PoiDetailFragment.newInstance(Integer.toString(poi.id)), getResources().getString(R.string.poi_detail_fragment_tag));
+                    }
+                });
+
+                final int finalI = i;
+                final int finalK3 = k;
+                poiRow.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        new AlertDialog.Builder(mContext)
+                                .setTitle("Change entry")
+                                .setMessage("Are you sure you want to change this point of interest?")
+                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Intent intent = new Intent(mContext, PoiListActivity.class);
+                                        intent.putExtra(EXTRA_RESPONSE_DATA, mPoiListResponseData);
+                                        mSelectedPoiIndex = finalI;
+                                        mSelectedPackage = finalK3;
+                                        getParentActivity().startActivityForResult(intent, POI_REQUEST_CODE);
+                                    }
+                                })
+                                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        // do nothing
+                                        dialog.cancel();
+                                    }
+                                })
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .show();
+
+                        return true;
+                    }
+                });
+                if (i % 3 == 0) {
+                    tripListFrame.addView(poiRow);
+                } else {
+                    tripListFrame.addView(poiRow, tripListFrame.getChildCount() - 1);
+                }
+
+                final Restaurant restaurant = mRestaurantResultList[k].get(i);
+
+                View restaurantRow = mLayoutInflater.inflate(R.layout.row_restaurant_list, tripListFrame, false);
+                ((TextView) restaurantRow.findViewById(R.id.text_view_restaurant_name)).setText(restaurant.name);
+                ((TextView) restaurantRow.findViewById(R.id.text_view_restaurant_rating)).setText("Rating " + restaurant.rating + "/100");
+                ((TextView) restaurantRow.findViewById(R.id.text_view_restaurant_price)).setText("Rp " + FormattingUtil.formatDecimal(restaurant.price));
+                Picasso.with(mContext).load(restaurant.imageUrl).into((ImageView) restaurantRow.findViewById(R.id.image_view_restaurant_image));
+                if (i % 3 == 0) {
+                    ((TextView) restaurantRow.findViewById(R.id.text_view_region)).setText("Lunch");
+                } else if (i % 3 == 1) {
+                    ((TextView) restaurantRow.findViewById(R.id.text_view_region)).setText("Dinner");
+                } else {
+                    ((TextView) restaurantRow.findViewById(R.id.text_view_region)).setText("Midnight snack");
+                }
+                restaurantRow.setScaleX(0.8f);
+                restaurantRow.setScaleY(0.8f);
+                restaurantRow.setAlpha(0.8f);
+
+                restaurantRow.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        replaceContentFragment(RestaurantDetailFragment.newInstance(Integer.toString(restaurant.id)), getResources().getString(R.string.restaurant_detail_fragment_tag));
+                    }
+                });
+
+                restaurantRow.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        new AlertDialog.Builder(mContext)
+                                .setTitle("Change entry")
+                                .setMessage("Are you sure you want to change this restaurant?")
+                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Intent intent = new Intent(mContext, RestaurantListActivity.class);
+                                        intent.putExtra(EXTRA_RESPONSE_DATA, mRestaurantListResponseData);
+                                        mSelectedRestaurantIndex = finalI;
+                                        mSelectedPackage = finalK3;
+                                        getParentActivity().startActivityForResult(intent, RESTAURANT_REQUEST_CODE);
+                                    }
+                                })
+                                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        // do nothing
+                                        dialog.cancel();
+                                    }
+                                })
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .show();
+
+                        return true;
+                    }
+                });
+                tripListFrame.addView(restaurantRow);
+            }
+
+            View hotelRow = mLayoutInflater.inflate(R.layout.row_hotel_list, mHotelListFrame, false);
+            ((TextView) hotelRow.findViewById(R.id.text_view_hotel_name)).setText(mSelectedHotel[k].name);
+            //((TextView) hotelRow.findViewById(R.id.text_view_region)).setText("Total price : " + mSelectedHotel.price);
+            ((TextView) hotelRow.findViewById(R.id.text_view_region)).setVisibility(View.GONE);
+            ((TextView) hotelRow.findViewById(R.id.text_view_hotel_rating)).setText("Rating " + mSelectedHotel[k].rating + "/100");
+            ((TextView) hotelRow.findViewById(R.id.text_view_hotel_price)).setText("Rp " + FormattingUtil.formatDecimal(mSelectedHotel[k].price));
+
+            LayerDrawable stars = (LayerDrawable) ((RatingBar) hotelRow.findViewById(R.id.star_bar_hotel_list)).getProgressDrawable();
+            stars.getDrawable(2).setColorFilter(Color.rgb(255, 199, 0), PorterDuff.Mode.SRC_ATOP);
+            stars.getDrawable(0).setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+            ((RatingBar) hotelRow.findViewById(R.id.star_bar_hotel_list)).setRating(mSelectedHotel[k].star);
+
+            Picasso.with(mContext).load(mSelectedHotel[k].imageUrl).into((ImageView) hotelRow.findViewById(R.id.image_view_hotel_image));
+            final int finalK2 = k;
+            hotelRow.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    replaceContentFragment(PoiDetailFragment.newInstance(Integer.toString(poi.id)), getResources().getString(R.string.poi_detail_fragment_tag));
+                    replaceContentFragment(HotelDetailFragment.newInstance(Integer.toString(mSelectedHotel[finalK2].id)), getResources().getString(R.string.hotel_detail_fragment_tag));
                 }
             });
-
-            final int finalI = i;
-            poiRow.setOnLongClickListener(new View.OnLongClickListener() {
+            hotelRow.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
                     new AlertDialog.Builder(mContext)
                             .setTitle("Change entry")
-                            .setMessage("Are you sure you want to change this point of interest?")
+                            .setMessage("Are you sure you want to change this hotel?")
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    Intent intent = new Intent(mContext, PoiListActivity.class);
-                                    intent.putExtra(EXTRA_RESPONSE_DATA, mPoiListResponseData);
-                                    mSelectedPoiIndex = finalI;
-                                    getParentActivity().startActivityForResult(intent, POI_REQUEST_CODE);
+                                    Intent intent = new Intent(mContext, HotelListActivity.class);
+                                    intent.putExtra(EXTRA_RESPONSE_DATA, mHotelListResponseData);
+                                    mSelectedPackage = finalK2;
+                                    getParentActivity().startActivityForResult(intent, HOTEL_REQUEST_CODE);
                                 }
                             })
                             .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    // do nothing
                                     dialog.cancel();
                                 }
                             })
@@ -691,52 +710,36 @@ public class TripResultFragment extends BaseFragment {
                     return true;
                 }
             });
-            if(i%3 == 0) {
-                mTripListFrame.addView(poiRow);
-            } else {
-                mTripListFrame.addView(poiRow, mTripListFrame.getChildCount() - 1);
-            }
+            mHotelListFrame.addView(hotelRow);
 
-            final Restaurant restaurant = mRestaurantResultList.get(i);
+            View souvenirRow = mLayoutInflater.inflate(R.layout.row_souvenir_list, mSouvenirListFrame, false);
+            ((TextView) souvenirRow.findViewById(R.id.text_view_souvenir_name)).setText(mSelectedSouvenir[k].name);
+            ((TextView) souvenirRow.findViewById(R.id.text_view_region)).setVisibility(View.GONE);
+            ((TextView) souvenirRow.findViewById(R.id.text_view_souvenir_rating)).setText("Rating " + mSelectedSouvenir[k].rating + "/100");
+            Picasso.with(mContext).load(mSelectedSouvenir[k].imageUrl).into((ImageView) souvenirRow.findViewById(R.id.image_view_souvenir_image));
 
-            View restaurantRow = mLayoutInflater.inflate(R.layout.row_restaurant_list, mTripListFrame, false);
-            ((TextView) restaurantRow.findViewById(R.id.text_view_restaurant_name)).setText(restaurant.name);
-            ((TextView) restaurantRow.findViewById(R.id.text_view_restaurant_rating)).setText("Rating " + restaurant.rating + "/100");
-            ((TextView) restaurantRow.findViewById(R.id.text_view_restaurant_price)).setText("Rp " + FormattingUtil.formatDecimal(restaurant.price));
-            Picasso.with(mContext).load(restaurant.imageUrl).into((ImageView) restaurantRow.findViewById(R.id.image_view_restaurant_image));
-            if(i%3 == 0){
-                ((TextView) restaurantRow.findViewById(R.id.text_view_region)).setText("Lunch");
-            } else if(i%3 == 1){
-                ((TextView) restaurantRow.findViewById(R.id.text_view_region)).setText("Dinner");
-            } else {
-                ((TextView) restaurantRow.findViewById(R.id.text_view_region)).setText("Midnight snack");
-            }
-            restaurantRow.setScaleX(0.8f); restaurantRow.setScaleY(0.8f); restaurantRow.setAlpha(0.8f);
-
-            restaurantRow.setOnClickListener(new View.OnClickListener() {
+            souvenirRow.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    replaceContentFragment(RestaurantDetailFragment.newInstance(Integer.toString(restaurant.id)), getResources().getString(R.string.restaurant_detail_fragment_tag));
+                    replaceContentFragment(SouvenirDetailFragment.newInstance(Integer.toString(mSelectedSouvenir[finalK2].id)), getResources().getString(R.string.souvenir_detail_fragment_tag));
                 }
             });
-
-            restaurantRow.setOnLongClickListener(new View.OnLongClickListener() {
+            souvenirRow.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
                     new AlertDialog.Builder(mContext)
                             .setTitle("Change entry")
-                            .setMessage("Are you sure you want to change this restaurant?")
+                            .setMessage("Are you sure you want to change this souvenir shop?")
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    Intent intent = new Intent(mContext, RestaurantListActivity.class);
-                                    intent.putExtra(EXTRA_RESPONSE_DATA, mRestaurantListResponseData);
-                                    mSelectedRestaurantIndex = finalI;
-                                    getParentActivity().startActivityForResult(intent, RESTAURANT_REQUEST_CODE);
+                                    Intent intent = new Intent(mContext, SouvenirListActivity.class);
+                                    intent.putExtra(EXTRA_RESPONSE_DATA, mSouvenirListResponseData);
+                                    mSelectedPackage = finalK2;
+                                    getParentActivity().startActivityForResult(intent, SOUVENIR_REQUEST_CODE);
                                 }
                             })
                             .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    // do nothing
                                     dialog.cancel();
                                 }
                             })
@@ -746,144 +749,226 @@ public class TripResultFragment extends BaseFragment {
                     return true;
                 }
             });
-            mTripListFrame.addView(restaurantRow);
+            mSouvenirListFrame.addView(souvenirRow);
+
+            View carRow = mLayoutInflater.inflate(R.layout.row_car_list, mTransportationListFrame, false);
+            ((TextView) carRow.findViewById(R.id.text_view_car_name)).setText(mSelectedCar[k].carName);
+            ((TextView) carRow.findViewById(R.id.text_view_car_detail)).setText("Cost : Rp " + FormattingUtil.formatDecimal(mSelectedCar[k].carPrice) + ", for " + mSelectedCar[k].carCapacity + " person");
+            mTransportationListFrame.addView(carRow);
+
+            final int finalK = k;
+            mTotalGuestEditText.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    if (s.length() == 0) {
+                        return;
+                    }
+                    int numGuests;
+                    try {
+                        numGuests = Integer.parseInt(s.toString());
+                        if (numGuests < 1 || numGuests > 45) {
+                            throw new Exception();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(mContext, "Please insert a valid total passenger number", Toast.LENGTH_LONG).show();
+                        mTotalPriceTextView.setText("Please insert a valid total passenger number");
+                        return;
+                    }
+
+                    mNumGuests = numGuests;
+                    mTotalPrice = 0;
+                    for (Restaurant restaurant : mRestaurantResultList[finalK]) {
+                        mTotalPrice += numGuests * restaurant.price;
+                    }
+                    for (Poi poi : mPoiResultList[finalK]) {
+                        mTotalPrice += numGuests * poi.price;
+                    }
+//                mTotalPrice += numGuests * mSelectedSouvenir.price;
+                    int numberOfRoom = (1 + numGuests) / 2;
+                    Log.d("test", "jmlh kmr : " + numberOfRoom);
+                    mTotalPrice += numberOfRoom * (mTotalNight - 1) * mSelectedHotel[finalK].price;
+
+                    mTotalPrice += findCarPrice(numGuests, finalK) * mTotalNight;
+
+                    mTransportationListFrame.removeAllViews();
+                    View carRow = mLayoutInflater.inflate(R.layout.row_car_list, mTransportationListFrame, false);
+                    ((TextView) carRow.findViewById(R.id.text_view_car_name)).setText(mSelectedCar[finalK].carName);
+                    ((TextView) carRow.findViewById(R.id.text_view_car_detail)).setText("Cost : Rp " + FormattingUtil.formatDecimal(mSelectedCar[finalK].carPrice) + ", for " + mSelectedCar[finalK].carCapacity + " person");
+                    mTransportationListFrame.addView(carRow);
+
+                    mTotalPriceTextView.setText("Rp " + FormattingUtil.formatDecimal(mTotalPrice));
+                }
+            });
+            mTotalGuestEditText.setText("1");
+
+            final int finalK1 = k;
+            saveTripButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String tripName = tripNameEditText.getText().toString();
+                    if (tripName.isEmpty()) {
+                        Toast.makeText(mContext, "Please insert your trip name", Toast.LENGTH_LONG).show();
+                        return;
+                    }
+
+                    Realm realm = Realm.getInstance(mContext);
+                    try {
+                        realm.beginTransaction();
+                        Trip trip = realm.createObject(Trip.class); // Create a new object
+
+                        try {
+                            mNumGuests = Integer.parseInt(mTotalGuestEditText.getText().toString());
+                            if (mNumGuests < 1 || mNumGuests > 45) {
+                                throw new Exception();
+                            }
+                        } catch (Exception e) {
+                            Toast.makeText(mContext, "Please insert a valid total passenger number", Toast.LENGTH_LONG).show();
+                            mTotalPriceTextView.setText("Please insert a valid total passenger number");
+                            return;
+                        }
+
+                        mTotalPrice = 0;
+                        for (Restaurant restaurant : mRestaurantResultList[finalK]) {
+                            mTotalPrice += mNumGuests * restaurant.price;
+                        }
+                        for (Poi poi : mPoiResultList[finalK]) {
+                            mTotalPrice += mNumGuests * poi.price;
+                        }
+
+                        int numberOfRoom = (1 + mNumGuests) / 2;
+                        Log.d("test", "jmlh kmr : " + numberOfRoom);
+                        mTotalPrice += numberOfRoom * (mTotalNight - 1) * mSelectedHotel[finalK].price;
+                        mTotalPrice += findCarPrice(mNumGuests, finalK) * mTotalNight;
+
+                        trip.setNumGuests(mNumGuests);
+                        trip.setTripName(tripName);
+                        trip.setTotalNight(mTotalNight);
+                        trip.setTotalPrice(mTotalPrice);
+
+                        com.yulius.belitungtourism.realm.Hotel hotel = realm.createObject(com.yulius.belitungtourism.realm.Hotel.class);
+                        hotel.setHotelId(mSelectedHotel[finalK1].id);
+                        hotel.setHotelName(mSelectedHotel[finalK1].name);
+                        hotel.setHotelPrice(mSelectedHotel[finalK1].price);
+                        hotel.setHotelRating(mSelectedHotel[finalK1].rating);
+                        hotel.setHotelStar(mSelectedHotel[finalK1].star);
+                        hotel.setHotelImageUrl(avoidNull(mSelectedHotel[finalK1].imageUrl));
+                        trip.setHotel(hotel);
+
+                        com.yulius.belitungtourism.realm.Souvenir souvenir = realm.createObject(com.yulius.belitungtourism.realm.Souvenir.class);
+                        souvenir.setSouvenirId(mSelectedSouvenir[finalK1].id);
+                        souvenir.setSouvenirName(mSelectedSouvenir[finalK1].name);
+                        souvenir.setSouvenirPrice(mSelectedSouvenir[finalK1].price);
+                        souvenir.setSouvenirRating(mSelectedSouvenir[finalK1].rating);
+                        souvenir.setSouvernirImageUrl(avoidNull(mSelectedSouvenir[finalK1].imageUrl));
+                        trip.setSouvenir(souvenir);
+
+                        com.yulius.belitungtourism.realm.Car car = realm.createObject(com.yulius.belitungtourism.realm.Car.class);
+                        car.setCarId(mSelectedCar[finalK1].carId);
+                        car.setCarName(mSelectedCar[finalK1].carName);
+                        car.setCarPrice(mSelectedCar[finalK1].carPrice);
+                        car.setCarCapacity(mSelectedCar[finalK1].carCapacity);
+                        trip.setCar(car);
+
+                        RealmList<com.yulius.belitungtourism.realm.Restaurant> restaurants = new RealmList<>();
+                        for (Restaurant currentRestaurant : mRestaurantResultList[finalK1]) {
+                            com.yulius.belitungtourism.realm.Restaurant restaurant = realm.createObject(com.yulius.belitungtourism.realm.Restaurant.class);
+                            restaurant.setRestaurantId(currentRestaurant.id);
+                            restaurant.setRestaurantName(currentRestaurant.name);
+                            restaurant.setRestaurantPrice(currentRestaurant.price);
+                            restaurant.setRestaurantRating(currentRestaurant.rating);
+                            restaurant.setRestaurantType(currentRestaurant.type);
+                            restaurant.setRestaurantImageUrl(avoidNull(currentRestaurant.imageUrl));
+                            restaurants.add(restaurant);
+                        }
+                        trip.setRestaurants(restaurants);
+
+                        RealmList<com.yulius.belitungtourism.realm.Poi> pois = new RealmList<>();
+                        for (Poi currentPoi : mPoiResultList[finalK1]) {
+                            com.yulius.belitungtourism.realm.Poi poi = realm.createObject(com.yulius.belitungtourism.realm.Poi.class);
+                            poi.setPoiId(currentPoi.id);
+                            poi.setPoiName(currentPoi.name);
+                            poi.setPoiPrice(currentPoi.price);
+                            poi.setPoiRating(currentPoi.rating);
+                            poi.setPoiImageUrl(avoidNull(currentPoi.imageUrl));
+                            Log.d("imageUrlAtRealmSaving", poi.getPoiImageUrl());
+                            pois.add(poi);
+                        }
+                        trip.setPois(pois);
+                        realm.commitTransaction();
+
+                        showMessage("Your trip has been save", Constans.MessageType.MESSAGE_SUCCESS, Constans.Duration.LONG);
+
+                        getFragmentManager().popBackStack();
+                    } catch (RealmException e) {
+                        realm.cancelTransaction();
+                        showMessage(tripName + " has been used for other trip name, please use other name", Constans.MessageType.MESSAGE_ERROR, Constans.Duration.LONG);
+                    }
+                }
+            });
+
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    mPackageListFrame.addView(currentPackage);
+                }
+            });
+        }
+    }
+
+    private int findTotalRating() {
+        int maxValue = Integer.MIN_VALUE;
+        int highestIndex = -1;
+
+        for(int i=0;i<3;i++) {
+            int totalPrice = 0;
+            for (Restaurant restaurant : mRestaurantResultList[i]) {
+                totalPrice += restaurant.rating;
+            }
+            for (Poi poi : mPoiResultList[i]) {
+                totalPrice += poi.rating;
+            }
+
+            totalPrice += mSelectedHotel[i].rating;
+            if(totalPrice > maxValue){
+                maxValue = totalPrice;
+                highestIndex = i;
+            }
         }
 
-//        for(int i = 0 ;i < mRestaurantResultList.size();i++){
-//            final Restaurant restaurant = mRestaurantResultList.get(i);
-//
-//            View restaurantRow = mLayoutInflater.inflate(R.layout.row_restaurant_list, mRestaurantListFrame, false);
-//            ((TextView) restaurantRow.findViewById(R.id.text_view_restaurant_name)).setText(restaurant.name);
-//            if(i%3 == 0){
-//                ((TextView) restaurantRow.findViewById(R.id.text_view_region)).setText("Day " + ((i/3)+1) + ", lunch");
-//            } else if(i%3 == 1){
-//                ((TextView) restaurantRow.findViewById(R.id.text_view_region)).setText("Day " + ((i/3)+1) + ", dinner");
-//            } else {
-//                ((TextView) restaurantRow.findViewById(R.id.text_view_region)).setText("Day " + ((i/3)+1) + ", midnight snack");
-//            }
-//
-//            restaurantRow.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    replaceContentFragment(RestaurantDetailFragment.newInstance(Integer.toString(restaurant.id)), getResources().getString(R.string.restaurant_detail_fragment_tag));
-//                }
-//            });
-//            mRestaurantListFrame.addView(restaurantRow);
-//        }
-//
-//        for(int i = 0 ;i < mPoiResultList.size();i++){
-//            final Poi poi = mPoiResultList.get(i);
-//
-//            View poiRow = mLayoutInflater.inflate(R.layout.row_poi_list, mPoiListFrame, false);
-//            ((TextView) poiRow.findViewById(R.id.text_view_poi_name)).setText(poi.name);
-//            if(i%3 == 0){
-//                ((TextView) poiRow.findViewById(R.id.text_view_region)).setText("Day " + ((i/3)+1));
-//            } else if(i%3 == 1){
-//                ((TextView) poiRow.findViewById(R.id.text_view_region)).setText("Day " + ((i/3)+1));
-//            } else {
-//                ((TextView) poiRow.findViewById(R.id.text_view_region)).setText("Day " + ((i/3)+1));
-//            }
-//            poiRow.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    replaceContentFragment(PoiDetailFragment.newInstance(Integer.toString(poi.id)), getResources().getString(R.string.poi_detail_fragment_tag));
-//                }
-//            });
-//            mPoiListFrame.addView(poiRow);
-//        }
+        return highestIndex;
+    }
 
-        View hotelRow = mLayoutInflater.inflate(R.layout.row_hotel_list, mHotelListFrame, false);
-        ((TextView) hotelRow.findViewById(R.id.text_view_hotel_name)).setText(mSelectedHotel.name);
-        //((TextView) hotelRow.findViewById(R.id.text_view_region)).setText("Total price : " + mSelectedHotel.price);
-        ((TextView) hotelRow.findViewById(R.id.text_view_region)).setVisibility(View.GONE);
-        ((TextView) hotelRow.findViewById(R.id.text_view_hotel_rating)).setText("Rating " + mSelectedHotel.rating + "/100");
-        ((TextView) hotelRow.findViewById(R.id.text_view_hotel_price)).setText("Rp " + FormattingUtil.formatDecimal(mSelectedHotel.price));
+    private int findTotalPrice() {
+        int minPrice = Integer.MAX_VALUE;
+        int cheapestIndex = -1;
 
-        LayerDrawable stars = (LayerDrawable) ((RatingBar) hotelRow.findViewById(R.id.star_bar_hotel_list)).getProgressDrawable();
-        stars.getDrawable(2).setColorFilter(Color.rgb(255, 199, 0), PorterDuff.Mode.SRC_ATOP);
-        stars.getDrawable(0).setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
-        ((RatingBar) hotelRow.findViewById(R.id.star_bar_hotel_list)).setRating(mSelectedHotel.star);
-
-        Picasso.with(mContext).load(mSelectedHotel.imageUrl).into((ImageView)hotelRow.findViewById(R.id.image_view_hotel_image));
-        hotelRow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                replaceContentFragment(HotelDetailFragment.newInstance(Integer.toString(mSelectedHotel.id)), getResources().getString(R.string.hotel_detail_fragment_tag));
+        for(int i=0;i<3;i++) {
+            int totalPrice = 0;
+            for (Restaurant restaurant : mRestaurantResultList[i]) {
+                totalPrice += restaurant.price;
             }
-        });
-        hotelRow.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                new AlertDialog.Builder(mContext)
-                        .setTitle("Change entry")
-                        .setMessage("Are you sure you want to change this hotel?")
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                Intent intent = new Intent(mContext, HotelListActivity.class);
-                                intent.putExtra(EXTRA_RESPONSE_DATA, mHotelListResponseData);
-                                getParentActivity().startActivityForResult(intent, HOTEL_REQUEST_CODE);
-                            }
-                        })
-                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        })
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
-
-                return true;
+            for (Poi poi : mPoiResultList[i]) {
+                totalPrice += poi.price;
             }
-        });
-        mHotelListFrame.addView(hotelRow);
 
-        View souvenirRow = mLayoutInflater.inflate(R.layout.row_souvenir_list, mSouvenirListFrame, false);
-        ((TextView) souvenirRow.findViewById(R.id.text_view_souvenir_name)).setText(mSelectedSouvenir.name);
-        //((TextView) souvenirRow.findViewById(R.id.text_view_region)).setText("Cost Estimation : " + mSelectedSouvenir.price);
-        ((TextView) souvenirRow.findViewById(R.id.text_view_region)).setVisibility(View.GONE);
-        ((TextView) souvenirRow.findViewById(R.id.text_view_souvenir_rating)).setText("Rating " + mSelectedSouvenir.rating + "/100");
-//        ((TextView) souvenirRow.findViewById(R.id.text_view_souvenir_price)).setText("Rp " + FormattingUtil.formatDecimal(mSelectedSouvenir.price));
-        Picasso.with(mContext).load(mSelectedSouvenir.imageUrl).into((ImageView)souvenirRow.findViewById(R.id.image_view_souvenir_image));
-
-        souvenirRow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                replaceContentFragment(SouvenirDetailFragment.newInstance(Integer.toString(mSelectedSouvenir.id)), getResources().getString(R.string.souvenir_detail_fragment_tag));
+            totalPrice += mSelectedHotel[i].price;
+            if(totalPrice < minPrice){
+                minPrice = totalPrice;
+                cheapestIndex = i;
             }
-        });
-        souvenirRow.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                new AlertDialog.Builder(mContext)
-                        .setTitle("Change entry")
-                        .setMessage("Are you sure you want to change this souvenir shop?")
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                Intent intent = new Intent(mContext, SouvenirListActivity.class);
-                                intent.putExtra(EXTRA_RESPONSE_DATA, mSouvenirListResponseData);
-                                getParentActivity().startActivityForResult(intent, SOUVENIR_REQUEST_CODE);
-                            }
-                        })
-                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        })
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
+        }
 
-                return true;
-            }
-        });
-        mSouvenirListFrame.addView(souvenirRow);
-
-        View carRow = mLayoutInflater.inflate(R.layout.row_car_list, mTransportationListFrame, false);
-        ((TextView) carRow.findViewById(R.id.text_view_car_name)).setText(mSelectedCar.carName);
-        ((TextView) carRow.findViewById(R.id.text_view_car_detail)).setText("Cost : Rp " + FormattingUtil.formatDecimal(mSelectedCar.carPrice) + ", for " + mSelectedCar.carCapacity + " person");
-
-        mTransportationListFrame.addView(carRow);
-
-        mTotalGuestEditText.setText("1");
+        return cheapestIndex;
     }
 
     private void findBestPoi() {
@@ -916,27 +1001,34 @@ public class TripResultFragment extends BaseFragment {
         Log.d("test algo", "total price poi: " + poiPopulation.getFittest().getTotalPrice());
 
         PoiIndividual bestPoiIndividual = poiPopulation.getFittest();
-        mPoiResultList = new ArrayList<>();
+        mPoiResultList[mOptionNumber] = new ArrayList<>();
         for(int i=0;i<bestPoiIndividual.size();i++){
-            mPoiResultList.add(bestPoiIndividual.getGene(i));
+            mPoiResultList[mOptionNumber].add(bestPoiIndividual.getGene(i));
         }
 
         applyTspAlgorithm();
 
-        mRestaurantListAPI.requestRestaurantList();
-        mRestaurantNearbyPoiAPI.requestRestaurantNearbyPoiList();
+//        mRestaurantListAPI.requestRestaurantList();
+        if(mRestaurantNearbyPoiResponseData == null || mRestaurantListResponseData == null) {
+            mRestaurantListAPI.requestRestaurantList();
+            mRestaurantNearbyPoiAPI.requestRestaurantNearbyPoiList();
+        } else {
+//            findBestRestaurant();
+            new CalcluateRestaurant().execute();
+
+        }
     }
 
     private void applyTspAlgorithm() {
         //todo
-        double[][] matrix = new double[mPoiResultList.size()][mPoiResultList.size()];
-        for(int i=0;i<mPoiResultList.size();i++){
-            for(int j=0;j<mPoiResultList.size();j++){
+        double[][] matrix = new double[mPoiResultList[mOptionNumber].size()][mPoiResultList[mOptionNumber].size()];
+        for(int i=0;i<mPoiResultList[mOptionNumber].size();i++){
+            for(int j=0;j<mPoiResultList[mOptionNumber].size();j++){
                 if(i == j){
                     matrix[i][j] = 0;
                 } else {
-                    double selisihLat = Math.pow(mPoiResultList.get(i).latitude - mPoiResultList.get(j).latitude, 2);
-                    double selisihLong = Math.pow(mPoiResultList.get(i).longitude - mPoiResultList.get(j).longitude, 2);
+                    double selisihLat = Math.pow(mPoiResultList[mOptionNumber].get(i).latitude - mPoiResultList[mOptionNumber].get(j).latitude, 2);
+                    double selisihLong = Math.pow(mPoiResultList[mOptionNumber].get(i).longitude - mPoiResultList[mOptionNumber].get(j).longitude, 2);
                     double selisih = Math.sqrt(selisihLat + selisihLong);
                     matrix[i][j] = selisih;
                     matrix[j][i] = selisih;
@@ -945,31 +1037,31 @@ public class TripResultFragment extends BaseFragment {
             }
         }
         String out ="";
-        for (int i = 0; i < mPoiResultList.size(); i++) {
+        for (int i = 0; i < mPoiResultList[mOptionNumber].size(); i++) {
             out += "\n";
-            for (int j = 0; (j) < mPoiResultList.size(); j++) {
+            for (int j = 0; (j) < mPoiResultList[mOptionNumber].size(); j++) {
                 out += matrix[i][j] + "  ";
             }
         }
         Log.d("test", out);
 
-        for (int i = 0; i < mPoiResultList.size(); i++) {
-            Log.d("test before shuffle", mPoiResultList.get(i).id + "\t");
+        for (int i = 0; i < mPoiResultList[mOptionNumber].size(); i++) {
+            Log.d("test before shuffle", mPoiResultList[mOptionNumber].get(i).id + "\t");
         }
         TSPNearestNeighbour tspNearestNeighbour = new TSPNearestNeighbour();
         ArrayList<Integer> result = tspNearestNeighbour.tsp(matrix);
-        ArrayList<Poi> resultClone = (ArrayList<Poi>) mPoiResultList.clone();
-        for(int i=0;i<mPoiResultList.size();i++){
-            mPoiResultList.set(i, resultClone.get(result.get(i)));
+        ArrayList<Poi> resultClone = (ArrayList<Poi>) mPoiResultList[mOptionNumber].clone();
+        for(int i=0;i<mPoiResultList[mOptionNumber].size();i++){
+            mPoiResultList[mOptionNumber].set(i, resultClone.get(result.get(i)));
         }
-        for (int i = 0; i < mPoiResultList.size(); i++) {
-            Log.d("test after shuffle", mPoiResultList.get(i).id + "\t");
+        for (int i = 0; i < mPoiResultList[mOptionNumber].size(); i++) {
+            Log.d("test after shuffle", mPoiResultList[mOptionNumber].get(i).id + "\t");
         }
     }
 
     private void findBestRestaurant() {
         if(mRestaurantListResponseData != null && mRestaurantNearbyPoiResponseData != null) {
-            RestaurantPopulation restaurantPopulation = new RestaurantPopulation(POPULATION_SIZE, true, mRestaurantMinBudget, mRestaurantMaxBudget, mTotalNight, mRestaurantListResponseData, mRestaurantNearbyPoiResponseData, mPoiResultList);
+            RestaurantPopulation restaurantPopulation = new RestaurantPopulation(POPULATION_SIZE, true, mRestaurantMinBudget, mRestaurantMaxBudget, mTotalNight, mRestaurantListResponseData, mRestaurantNearbyPoiResponseData, mPoiResultList[mOptionNumber]);
 
             int generationCount = 0;
             int numberSameResult = 0;
@@ -998,63 +1090,71 @@ public class TripResultFragment extends BaseFragment {
             Log.d("test algo", "total price restaurant: " + restaurantPopulation.getFittest().getTotalPrice());
             //show hasilnya
             RestaurantIndividual bestRestaurantIndividual = restaurantPopulation.getFittest();
-            mRestaurantResultList = new ArrayList<>();
+            mRestaurantResultList[mOptionNumber] = new ArrayList<>();
 
             for (int i = 0; i < bestRestaurantIndividual.size(); i++) {
-                mRestaurantResultList.add(bestRestaurantIndividual.getGene(i));
+                mRestaurantResultList[mOptionNumber].add(bestRestaurantIndividual.getGene(i));
             }
 
-            mHotelListAPI.requestHotelList();
+            if(mHotelListResponseData == null) {
+                mHotelListAPI.requestHotelList();
+            } else {
+                findBestHotelUsingLottery();
+            }
         }
     }
 
-    private void findBestHotel() {
-        for(int i=0;i<mHotelListResponseData.entries.length;i++){
-            int totalPrice = mHotelListResponseData.entries[i].hotelPrice * (mTotalNight-1);
-            if(totalPrice <= mHotelMaxBudget && totalPrice >= mHotelMinBudget){
-                Hotel hotel = new Hotel();
-                hotel.id = mHotelListResponseData.entries[i].hotelId;
-                hotel.name = mHotelListResponseData.entries[i].hotelName;
-                hotel.price = mHotelListResponseData.entries[i].hotelPrice;
-                hotel.rating = mHotelListResponseData.entries[i].hotelRating;
-                hotel.star = mHotelListResponseData.entries[i].hotelStar;
-                Log.d("starAtResult", String.valueOf(mHotelListResponseData.entries[i].hotelStar));
-
-                if(mHotelListResponseData.entries[i].assets != null)
-                {hotel.imageUrl = mHotelListResponseData.entries[i].assets[0].url;}
-                else
-                {hotel.imageUrl = null;}
-                mSelectedHotel = hotel;
-
-                break;
-            }
-        }
-
-        if(mSelectedHotel == null){//fallback klo null, ambil yg lbh murah aj gpp
-            for(int i=0;i<mHotelListResponseData.entries.length;i++){
-                int totalPrice = mHotelListResponseData.entries[i].hotelPrice * (mTotalNight-1);
-                if(totalPrice <= mHotelMaxBudget){
-                    Hotel hotel = new Hotel();
-                    hotel.id = mHotelListResponseData.entries[i].hotelId;
-                    hotel.name = mHotelListResponseData.entries[i].hotelName;
-                    hotel.price = mHotelListResponseData.entries[i].hotelPrice;
-                    hotel.rating = mHotelListResponseData.entries[i].hotelRating;
-
-                    hotel.star = mHotelListResponseData.entries[i].hotelStar;
-                    Log.d("starAtResult", String.valueOf(mHotelListResponseData.entries[i].hotelStar));
-
-                    if(mHotelListResponseData.entries[i].assets != null)
-                    {hotel.imageUrl = mHotelListResponseData.entries[i].assets[0].url;}
-                    else
-                    {hotel.imageUrl = null;}
-
-                    mSelectedHotel = hotel;
-                    break;
-                }
-            }
-        }
-        mSouvenirListAPI.requestSouvenirList();
-    }
+//    private void findBestHotel() {
+//        for(int i=0;i<mHotelListResponseData.entries.length;i++){
+//            int totalPrice = mHotelListResponseData.entries[i].hotelPrice * (mTotalNight-1);
+//            if(totalPrice <= mHotelMaxBudget && totalPrice >= mHotelMinBudget){
+//                Hotel hotel = new Hotel();
+//                hotel.id = mHotelListResponseData.entries[i].hotelId;
+//                hotel.name = mHotelListResponseData.entries[i].hotelName;
+//                hotel.price = mHotelListResponseData.entries[i].hotelPrice;
+//                hotel.rating = mHotelListResponseData.entries[i].hotelRating;
+//                hotel.star = mHotelListResponseData.entries[i].hotelStar;
+//                Log.d("starAtResult", String.valueOf(mHotelListResponseData.entries[i].hotelStar));
+//
+//                if(mHotelListResponseData.entries[i].assets != null)
+//                {hotel.imageUrl = mHotelListResponseData.entries[i].assets[0].url;}
+//                else
+//                {hotel.imageUrl = null;}
+//                mSelectedHotel = hotel;
+//
+//                break;
+//            }
+//        }
+//
+//        if(mSelectedHotel == null){//fallback klo null, ambil yg lbh murah aj gpp
+//            for(int i=0;i<mHotelListResponseData.entries.length;i++){
+//                int totalPrice = mHotelListResponseData.entries[i].hotelPrice * (mTotalNight-1);
+//                if(totalPrice <= mHotelMaxBudget){
+//                    Hotel hotel = new Hotel();
+//                    hotel.id = mHotelListResponseData.entries[i].hotelId;
+//                    hotel.name = mHotelListResponseData.entries[i].hotelName;
+//                    hotel.price = mHotelListResponseData.entries[i].hotelPrice;
+//                    hotel.rating = mHotelListResponseData.entries[i].hotelRating;
+//
+//                    hotel.star = mHotelListResponseData.entries[i].hotelStar;
+//                    Log.d("starAtResult", String.valueOf(mHotelListResponseData.entries[i].hotelStar));
+//
+//                    if(mHotelListResponseData.entries[i].assets != null)
+//                    {hotel.imageUrl = mHotelListResponseData.entries[i].assets[0].url;}
+//                    else
+//                    {hotel.imageUrl = null;}
+//
+//                    mSelectedHotel = hotel;
+//                    break;
+//                }
+//            }
+//        }
+//        if(mSouvenirListResponseData == null) {
+//            mSouvenirListAPI.requestSouvenirList();
+//        } else {
+//            findBestSouvenir();
+//        }
+//    }
 
     private void findBestHotelUsingLottery() {
         mHotelLotteryList = new ArrayList<Integer>();
@@ -1082,11 +1182,16 @@ public class TripResultFragment extends BaseFragment {
                 else
                 {hotel.imageUrl = null;}
 
-                mSelectedHotel = hotel;
+                mSelectedHotel[mOptionNumber] = hotel;
                 break;
             }
         }
-        mSouvenirListAPI.requestSouvenirList();
+
+        if(mSouvenirListResponseData == null) {
+            mSouvenirListAPI.requestSouvenirList();
+        } else {
+            findBestSouvenir();
+        }
     }
 
     private void findBestSouvenir() {
@@ -1100,22 +1205,47 @@ public class TripResultFragment extends BaseFragment {
         int selectedSouvenirId = mSouvenirLotteryList.get(selectedIndex);
         for(int i=0;i<mSouvenirListResponseData.entries.length;i++){
             if(mSouvenirListResponseData.entries[i].souvenirId == selectedSouvenirId){
-                mSelectedSouvenir = new Souvenir();
-                mSelectedSouvenir.id = mSouvenirListResponseData.entries[i].souvenirId;
-                mSelectedSouvenir.name = mSouvenirListResponseData.entries[i].souvenirName;
-                mSelectedSouvenir.price = mSouvenirListResponseData.entries[i].souvenirPrice;
-                mSelectedSouvenir.rating = mSouvenirListResponseData.entries[i].souvenirRating;
+                mSelectedSouvenir[mOptionNumber] = new Souvenir();
+                mSelectedSouvenir[mOptionNumber].id = mSouvenirListResponseData.entries[i].souvenirId;
+                mSelectedSouvenir[mOptionNumber].name = mSouvenirListResponseData.entries[i].souvenirName;
+                mSelectedSouvenir[mOptionNumber].price = mSouvenirListResponseData.entries[i].souvenirPrice;
+                mSelectedSouvenir[mOptionNumber].rating = mSouvenirListResponseData.entries[i].souvenirRating;
 
                 if(mSouvenirListResponseData.entries[i].assets != null)
-                {mSelectedSouvenir.imageUrl = mSouvenirListResponseData.entries[i].assets[0].url;}
+                {mSelectedSouvenir[mOptionNumber].imageUrl = mSouvenirListResponseData.entries[i].assets[0].url;}
                 else
-                {mSelectedSouvenir.imageUrl = null;}
+                {mSelectedSouvenir[mOptionNumber].imageUrl = null;}
                 break;
             }
         }
 
-        mCarAPI.requestCarList();
-//        refreshFragment();
+        if(mCarResponseData == null) {
+            mCarAPI.requestCarList();
+        } else {
+            findCarPrice(1, mOptionNumber);
+
+            refreshFragment();
+
+            mOptionNumber++;
+
+            if(mOptionNumber < 3){
+                findBestPoi();
+            } else {
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        hideMessageScreen();
+                            LinearLayout footer = (LinearLayout) mLayoutInflater.inflate(R.layout.item_most_package, mPackageListFrame, false);
+                            TextView cheapest = (TextView) footer.findViewById(R.id.text_view_cheapest);
+                            TextView highestRating = (TextView) footer.findViewById(R.id.text_view_highest_rating);
+                            cheapest.setText("Package " + (findTotalPrice() + 1));
+                            highestRating.setText("Package " + (findTotalRating() + 1));
+                            mPackageListFrame.addView(footer);
+
+                    }
+                });
+            }
+        }
     }
 
     @Override
