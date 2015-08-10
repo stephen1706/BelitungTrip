@@ -6,6 +6,7 @@ import java.util.Stack;
 public class TSPNearestNeighbour {
     private int numberOfNodes;
     private Stack<Integer> stack;
+    public double totalLength;
 
     public TSPNearestNeighbour(){
         stack = new Stack<Integer>();
@@ -27,6 +28,7 @@ public class TSPNearestNeighbour {
         boolean minFlag = false;
         System.out.println("city 0 " + "\t");
 
+        totalLength = 0;
         while (!stack.isEmpty()){
             element = stack.peek();
             i = 0;
@@ -36,6 +38,7 @@ public class TSPNearestNeighbour {
                     if (min > adjacencyMatrix[element][i]){//cari nilai minimal yg bs dituju dari titik itu
                         min = adjacencyMatrix[element][i];
                         dst = i;
+                        totalLength += min;
                         minFlag = true;
                     }
                 }

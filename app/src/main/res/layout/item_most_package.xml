@@ -33,4 +33,19 @@
         android:textAllCaps="true"
         android:textSize="18dp"
         android:textColor="@color/primary"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Minimal Traveling Package : "
+        android:textAllCaps="true"
+        android:textSize="18dp"
+        android:textColor="@color/primary"/>
+    <TextView
+        android:id="@+id/text_view_min_distance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textAllCaps="true"
+        android:textSize="18dp"
+        android:textColor="@color/primary"/>
 </LinearLayout>

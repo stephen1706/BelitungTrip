@@ -131,6 +131,7 @@ public class TripResultFragment extends BaseFragment {
     private LinearLayout mPackageListFrame;
     private int mOptionNumber;
     private int mSelectedPackage;
+    private double[] tspDistance;
 
     public static TripResultFragment newInstance(int poiMinBudget, int poiMaxBudget, int restaurantMinBudget, int restaurantMaxBudget, int hotelMinBudget, int hotelMaxBudget, int totalNight) {
         TripResultFragment fragment = new TripResultFragment();
@@ -402,6 +403,7 @@ public class TripResultFragment extends BaseFragment {
         mSelectedCar = new Car[3];
         mPoiResultList = new ArrayList[3];
         mRestaurantResultList = new ArrayList[3];
+        tspDistance = new double[3];
     }
 
     private void setUpMessageListener() {
@@ -1050,6 +1052,8 @@ public class TripResultFragment extends BaseFragment {
         }
         TSPNearestNeighbour tspNearestNeighbour = new TSPNearestNeighbour();
         ArrayList<Integer> result = tspNearestNeighbour.tsp(matrix);
+        tspDistance[mOptionNumber] = tspNearestNeighbour.totalLength;
+
         ArrayList<Poi> resultClone = (ArrayList<Poi>) mPoiResultList[mOptionNumber].clone();
         for(int i=0;i<mPoiResultList[mOptionNumber].size();i++){
             mPoiResultList[mOptionNumber].set(i, resultClone.get(result.get(i)));
@@ -1238,14 +1242,30 @@ public class TripResultFragment extends BaseFragment {
                             LinearLayout footer = (LinearLayout) mLayoutInflater.inflate(R.layout.item_most_package, mPackageListFrame, false);
                             TextView cheapest = (TextView) footer.findViewById(R.id.text_view_cheapest);
                             TextView highestRating = (TextView) footer.findViewById(R.id.text_view_highest_rating);
+                            TextView minDistance = (TextView) footer.findViewById(R.id.text_view_min_distance);
                             cheapest.setText("Package " + (findTotalPrice() + 1));
                             highestRating.setText("Package " + (findTotalRating() + 1));
+                            minDistance.setText("Package " + (findMinDistance() + 1));
                             mPackageListFrame.addView(footer);
 
                     }
                 });
             }
         }
+    }
+
+    private int findMinDistance() {
+        double minDistance = Integer.MAX_VALUE;
+        int cheapestIndex = -1;
+
+        for(int i=0;i<3;i++) {
+            if(tspDistance[i] < minDistance){
+                minDistance = tspDistance[i];
+                cheapestIndex = i;
+            }
+        }
+
+        return cheapestIndex;
     }
 
     @Override
